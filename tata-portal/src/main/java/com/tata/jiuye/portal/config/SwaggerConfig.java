@@ -16,11 +16,11 @@ public class SwaggerConfig extends BaseSwaggerConfig {
     @Override
     public SwaggerProperties swaggerProperties() {
         return SwaggerProperties.builder()
-                .apiBasePackage("com.macro.mall.portal.controller")
-                .title("mall前台系统")
-                .description("mall前台相关接口文档")
-                .contactName("macro")
-                .version("1.0")
+                .apiBasePackage("com.tata.jiuye.portal.controller")
+                .title("塔塔酒业前台系统")
+                .description("塔塔酒业前台相关接口文档")
+                .contactName("塔塔酒业")
+                .version("V1.0.0")
                 .enableSecurity(true)
                 .build();
     }

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.tata.jiuye")
-public class MallPortalApplication {
+public class JiuyePortalApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MallPortalApplication.class, args);
+        SpringApplication.run(JiuyePortalApplication.class, args);
     }
 
 }

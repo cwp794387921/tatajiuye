@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface UmsMemberMapper extends BaseMapper<UmsMember> {
 
     long countByExample(UmsMemberExample example);
