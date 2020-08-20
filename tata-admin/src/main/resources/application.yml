@@ -8,10 +8,20 @@ spring:
       enabled: true #开启文件上传
       max-file-size: 10MB #限制文件上传大小为10M
 
-mybatis:
-  mapper-locations:
-    - classpath:dao/*.xml
-    - classpath*:com/**/mapper/*.xml
+#mybatis:
+#  mapper-locations:
+#    - classpath:dao/*.xml
+#    - classpath*:com/**/mapper/*.xml
+mybatis-plus:
+  mapper-locations: classpath:/mapper/mysql/*:xml
+  global-config:
+    banner: false
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头

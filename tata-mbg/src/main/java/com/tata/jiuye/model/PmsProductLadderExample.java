@@ -1,4 +1,4 @@
-package com.tata.mall.model;
+package com.tata.jiuye.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

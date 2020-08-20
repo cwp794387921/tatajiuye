@@ -2,8 +2,9 @@ package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.PmsProductLadder;
-import com.tata.jiuye.model.PmsProductLadderExample;
 import java.util.List;
+
+import com.tata.jiuye.model.PmsProductLadderExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface PmsProductLadderMapper extends BaseMapper<PmsProductLadder> {
