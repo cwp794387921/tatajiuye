@@ -73,4 +73,16 @@
             hs.sort DESC
         LIMIT #{offset}, #{limit};
     </select>
+
+    <select id="getPmsProductByProductCategoryId" resultMap="com.tata.jiuye.mapper.PmsProductMapper.BaseResultMap">
+        SELECT pp.* FROM
+            pms_product pp
+        LEFT JOIN pms_product_category ppc ON ppc.id = pp.product_category_id
+        WHERE
+            pp.delete_status = 0
+        AND
+            pp.product_category_id = #{productCategoryId}
+        ORDER BY
+            pp.sort DESC
+    </select>
 </mapper>

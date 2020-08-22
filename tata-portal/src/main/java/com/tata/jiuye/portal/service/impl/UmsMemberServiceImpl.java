@@ -14,6 +14,7 @@ import com.tata.jiuye.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,16 +38,20 @@ import java.util.Random;
  * Created by macro on 2018/8/3.
  */
 @Service
-@RequiredArgsConstructor
 public class UmsMemberServiceImpl implements UmsMemberService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
 
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final UmsMemberMapper memberMapper;
-    private final UmsMemberLevelMapper memberLevelMapper;
-    private final UmsMemberCacheService memberCacheService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private UmsMemberMapper memberMapper;
+    @Autowired
+    private UmsMemberLevelMapper memberLevelMapper;
+    @Autowired
+    private UmsMemberCacheService memberCacheService;
 
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;

@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service;
 
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.CmsSubject;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.PmsProductCategory;
@@ -44,4 +45,14 @@ public interface HomeService {
      * 分页获取新品推荐商品
      */
     List<PmsProduct> newProductList(Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据商品分类获取分页分类商品列表
+     * @param pageNum                                       页码
+     * @param pageSize                                      每页条数
+     * @param productCategoryId                            商品分类ID
+     * @author laich
+     * @return                                               指定分类分页商品列表
+     */
+    CommonPage<PmsProduct> getPmsProductByProductCategoryId(Integer pageNum, Integer pageSize, Long productCategoryId);
 }

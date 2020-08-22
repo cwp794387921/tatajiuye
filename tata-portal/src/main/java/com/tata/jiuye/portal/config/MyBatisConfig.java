@@ -12,4 +12,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @MapperScan({"com.tata.jiuye.mapper","com.tata.jiuye.portal.dao"})
 public class MyBatisConfig {
+
 }

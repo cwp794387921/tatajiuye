@@ -1,5 +1,6 @@
 package com.tata.jiuye.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "帐号启用状态:0->禁用；1->启用")
     private Integer status;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "注册时间")
     private Date createTime;
 

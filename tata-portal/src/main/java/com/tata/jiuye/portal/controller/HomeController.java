@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.CmsSubject;
 import com.tata.jiuye.model.PmsProduct;
@@ -8,6 +9,7 @@ import com.tata.jiuye.portal.domain.HomeContentResult;
 import com.tata.jiuye.portal.service.HomeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -76,5 +78,15 @@ public class HomeController {
                                                          @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
         List<PmsProduct> productList = homeService.newProductList(pageNum,pageSize);
         return CommonResult.success(productList);
+    }
+
+    @ApiOperation("分页获取分类商品")
+    @RequestMapping(value = "/classifiedProductPage", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult classifiedProductPage(@RequestParam(value = "pageNum", defaultValue = "1") @ApiParam("页码") Integer pageNum,
+                                              @RequestParam(value = "pageSize", defaultValue = "10") @ApiParam("每页条数") Integer pageSize,
+                                              @RequestParam @ApiParam("商品分类ID") Long productCategoryId){
+        CommonPage<PmsProduct> resultPage = homeService.getPmsProductByProductCategoryId(pageNum,pageSize,productCategoryId);
+        return CommonResult.success(resultPage);
     }
 }

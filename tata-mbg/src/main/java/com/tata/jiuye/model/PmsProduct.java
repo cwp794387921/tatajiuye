@@ -1,5 +1,6 @@
 package com.tata.jiuye.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -91,9 +92,11 @@ public class PmsProduct implements Serializable {
 
     private String detailTitle;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "促销开始时间")
     private Date promotionStartTime;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "促销结束时间")
     private Date promotionEndTime;
 

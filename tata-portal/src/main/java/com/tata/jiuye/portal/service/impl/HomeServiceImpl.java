@@ -1,6 +1,9 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.common.api.CommonPage;
+import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.dao.HomeDao;
@@ -10,6 +13,8 @@ import com.tata.jiuye.portal.domain.HomeFlashPromotion;
 import com.tata.jiuye.portal.service.HomeService;
 import com.tata.jiuye.portal.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,18 +25,24 @@ import java.util.List;
  * 首页内容管理Service实现类
  * Created by macro on 2019/1/28.
  */
+@Slf4j
 @Service
-@RequiredArgsConstructor
 public class HomeServiceImpl implements HomeService {
 
-    private final HomeDao homeDao;
-    private final PmsProductMapper productMapper;
-    private final CmsSubjectMapper subjectMapper;
-    private final SmsHomeAdvertiseMapper advertiseMapper;
-    private final SmsFlashPromotionMapper flashPromotionMapper;
-    private final PmsProductCategoryMapper productCategoryMapper;
-    private final SmsFlashPromotionSessionMapper promotionSessionMapper;
-
+    @Autowired
+    private HomeDao homeDao;
+    @Autowired
+    private PmsProductMapper productMapper;
+    @Autowired
+    private CmsSubjectMapper subjectMapper;
+    @Autowired
+    private SmsHomeAdvertiseMapper advertiseMapper;
+    @Autowired
+    private SmsFlashPromotionMapper flashPromotionMapper;
+    @Autowired
+    private PmsProductCategoryMapper productCategoryMapper;
+    @Autowired
+    private SmsFlashPromotionSessionMapper promotionSessionMapper;
     @Override
     public HomeContentResult content() {
         HomeContentResult result = new HomeContentResult();
@@ -57,7 +68,8 @@ public class HomeServiceImpl implements HomeService {
         PmsProductExample example = new PmsProductExample();
         example.createCriteria()
                 .andDeleteStatusEqualTo(0)
-                .andPublishStatusEqualTo(1);
+                .andPublishStatusEqualTo(1)
+                .andRecommandStatusEqualTo(1);
         return productMapper.selectByExample(example);
     }
 
@@ -95,6 +107,24 @@ public class HomeServiceImpl implements HomeService {
         return homeDao.getNewProductList(offset, pageSize);
     }
 
+    @Override
+    public CommonPage<PmsProduct> getPmsProductByProductCategoryId(Integer pageNum, Integer pageSize,Long productCategoryId){
+        log.info("-------------------------根据商品分类获取分页分类商品列表 开始-----------------------------------------------");
+        if(productCategoryId == null){
+            Asserts.fail("商品分类ID为空");
+        }
+        log.info("-------------------------参数 pageNum :"+pageNum);
+        log.info("-------------------------参数 pageSize :"+pageSize);
+        log.info("-------------------------参数 productCategoryId :"+productCategoryId);
+        PageHelper.startPage(pageNum, pageSize);
+        List<PmsProduct> categoryProductList = homeDao.getPmsProductByProductCategoryId(productCategoryId);
+        log.info("-------------------------结果  :"+productCategoryId);
+        CommonPage<PmsProduct> resulPage = CommonPage.restPage(categoryProductList);
+        log.info("-------------------------根据商品分类获取分页分类商品列表 结束-----------------------------------------------");
+        return resulPage;
+    }
+/*************************************公共方法 分界线******************************************************************/
+/*************************************私有方法 分界线******************************************************************/
     private HomeFlashPromotion getHomeFlashPromotion() {
         HomeFlashPromotion homeFlashPromotion = new HomeFlashPromotion();
         //获取当前秒杀活动
