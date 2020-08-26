@@ -27,24 +27,20 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class HomeServiceImpl implements HomeService {
 
-    @Autowired
-    private HomeDao homeDao;
-    @Autowired
-    private PmsProductMapper productMapper;
-    @Autowired
-    private CmsSubjectMapper subjectMapper;
-    @Autowired
-    private SmsHomeAdvertiseMapper advertiseMapper;
-    @Autowired
-    private SmsFlashPromotionMapper flashPromotionMapper;
-    @Autowired
-    private PmsProductCategoryMapper productCategoryMapper;
-    @Autowired
-    private SmsFlashPromotionSessionMapper promotionSessionMapper;
+    private final HomeDao homeDao;
+    private final PmsProductMapper productMapper;
+    private final CmsSubjectMapper subjectMapper;
+    private final SmsHomeAdvertiseMapper advertiseMapper;
+    private final SmsFlashPromotionMapper flashPromotionMapper;
+    private final PmsProductCategoryMapper productCategoryMapper;
+    private final SmsFlashPromotionSessionMapper promotionSessionMapper;
+
     @Override
     public HomeContentResult content() {
+
         HomeContentResult result = new HomeContentResult();
         //获取首页广告
         result.setAdvertiseList(getHomeAdvertiseList());
@@ -58,6 +54,7 @@ public class HomeServiceImpl implements HomeService {
         result.setHotProductList(homeDao.getHotProductList(0, 4));
         //获取推荐专题
         result.setSubjectList(homeDao.getRecommendSubjectList(0, 4));
+
         return result;
     }
 

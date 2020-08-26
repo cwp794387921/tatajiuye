@@ -10,29 +10,30 @@ import com.tata.jiuye.portal.service.HomeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * 首页内容管理Controller
- * Created by macro on 2019/1/28.
+ * 小程序首页
+ *
+ * @author lewis
  */
 @Controller
-@Api(tags = "HomeController", description = "首页内容管理")
+@Api(tags = "HomeController", value = "小程序首页")
 @RequestMapping("/home")
+@RequiredArgsConstructor
 public class HomeController {
-    @Autowired
-    private HomeService homeService;
+
+    private final HomeService homeService;
 
     @ApiOperation("首页内容页信息展示")
     @RequestMapping(value = "/content", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<HomeContentResult> content() {
-        HomeContentResult contentResult = homeService.content();
-        return CommonResult.success(contentResult);
+        return CommonResult.success(homeService.content());
     }
 
     @ApiOperation("分页获取推荐商品")
@@ -58,7 +59,7 @@ public class HomeController {
     public CommonResult<List<CmsSubject>> getSubjectList(@RequestParam(required = false) Long cateId,
                                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
                                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        List<CmsSubject> subjectList = homeService.getSubjectList(cateId,pageSize,pageNum);
+        List<CmsSubject> subjectList = homeService.getSubjectList(cateId, pageSize, pageNum);
         return CommonResult.success(subjectList);
     }
 
@@ -67,7 +68,7 @@ public class HomeController {
     @ResponseBody
     public CommonResult<List<PmsProduct>> hotProductList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                          @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
-        List<PmsProduct> productList = homeService.hotProductList(pageNum,pageSize);
+        List<PmsProduct> productList = homeService.hotProductList(pageNum, pageSize);
         return CommonResult.success(productList);
     }
 
@@ -76,7 +77,7 @@ public class HomeController {
     @ResponseBody
     public CommonResult<List<PmsProduct>> newProductList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                          @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
-        List<PmsProduct> productList = homeService.newProductList(pageNum,pageSize);
+        List<PmsProduct> productList = homeService.newProductList(pageNum, pageSize);
         return CommonResult.success(productList);
     }
 
@@ -85,8 +86,8 @@ public class HomeController {
     @ResponseBody
     public CommonResult classifiedProductPage(@RequestParam(value = "pageNum", defaultValue = "1") @ApiParam("页码") Integer pageNum,
                                               @RequestParam(value = "pageSize", defaultValue = "10") @ApiParam("每页条数") Integer pageSize,
-                                              @RequestParam @ApiParam("商品分类ID") Long productCategoryId){
-        CommonPage<PmsProduct> resultPage = homeService.getPmsProductByProductCategoryId(pageNum,pageSize,productCategoryId);
+                                              @RequestParam @ApiParam("商品分类ID") Long productCategoryId) {
+        CommonPage<PmsProduct> resultPage = homeService.getPmsProductByProductCategoryId(pageNum, pageSize, productCategoryId);
         return CommonResult.success(resultPage);
     }
 }

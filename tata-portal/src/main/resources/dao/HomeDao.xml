@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tata.jiuye.portal.dao.HomeDao">
+
     <resultMap id="flashPromotionProduct" type="com.tata.jiuye.portal.domain.FlashPromotionProduct"
                extends="com.tata.jiuye.mapper.PmsProductMapper.BaseResultMap">
         <result column="flash_promotion_price" property="flashPromotionPrice"/>
