@@ -5,7 +5,7 @@ import com.tata.jiuye.model.UmsMemberReceiveAddress;
 import com.tata.jiuye.portal.service.UmsMemberReceiveAddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +18,10 @@ import java.util.List;
 @Controller
 @Api(tags = "UmsMemberReceiveAddressController", description = "会员收货地址管理")
 @RequestMapping("/member/address")
+@RequiredArgsConstructor
 public class UmsMemberReceiveAddressController {
-    @Autowired
-    private UmsMemberReceiveAddressService memberReceiveAddressService;
+
+    private final UmsMemberReceiveAddressService memberReceiveAddressService;
 
     @ApiOperation("添加收货地址")
     @RequestMapping(value = "/add", method = RequestMethod.POST)

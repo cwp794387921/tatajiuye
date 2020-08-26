@@ -5,6 +5,7 @@ import com.tata.jiuye.portal.domain.OmsOrderReturnApplyParam;
 import com.tata.jiuye.portal.service.OmsPortalOrderReturnApplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Api(tags = "OmsPortalOrderReturnApplyController", description = "申请退货管理")
 @RequestMapping("/returnApply")
+@RequiredArgsConstructor
 public class OmsPortalOrderReturnApplyController {
-    @Autowired
-    private OmsPortalOrderReturnApplyService returnApplyService;
+
+    private final OmsPortalOrderReturnApplyService returnApplyService;
 
     @ApiOperation("申请退货")
     @RequestMapping(value = "/create", method = RequestMethod.POST)

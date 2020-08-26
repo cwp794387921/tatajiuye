@@ -7,7 +7,7 @@ import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.portal.service.PortalBrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +20,10 @@ import java.util.List;
 @Controller
 @Api(tags = "PortalBrandController", description = "前台品牌管理")
 @RequestMapping("/brand")
+@RequiredArgsConstructor
 public class PortalBrandController {
 
-    @Autowired
-    private PortalBrandService homeBrandService;
+    private final PortalBrandService homeBrandService;
 
     @ApiOperation("分页获取推荐品牌")
     @RequestMapping(value = "/recommendList", method = RequestMethod.GET)
@@ -48,7 +48,7 @@ public class PortalBrandController {
     public CommonResult<CommonPage<PmsProduct>> productList(@RequestParam Long brandId,
                                                             @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                             @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
-        CommonPage<PmsProduct> result = homeBrandService.productList(brandId,pageNum, pageSize);
+        CommonPage<PmsProduct> result = homeBrandService.productList(brandId, pageNum, pageSize);
         return CommonResult.success(result);
     }
 }

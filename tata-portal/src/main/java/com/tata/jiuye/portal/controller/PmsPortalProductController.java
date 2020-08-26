@@ -9,6 +9,7 @@ import com.tata.jiuye.portal.service.PmsPortalProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,10 @@ import java.util.List;
 @Controller
 @Api(tags = "PmsPortalProductController", description = "前台商品管理")
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class PmsPortalProductController {
 
-    @Autowired
-    private PmsPortalProductService portalProductService;
+    private final PmsPortalProductService portalProductService;
 
     @ApiOperation(value = "综合搜索、筛选、排序")
     @ApiImplicitParam(name = "sort", value = "排序字段:0->按相关度；1->按新品；2->按销量；3->价格从低到高；4->价格从高到低",

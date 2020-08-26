@@ -8,6 +8,7 @@ import com.tata.jiuye.portal.service.OmsCartItemService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +22,11 @@ import java.util.List;
 @Controller
 @Api(tags = "OmsCartItemController", description = "购物车管理")
 @RequestMapping("/cart")
+@RequiredArgsConstructor
 public class OmsCartItemController {
-    @Autowired
-    private OmsCartItemService cartItemService;
-    @Autowired
-    private UmsMemberService memberService;
+
+    private final UmsMemberService memberService;
+    private final OmsCartItemService cartItemService;
 
     @ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add", method = RequestMethod.POST)

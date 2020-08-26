@@ -11,7 +11,7 @@ import com.tata.jiuye.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,20 +24,19 @@ import java.util.List;
 @Controller
 @Api(tags = "UmsMemberCouponController", description = "用户优惠券管理")
 @RequestMapping("/member/coupon")
+@RequiredArgsConstructor
 public class UmsMemberCouponController {
-    @Autowired
-    private UmsMemberCouponService memberCouponService;
-    @Autowired
-    private OmsCartItemService cartItemService;
-    @Autowired
-    private UmsMemberService memberService;
+
+    private final UmsMemberService memberService;
+    private final OmsCartItemService cartItemService;
+    private final UmsMemberCouponService memberCouponService;
 
     @ApiOperation("领取指定优惠券")
     @RequestMapping(value = "/add/{couponId}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult add(@PathVariable Long couponId) {
         memberCouponService.add(couponId);
-        return CommonResult.success(null,"领取成功");
+        return CommonResult.success(null, "领取成功");
     }
 
     @ApiOperation("获取用户优惠券历史列表")

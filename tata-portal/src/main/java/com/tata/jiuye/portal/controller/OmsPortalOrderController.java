@@ -9,6 +9,7 @@ import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,10 @@ import java.util.Map;
 @Controller
 @Api(tags = "OmsPortalOrderController", description = "订单管理")
 @RequestMapping("/order")
+@RequiredArgsConstructor
 public class OmsPortalOrderController {
-    @Autowired
-    private OmsPortalOrderService portalOrderService;
+
+    private final OmsPortalOrderService portalOrderService;
 
     @ApiOperation("根据购物车信息生成确认单信息")
     @RequestMapping(value = "/generateConfirmOrder", method = RequestMethod.POST)
