@@ -4,9 +4,9 @@ spring:
   profiles:
     active: dev #默认为开发环境
 
-mybatis:
+mybatis-plus:
   mapper-locations:
-    - classpath:dao/*.xml
+    - classpath*:dao/*.xml
     - classpath*:com/**/mapper/*.xml
 
   configuration:

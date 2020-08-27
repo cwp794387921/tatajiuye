@@ -4,7 +4,6 @@ import com.tata.jiuye.model.CmsSubject;
 import com.tata.jiuye.model.PmsBrand;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.portal.domain.FlashPromotionProduct;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,7 +13,6 @@ import java.util.List;
  * 首页内容管理自定义Dao
  * Created by macro on 2019/1/28.
  */
-@Mapper
 public interface HomeDao {
 
     /**
