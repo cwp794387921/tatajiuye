@@ -21,6 +21,7 @@
     <result column="growth" jdbcType="INTEGER" property="growth" />
     <result column="luckey_count" jdbcType="INTEGER" property="luckeyCount" />
     <result column="history_integration" jdbcType="INTEGER" property="historyIntegration" />
+    <result column="openid" jdbcType="VARCHAR" property="openId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -98,6 +99,12 @@
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
+  </select>
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ums_member
+    where openid = #{openid,jdbcType=VARCHAR}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 

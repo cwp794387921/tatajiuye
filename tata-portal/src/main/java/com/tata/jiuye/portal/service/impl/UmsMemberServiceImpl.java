@@ -211,7 +211,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 //没有该用户进行添加操作
                 JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
                 LOGGER.info("==========微信用户信息==========："+object);
-                //String openId = jsonObject.get("openid").toString();
                 LOGGER.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
                 LOGGER.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
                 umsMember = new UmsMember();
@@ -222,6 +221,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 umsMember.setStatus(1);
                 umsMember.setIcon(object.get("headimgurl").toString());
                 umsMember.setGender((int) object.get("sex"));
+                umsMember.setOpenId(openId);
                 //获取默认会员等级并设置
                 UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
                 levelExample.createCriteria().andDefaultStatusEqualTo(1);
@@ -229,6 +229,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 if (!CollectionUtils.isEmpty(memberLevelList)) {
                     umsMember.setMemberLevelId(memberLevelList.get(0).getId());
                 }
+                //绑定关系
+
                 memberMapper.insert(umsMember);
             }
 

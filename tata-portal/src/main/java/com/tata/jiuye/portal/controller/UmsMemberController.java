@@ -114,11 +114,11 @@ public class UmsMemberController {
     @ResponseBody
     public CommonResult WxApplogin(@RequestParam String wxCode) {
         if (StrUtil.isEmpty(wxCode)) {
-            return CommonResult.failed("wxCode is wrong,请与管理员联系");
+            return CommonResult.validateFailed("wxCode is wrong,请与管理员联系");
         }
         String token = memberService.Wxlogin(wxCode);
         if (token == null) {
-            return CommonResult.validateFailed("登陆失败");
+            return CommonResult.failed("登陆失败");
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
