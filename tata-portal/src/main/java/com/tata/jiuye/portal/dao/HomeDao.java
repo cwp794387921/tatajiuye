@@ -5,6 +5,7 @@ import com.tata.jiuye.model.PmsBrand;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.portal.domain.FlashPromotionProduct;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public interface HomeDao {
     /**
      * 获取推荐品牌
      */
+
+
+
     List<PmsBrand> getRecommendBrandList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 
     /**

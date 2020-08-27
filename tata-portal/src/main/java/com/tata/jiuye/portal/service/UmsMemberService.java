@@ -61,4 +61,9 @@ public interface UmsMemberService {
      * 刷新token
      */
     String refreshToken(String token);
+
+    /**
+     * 微信小程序登陆后获取token
+     */
+    String Wxlogin(String wxCode);
 }

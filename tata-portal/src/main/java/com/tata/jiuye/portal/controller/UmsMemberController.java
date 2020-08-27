@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
@@ -28,6 +29,7 @@ import java.util.Map;
 @RequestMapping("/sso")
 @RequiredArgsConstructor
 public class UmsMemberController {
+
 
     private final UmsMemberService memberService;
 
@@ -103,6 +105,23 @@ public class UmsMemberController {
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", refreshToken);
+        tokenMap.put("tokenHead", tokenHead);
+        return CommonResult.success(tokenMap);
+    }
+
+    @ApiOperation("微信小程序登陆")
+    @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult WxApplogin(@RequestParam String wxCode) {
+        if (StrUtil.isEmpty(wxCode)) {
+            return CommonResult.failed("wxCode is wrong,请与管理员联系");
+        }
+        String token = memberService.Wxlogin(wxCode);
+        if (token == null) {
+            return CommonResult.validateFailed("登陆失败");
+        }
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }

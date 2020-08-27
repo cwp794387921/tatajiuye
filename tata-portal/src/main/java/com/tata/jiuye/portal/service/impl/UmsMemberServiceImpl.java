@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.UmsMemberLevelMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
@@ -10,9 +11,12 @@ import com.tata.jiuye.model.UmsMemberLevelExample;
 import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberService;
+import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +44,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class UmsMemberServiceImpl implements UmsMemberService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final UmsMemberMapper memberMapper;
@@ -188,6 +193,51 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         String realAuthCode = memberCacheService.getAuthCode(telephone);
         return authCode.equals(realAuthCode);
+    }
+
+    @Override
+    public String Wxlogin(String wxCode){
+        JSONObject result = GetWeiXinCode.getOpenId(wxCode);
+        String accessToken = result.get("access_token").toString();
+        String openId = result.get("openid").toString();
+        String token = null;
+        try {
+            //查询是否已有该用户
+            UmsMember umsMember = memberMapper.selectById(openId);
+            if(umsMember!=null){
+                //已注册 直接登陆
+
+            }else{
+                //没有该用户进行添加操作
+                JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
+                LOGGER.info("==========微信用户信息==========："+object);
+                //String openId = jsonObject.get("openid").toString();
+                LOGGER.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
+                LOGGER.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
+                umsMember = new UmsMember();
+                umsMember.setUsername(object.get("nickname").toString());
+                umsMember.setPhone(null);
+                umsMember.setPassword(passwordEncoder.encode("123456"));
+                umsMember.setCreateTime(new Date());
+                umsMember.setStatus(1);
+                umsMember.setIcon(object.get("headimgurl").toString());
+                umsMember.setGender((int) object.get("sex"));
+                //获取默认会员等级并设置
+                UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
+                levelExample.createCriteria().andDefaultStatusEqualTo(1);
+                List<UmsMemberLevel> memberLevelList = memberLevelMapper.selectByExample(levelExample);
+                if (!CollectionUtils.isEmpty(memberLevelList)) {
+                    umsMember.setMemberLevelId(memberLevelList.get(0).getId());
+                }
+                memberMapper.insert(umsMember);
+            }
+
+            UserDetails userDetails=new MemberDetails(umsMember);
+            token = jwtTokenUtil.generateToken(userDetails);
+        } catch (AuthenticationException e) {
+            LOGGER.warn("登录异常:{}", e.getMessage());
+        }
+        return token;
     }
 
 }

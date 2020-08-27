@@ -8,7 +8,6 @@
         <result column="flash_promotion_count" property="flashPromotionCount"/>
         <result column="flash_promotion_limit" property="flashPromotionLimit"/>
     </resultMap>
-
     <select id="getRecommendBrandList" resultMap="com.tata.jiuye.mapper.PmsBrandMapper.BaseResultMap">
         SELECT b.*
         FROM
@@ -75,7 +74,7 @@
         LIMIT #{offset}, #{limit};
     </select>
 
-    <select id="getPmsProductByProductCategoryId" resultMap="com.tata.jiuye.mapper.PmsProductMapper.BaseResultMap">
+    <select id="getPmsProductByProductCategoryId"  resultMap="com.tata.jiuye.mapper.PmsProductMapper.BaseResultMap">
         SELECT pp.* FROM
             pms_product pp
         LEFT JOIN pms_product_category ppc ON ppc.id = pp.product_category_id

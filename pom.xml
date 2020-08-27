@@ -49,10 +49,10 @@
         <logstash-logback.version>5.3</logstash-logback.version>
         <minio.version>3.0.10</minio.version>
         <guava.version>20.0</guava.version>
-
         <tata-common.version>1.0.0-SNAPSHOT</tata-common.version>
         <tata-mbg.version>1.0.0-SNAPSHOT</tata-mbg.version>
         <tata-security.version>1.0.0-SNAPSHOT</tata-security.version>
+        <fastjson.version>1.2.45</fastjson.version>
     </properties>
 
     <dependencies>
@@ -99,7 +99,11 @@
                 <artifactId>tata-mbg</artifactId>
                 <version>${tata-mbg.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
             <!--mall安全模块-->
             <dependency>
                 <groupId>com.tata.jiuye</groupId>
