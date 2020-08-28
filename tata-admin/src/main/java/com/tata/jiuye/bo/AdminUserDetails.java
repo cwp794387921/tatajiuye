@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 /**
  * SpringSecurity需要的用户详情
- *1111
  * @author lewis
  */
 public class AdminUserDetails implements UserDetails {

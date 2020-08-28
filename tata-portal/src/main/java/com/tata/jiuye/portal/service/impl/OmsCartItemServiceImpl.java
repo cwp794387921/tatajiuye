@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,11 +29,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OmsCartItemServiceImpl implements OmsCartItemService {
-
-    private final PortalProductDao productDao;
-    private final UmsMemberService memberService;
-    private final OmsCartItemMapper cartItemMapper;
-    private final OmsPromotionService promotionService;
+    @Resource
+    private  PortalProductDao productDao;
+    @Resource
+    private  UmsMemberService memberService;
+    @Resource
+    private  OmsCartItemMapper cartItemMapper;
+    @Resource
+    private  OmsPromotionService promotionService;
 
     @Override
     public int add(OmsCartItem cartItem) {

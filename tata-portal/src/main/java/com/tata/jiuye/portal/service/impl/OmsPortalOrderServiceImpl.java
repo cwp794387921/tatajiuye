@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -32,22 +33,36 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
-
-    private final UmsMemberService memberService;
-    private final OmsCartItemService cartItemService;
-    private final UmsMemberReceiveAddressService memberReceiveAddressService;
-    private final UmsMemberCouponService memberCouponService;
-    private final UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
-    private final PmsSkuStockMapper skuStockMapper;
-    private final SmsCouponHistoryDao couponHistoryDao;
-    private final OmsOrderMapper orderMapper;
-    private final PortalOrderItemDao orderItemDao;
-    private final SmsCouponHistoryMapper couponHistoryMapper;
-    private final RedisService redisService;
-    private final PortalOrderDao portalOrderDao;
-    private final OmsOrderSettingMapper orderSettingMapper;
-    private final OmsOrderItemMapper orderItemMapper;
-    private final CancelOrderSender cancelOrderSender;
+    @Resource
+    private  UmsMemberService memberService;
+    @Resource
+    private  OmsCartItemService cartItemService;
+    @Resource
+    private  UmsMemberReceiveAddressService memberReceiveAddressService;
+    @Resource
+    private  UmsMemberCouponService memberCouponService;
+    @Resource
+    private  UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
+    @Resource
+    private  PmsSkuStockMapper skuStockMapper;
+    @Resource
+    private  SmsCouponHistoryDao couponHistoryDao;
+    @Resource
+    private  OmsOrderMapper orderMapper;
+    @Resource
+    private  PortalOrderItemDao orderItemDao;
+    @Resource
+    private  SmsCouponHistoryMapper couponHistoryMapper;
+    @Resource
+    private  RedisService redisService;
+    @Resource
+    private  PortalOrderDao portalOrderDao;
+    @Resource
+    private  OmsOrderSettingMapper orderSettingMapper;
+    @Resource
+    private  OmsOrderItemMapper orderItemMapper;
+    @Resource
+    private  CancelOrderSender cancelOrderSender;
 
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;

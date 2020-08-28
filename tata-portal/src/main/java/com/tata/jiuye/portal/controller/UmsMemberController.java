@@ -119,11 +119,11 @@ public class UmsMemberController {
     @ApiOperation("微信小程序登陆")
     @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult WxApplogin(@RequestParam String wxCode) {
-        if (StrUtil.isEmpty(wxCode)) {
-            return CommonResult.validateFailed("wxCode is wrong,请与管理员联系");
+    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam String phone,@RequestParam(value = "fatherId", required=false) String fatherId) {
+        if (StrUtil.isEmpty(wxCode)||StrUtil.isEmpty(phone)) {
+            return CommonResult.validateFailed("参数缺失");
         }
-        String token = memberService.Wxlogin(wxCode);
+        String token = memberService.Wxlogin(wxCode,phone,fatherId);
         if (token == null) {
             return CommonResult.failed("登陆失败");
         }

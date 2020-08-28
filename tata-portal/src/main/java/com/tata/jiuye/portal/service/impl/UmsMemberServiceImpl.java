@@ -45,9 +45,11 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class UmsMemberServiceImpl implements UmsMemberService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private static final Logger log = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
+    @Resource
+    private  PasswordEncoder passwordEncoder;
+    @Resource
+    private  JwtTokenUtil jwtTokenUtil;
     @Resource
     private  UmsMemberMapper memberMapper;
     @Resource
@@ -200,14 +202,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
-    public String Wxlogin(String wxCode){
-        JSONObject result = GetWeiXinCode.getOpenId(wxCode);
-        String accessToken = result.get("access_token").toString();
-        String openId = result.get("openid").toString();
-        //String openId="11111";
-        //String accessToken="1111";
+    public String Wxlogin(String wxCode,String phone,String fatherId){
         String token = null;
         try {
+            JSONObject result = GetWeiXinCode.getOpenId(wxCode);
+            String accessToken = result.get("access_token").toString();
+            String openId = result.get("openid").toString();
+            //String openId="11111";
+            //String accessToken="1111";
             //查询是否已有该用户
             UmsMember umsMember = memberMapper.selectById(openId);
             if(umsMember!=null){
@@ -216,12 +218,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             }else{
                 //没有该用户进行添加操作
                 JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
-                LOGGER.info("==========微信用户信息==========："+object);
-                LOGGER.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
-                LOGGER.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
+                log.info("==========微信用户信息==========："+object);
+                log.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
+                log.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
                 umsMember = new UmsMember();
-                umsMember.setUsername(object.get("nickname").toString());
-                umsMember.setPhone(null);
+                umsMember.setUsername(phone);
+                umsMember.setPhone(phone);
                 umsMember.setPassword(passwordEncoder.encode("123456"));
                 umsMember.setCreateTime(new Date());
                 umsMember.setStatus(1);
@@ -243,7 +245,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             UserDetails userDetails=new MemberDetails(umsMember);
             token = jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
-            LOGGER.warn("登录异常:{}", e.getMessage());
+            log.warn("登录异常:{}", e.getMessage());
+        }catch (Exception e){
+            log.info(e.getMessage());
         }
         return token;
     }

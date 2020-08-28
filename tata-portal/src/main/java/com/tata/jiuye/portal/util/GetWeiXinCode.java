@@ -114,7 +114,11 @@ public class GetWeiXinCode {
                 (code, appid, appsecret);
         String result = SendPushPost.sendGet(currentOpenIdurl);
         JSONObject obj = JSONObject.parseObject(result);
-        String accessToken = (String) obj.get("access_token");
+        System.out.println(obj);
+        if(obj.get("access_token")==null){
+            return null;
+        }
+        String accessToken = obj.get("access_token").toString();
         Integer expiresIn = (Integer) obj.get("expires_in");
         redisUtils.set(tokenKey, accessToken, expiresIn);
         //String openId = (String) obj.get("openid");

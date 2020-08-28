@@ -65,5 +65,5 @@ public interface UmsMemberService {
     /**
      * 微信小程序登陆后获取token
      */
-    String Wxlogin(String wxCode);
+    String Wxlogin(String wxCode,String phone,String fatherId);
 }
