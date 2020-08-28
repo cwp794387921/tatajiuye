@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,9 +25,10 @@ import java.util.List;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 public class OmsCartItemController {
-
-    private final UmsMemberService memberService;
-    private final OmsCartItemService cartItemService;
+    @Resource
+    private  UmsMemberService memberService;
+    @Resource
+    private  OmsCartItemService cartItemService;
 
     @ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add", method = RequestMethod.POST)

@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -47,9 +48,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UmsMemberMapper memberMapper;
-    private final UmsMemberLevelMapper memberLevelMapper;
-    private final UmsMemberCacheService memberCacheService;
+    @Resource
+    private  UmsMemberMapper memberMapper;
+    @Resource
+    private  UmsMemberLevelMapper memberLevelMapper;
+    @Resource
+    private  UmsMemberCacheService memberCacheService;
 
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
@@ -200,6 +204,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         JSONObject result = GetWeiXinCode.getOpenId(wxCode);
         String accessToken = result.get("access_token").toString();
         String openId = result.get("openid").toString();
+        //String openId="11111";
+        //String accessToken="1111";
         String token = null;
         try {
             //查询是否已有该用户

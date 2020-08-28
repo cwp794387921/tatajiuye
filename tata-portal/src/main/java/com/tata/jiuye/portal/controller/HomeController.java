@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -26,8 +27,8 @@ import java.util.List;
 @RequestMapping("/home")
 @RequiredArgsConstructor
 public class HomeController {
-
-    private final HomeService homeService;
+    @Resource
+    private  HomeService homeService;
 
     @ApiOperation("首页内容页信息展示")
     @RequestMapping(value = "/content", method = RequestMethod.GET)

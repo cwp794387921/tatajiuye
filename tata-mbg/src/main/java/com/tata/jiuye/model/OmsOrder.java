@@ -16,6 +16,8 @@ public class OmsOrder implements Serializable {
     @ApiModelProperty(value = "订单编号")
     private String orderSn;
 
+    private String channelOrderNum;
+
     @ApiModelProperty(value = "提交时间")
     private Date createTime;
 
@@ -140,6 +142,14 @@ public class OmsOrder implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public String getChannelOrderNum() {
+        return channelOrderNum;
+    }
+
+    public void setChannelOrderNum(String channelOrderNum) {
+        this.channelOrderNum = channelOrderNum;
     }
 
     public void setId(Long id) {

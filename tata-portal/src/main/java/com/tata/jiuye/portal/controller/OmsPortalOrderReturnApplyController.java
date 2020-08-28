@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
+
 /**
  * 申请退货管理Controller
  * Created by macro on 2018/10/17.
@@ -22,8 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/returnApply")
 @RequiredArgsConstructor
 public class OmsPortalOrderReturnApplyController {
-
-    private final OmsPortalOrderReturnApplyService returnApplyService;
+    @Resource
+    private  OmsPortalOrderReturnApplyService returnApplyService;
 
     @ApiOperation("申请退货")
     @RequestMapping(value = "/create", method = RequestMethod.POST)

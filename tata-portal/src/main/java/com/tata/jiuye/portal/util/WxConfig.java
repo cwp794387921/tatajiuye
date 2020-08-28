@@ -1,18 +1,19 @@
 package com.tata.jiuye.portal.util;
 
+import com.github.wxpay.sdk.WXPayConfig;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
-public class WxConfig {
+public class WxConfig implements WXPayConfig {
 
     private byte[] certData;
 
     public WxConfig() throws Exception {
-        URL resource = WxConfig.class.getClassLoader().getResource("test/apiclient_cert.p12");
-//        String certPath = "/javadata/DGJAVA/tomcat/cert/gxzjj/test/apiclient_cert.p12";
+        URL resource = WxConfig.class.getClassLoader().getResource("apiclient_cert.p12");
         String path = resource.getPath();
         File file = new File(path);
         InputStream certStream = new FileInputStream(file);
@@ -20,12 +21,13 @@ public class WxConfig {
         certStream.read(this.certData);
         certStream.close();
     }
-
+    @Override
     public String  getAppID() {
         return "";
     }
 
     //商户号
+    @Override
     public String getMchID() {
         return "";
     }
@@ -33,14 +35,28 @@ public class WxConfig {
     public String getAppSecret() {
         return "";
     }
-
+    @Override
     public String getKey() {
         return "";
+    }
+
+    public String getNotifyUrl(){
+        return "http://localhost/pay/wxNotify";
     }
 
     public InputStream getCertStream() {
         ByteArrayInputStream certBis = new ByteArrayInputStream(this.certData);
         return certBis;
+    }
+
+    @Override
+    public int getHttpConnectTimeoutMs() {
+        return 8000;
+    }
+
+    @Override
+    public int getHttpReadTimeoutMs() {
+        return 10000;
     }
 
     /**

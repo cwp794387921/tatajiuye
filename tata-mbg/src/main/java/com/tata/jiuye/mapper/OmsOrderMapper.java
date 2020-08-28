@@ -22,6 +22,8 @@ public interface OmsOrderMapper extends BaseMapper<OmsOrder> {
 
     OmsOrder selectByPrimaryKey(Long id);
 
+    OmsOrder selectByOrderNum(String  orderNum);
+
     int updateByExampleSelective(@Param("record") OmsOrder record, @Param("example") OmsOrderExample example);
 
     int updateByExample(@Param("record") OmsOrder record, @Param("example") OmsOrderExample example);

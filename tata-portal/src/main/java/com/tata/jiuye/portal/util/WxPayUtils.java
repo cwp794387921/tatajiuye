@@ -16,10 +16,6 @@ import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.util.*;
 
-/**
- * @author tangxs
- * @date 18
- */
 public class WxPayUtils {
     //微信支付工具类
     private static String originKey;
