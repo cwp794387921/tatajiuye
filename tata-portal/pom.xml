@@ -18,7 +18,11 @@
             <groupId>com.tata.jiuye</groupId>
             <artifactId>tata-mbg</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.3</version>
+        </dependency>
         <dependency>
             <groupId>com.tata.jiuye</groupId>
             <artifactId>tata-security</artifactId>
