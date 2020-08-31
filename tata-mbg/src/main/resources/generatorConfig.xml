@@ -30,14 +30,14 @@
             <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.tata.jiuye.model" targetProject="mall-mbg\src\main\java"/>
+        <javaModelGenerator targetPackage="com.tata.jiuye.model" targetProject="tata-mbg\src\main\java"/>
 
-        <sqlMapGenerator targetPackage="com.tata.jiuye.mapper" targetProject="mall-mbg\src\main\resources"/>
+        <sqlMapGenerator targetPackage="com.tata.jiuye.mapper" targetProject="tata-mbg\src\main\resources"/>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.tata.jiuye.mapper"
-                             targetProject="mall-mbg\src\main\java"/>
+                             targetProject="tata-mbg\src\main\java"/>
         <!--生成全部表tableName设为%-->
-        <table tableName="%">
+        <table tableName="acct_settle_info">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

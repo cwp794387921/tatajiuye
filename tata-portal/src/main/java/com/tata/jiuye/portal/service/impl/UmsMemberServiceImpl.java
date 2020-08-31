@@ -2,16 +2,13 @@ package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.exception.Asserts;
-import com.tata.jiuye.mapper.UmsMemberLevelMapper;
-import com.tata.jiuye.mapper.UmsMemberMapper;
-import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.model.UmsMemberExample;
-import com.tata.jiuye.model.UmsMemberLevel;
-import com.tata.jiuye.model.UmsMemberLevelExample;
+import com.tata.jiuye.mapper.*;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
+import com.tata.jiuye.portal.util.GlobalConstants;
 import com.tata.jiuye.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +25,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +42,7 @@ import java.util.Random;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class UmsMemberServiceImpl implements UmsMemberService {
 
     private static final Logger log = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
@@ -52,6 +52,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private  JwtTokenUtil jwtTokenUtil;
     @Resource
     private  UmsMemberMapper memberMapper;
+    @Resource
+    private UmsMemberAndMemberMapper memberAndMemberMapper;
+    @Resource
+    private UmsMemberAndBranchMapper memberAndBranchMapper;
+    @Resource
+    private AcctInfoMapper acctInfoMapper;
     @Resource
     private  UmsMemberLevelMapper memberLevelMapper;
     @Resource
@@ -208,13 +214,16 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             JSONObject result = GetWeiXinCode.getOpenId(wxCode);
             String accessToken = result.get("access_token").toString();
             String openId = result.get("openid").toString();
-            //String openId="11111";
-            //String accessToken="1111";
+           // String openId="1111";
+           // String accessToken="1111";
             //查询是否已有该用户
-            UmsMember umsMember = memberMapper.selectById(openId);
+            UmsMember umsMember = memberMapper.selectByUsername(phone);
             if(umsMember!=null){
                 //已注册 直接登陆
-
+                log.info("===》用户已存在，直接登录");
+                //绑定openid
+                umsMember.setOpenId(openId);
+                memberMapper.updateByPrimaryKey(umsMember);
             }else{
                 //没有该用户进行添加操作
                 JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
@@ -227,8 +236,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 umsMember.setPassword(passwordEncoder.encode("123456"));
                 umsMember.setCreateTime(new Date());
                 umsMember.setStatus(1);
-                umsMember.setIcon(object.get("headimgurl").toString());
-                umsMember.setGender((int) object.get("sex"));
+                //umsMember.setIcon(object.get("headimgurl").toString());
+                //umsMember.setGender((int) object.get("sex"));
                 umsMember.setOpenId(openId);
                 //获取默认会员等级并设置
                 UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
@@ -238,16 +247,66 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                     umsMember.setMemberLevelId(memberLevelList.get(0).getId());
                 }
                 //绑定关系
-
+                String grandPaId;
+                String parent;
+                if(fatherId!=null){
+                    log.info("邀请人手机号:"+fatherId);
+                    UmsMember father = memberMapper.selectByUsername(fatherId);
+                    UmsMemberAndMember fatherInfo=memberAndMemberMapper.selectByUsername(fatherId);
+                    UmsMemberAndBranch fatherBranchInfo=memberAndBranchMapper.selectById(fatherId);
+                    if(father==null||fatherInfo==null||fatherBranchInfo==null){
+                        log.info("邀请人信息不存在");
+                        return null;
+                    }
+                    grandPaId=fatherInfo.getFatherId();
+                    if(fatherBranchInfo.getIsBranch()==0){
+                        parent=fatherBranchInfo.getParent();
+                    }else{
+                        log.info("邀请人配送中心编号:"+fatherBranchInfo.getUserBarnch());
+                        parent=fatherBranchInfo.getUserBarnch();
+                    }
+                }else{
+                    log.info("未携带邀请码注册");
+                    log.info("上级绑定到平台");
+                    fatherId="00000000";
+                    grandPaId="00000000";
+                    parent="0000000000";
+                }
+                //生成会员关系表
+                UmsMemberAndMember umsMemberAndMember=new UmsMemberAndMember();
+                umsMemberAndMember.setUserName(phone);
+                umsMemberAndMember.setCreateTime(new Date());
+                umsMemberAndMember.setFatherId(fatherId);
+                umsMemberAndMember.setGrandpaId(grandPaId);
+                umsMemberAndMember.setRecommendId(fatherId);
+                //生成会员配送中心关系表
+                UmsMemberAndBranch umsMemberAndBranch=new UmsMemberAndBranch();
+                umsMemberAndBranch.setIsBranch(0);
+                umsMemberAndBranch.setParent(parent);
+                umsMemberAndBranch.setUserName(phone);
+                //生成会员账户信息表
+                String acctId=phone+ GlobalConstants.ACCTITAIL2;
+                AcctInfo acctInfo=new AcctInfo();
+                acctInfo.setAcctId(acctId);
+                acctInfo.setBalance(new BigDecimal(0));
+                acctInfo.setMemberNo(phone);
+                acctInfo.setEffDate(new Date());
+                acctInfo.setInsertTime(new Date());
+                acctInfo.setUpdateTime(new Date());
+                acctInfo.setStatus(1);
+                //插入会员信息
                 memberMapper.insert(umsMember);
+                memberAndMemberMapper.insert(umsMemberAndMember);
+                memberAndBranchMapper.insert(umsMemberAndBranch);
+                acctInfoMapper.insert(acctInfo);
             }
-
             UserDetails userDetails=new MemberDetails(umsMember);
             token = jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
             log.warn("登录异常:{}", e.getMessage());
         }catch (Exception e){
             log.info(e.getMessage());
+            throw new RuntimeException();
         }
         return token;
     }

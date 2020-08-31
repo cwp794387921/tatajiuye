@@ -4,9 +4,13 @@ import cn.hutool.core.util.StrUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
+import com.tata.jiuye.portal.service.impl.UmsMemberServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -35,7 +39,10 @@ import java.util.Map;
 @Api(tags = "UmsMemberController", description = "会员登录注册管理")
 @RequestMapping("/sso")
 @RequiredArgsConstructor
+@Slf4j
 public class UmsMemberController {
+
+    private static final Logger log = LoggerFactory.getLogger(UmsMemberController.class);
 
     @Resource
     private  UmsMemberService memberService;
@@ -125,11 +132,22 @@ public class UmsMemberController {
         }
         String token = memberService.Wxlogin(wxCode,phone,fatherId);
         if (token == null) {
-            return CommonResult.failed("登陆失败");
+            return CommonResult.failed("登陆或注册失败,请联系管理员");
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }
+
+    @ApiOperation("短信验证")
+    @RequestMapping(value = "/smsAPI", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult smsAPI(@RequestParam String phone, String code) {
+
+
+        return CommonResult.failed();
+    }
+
+
 }

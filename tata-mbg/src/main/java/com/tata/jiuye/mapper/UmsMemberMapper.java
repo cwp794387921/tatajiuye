@@ -19,6 +19,8 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
 
     UmsMember selectById(String openid);
 
+    UmsMember selectByUsername(String username);
+
     int insert(UmsMember record);
 
     int insertSelective(UmsMember record);
