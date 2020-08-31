@@ -2,9 +2,11 @@ package com.tata.jiuye.portal.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.impl.UmsMemberServiceImpl;
+import com.tata.jiuye.portal.util.ValidateCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,8 +49,13 @@ public class UmsMemberController {
 
     private static final Logger log = LoggerFactory.getLogger(UmsMemberController.class);
 
+    protected HttpServletRequest request;
+
     @Resource
     private  UmsMemberService memberService;
+
+    @Resource
+    private  RedisService redisService;
 
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
@@ -140,13 +150,40 @@ public class UmsMemberController {
         return CommonResult.success(tokenMap);
     }
 
-    @ApiOperation("短信验证")
+    /**
+     * 响应验证码页面
+     * @return
+     */
+    @ApiOperation("图文验证码")
+    @RequestMapping(value="/validateCode")
+    public String validateCode(String phone,Model model, HttpServletResponse response) throws Exception{
+        // 设置响应的类型格式为图片格式
+        if(StrUtil.isEmpty(phone)){
+            model.addAttribute("msg","参数错误");
+            return "message";
+        }
+        /** 将验证码放入缓存  **/
+        ValidateCode vCode = new ValidateCode(120,40);
+        redisService.set(phone,vCode.getCode(),5*60);//五分钟
+        response.setContentType("image/jpeg"); //禁止图像缓存。
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        HttpSession session = request.getSession();
+        log.info("图形验证码="+vCode.getCode());
+        session.setAttribute("verifyCode", vCode.getCode());
+        vCode.write(response.getOutputStream());
+        return null;
+    }
+
+
+    @ApiOperation("获取短信验证码")
     @RequestMapping(value = "/smsAPI", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult smsAPI(@RequestParam String phone, String code) {
+    public CommonResult smsAPI(@RequestParam String phone) {
 
 
-        return CommonResult.failed();
+        return CommonResult.success("短信发送成功");
     }
 
 
