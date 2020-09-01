@@ -231,7 +231,8 @@ public class HomeServiceImpl implements HomeService {
         //获取所有升级为VIP商品
         List<PmsProduct> pmsProducts = productMapper.getProductByIfJoinVipProduct(1);
         if(CollectionUtils.isEmpty(pmsProducts)){
-            Asserts.fail("暂无加入VIP的商品");
+            return null;
+            //Asserts.fail("暂无加入VIP的商品");
         }
         Long ifJoinVipProductId = pmsProducts.get(0).getId();
         log.info("------------------------------加入VIP的商品ID 为 : "+ifJoinVipProductId);

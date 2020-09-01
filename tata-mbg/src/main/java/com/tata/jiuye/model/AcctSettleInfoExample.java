@@ -106,6 +106,66 @@ public class AcctSettleInfoExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andIdIsNull() {
+            addCriterion("id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIsNotNull() {
+            addCriterion("id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdEqualTo(Long value) {
+            addCriterion("id =", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotEqualTo(Long value) {
+            addCriterion("id <>", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThan(Long value) {
+            addCriterion("id >", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("id >=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThan(Long value) {
+            addCriterion("id <", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThanOrEqualTo(Long value) {
+            addCriterion("id <=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<Long> values) {
+            addCriterion("id in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotIn(List<Long> values) {
+            addCriterion("id not in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdBetween(Long value1, Long value2) {
+            addCriterion("id between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotBetween(Long value1, Long value2) {
+            addCriterion("id not between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
         public Criteria andOrderIdIsNull() {
             addCriterion("order_id is null");
             return (Criteria) this;
@@ -493,6 +553,206 @@ public class AcctSettleInfoExample {
 
         public Criteria andInsertTimeNotBetween(Date value1, Date value2) {
             addCriterion("insert_time not between", value1, value2, "insertTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeIsNull() {
+            addCriterion("flow_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeIsNotNull() {
+            addCriterion("flow_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeEqualTo(String value) {
+            addCriterion("flow_type =", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeNotEqualTo(String value) {
+            addCriterion("flow_type <>", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeGreaterThan(String value) {
+            addCriterion("flow_type >", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("flow_type >=", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeLessThan(String value) {
+            addCriterion("flow_type <", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeLessThanOrEqualTo(String value) {
+            addCriterion("flow_type <=", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeLike(String value) {
+            addCriterion("flow_type like", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeNotLike(String value) {
+            addCriterion("flow_type not like", value, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeIn(List<String> values) {
+            addCriterion("flow_type in", values, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeNotIn(List<String> values) {
+            addCriterion("flow_type not in", values, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeBetween(String value1, String value2) {
+            addCriterion("flow_type between", value1, value2, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeNotBetween(String value1, String value2) {
+            addCriterion("flow_type not between", value1, value2, "flowType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailIsNull() {
+            addCriterion("flow_type_detail is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailIsNotNull() {
+            addCriterion("flow_type_detail is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailEqualTo(String value) {
+            addCriterion("flow_type_detail =", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailNotEqualTo(String value) {
+            addCriterion("flow_type_detail <>", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailGreaterThan(String value) {
+            addCriterion("flow_type_detail >", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailGreaterThanOrEqualTo(String value) {
+            addCriterion("flow_type_detail >=", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailLessThan(String value) {
+            addCriterion("flow_type_detail <", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailLessThanOrEqualTo(String value) {
+            addCriterion("flow_type_detail <=", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailLike(String value) {
+            addCriterion("flow_type_detail like", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailNotLike(String value) {
+            addCriterion("flow_type_detail not like", value, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailIn(List<String> values) {
+            addCriterion("flow_type_detail in", values, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailNotIn(List<String> values) {
+            addCriterion("flow_type_detail not in", values, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailBetween(String value1, String value2) {
+            addCriterion("flow_type_detail between", value1, value2, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlowTypeDetailNotBetween(String value1, String value2) {
+            addCriterion("flow_type_detail not between", value1, value2, "flowTypeDetail");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIsNull() {
+            addCriterion("source_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIsNotNull() {
+            addCriterion("source_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdEqualTo(Long value) {
+            addCriterion("source_id =", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotEqualTo(Long value) {
+            addCriterion("source_id <>", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdGreaterThan(Long value) {
+            addCriterion("source_id >", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("source_id >=", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdLessThan(Long value) {
+            addCriterion("source_id <", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdLessThanOrEqualTo(Long value) {
+            addCriterion("source_id <=", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIn(List<Long> values) {
+            addCriterion("source_id in", values, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotIn(List<Long> values) {
+            addCriterion("source_id not in", values, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdBetween(Long value1, Long value2) {
+            addCriterion("source_id between", value1, value2, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotBetween(Long value1, Long value2) {
+            addCriterion("source_id not between", value1, value2, "sourceId");
             return (Criteria) this;
         }
     }

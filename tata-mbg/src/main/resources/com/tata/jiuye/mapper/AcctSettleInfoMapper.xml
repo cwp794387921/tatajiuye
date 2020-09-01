@@ -2,12 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tata.jiuye.mapper.AcctSettleInfoMapper">
   <resultMap id="BaseResultMap" type="com.tata.jiuye.model.AcctSettleInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="acct_id" jdbcType="VARCHAR" property="acctId" />
     <result column="befor_bal" jdbcType="DECIMAL" property="beforBal" />
     <result column="change" jdbcType="DECIMAL" property="change" />
     <result column="after_bal" jdbcType="VARCHAR" property="afterBal" />
     <result column="insert_time" jdbcType="TIMESTAMP" property="insertTime" />
+    <result column="flow_type" jdbcType="VARCHAR" property="flowType" />
+    <result column="flow_type_detail" jdbcType="VARCHAR" property="flowTypeDetail" />
+    <result column="source_id" jdbcType="BIGINT" property="sourceId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    order_id, acct_id, befor_bal, change, after_bal, insert_time
+    id, order_id, acct_id, befor_bal, change, after_bal, insert_time, flow_type, flow_type_detail, 
+    source_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample" resultMap="BaseResultMap">
     select
@@ -84,6 +89,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from acct_settle_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from acct_settle_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample">
     delete from acct_settle_info
     <if test="_parameter != null">
@@ -91,14 +106,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.tata.jiuye.model.AcctSettleInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into acct_settle_info (order_id, acct_id, befor_bal, 
-      change, after_bal, insert_time
+      change, after_bal, insert_time, 
+      flow_type, flow_type_detail, source_id
       )
     values (#{orderId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{beforBal,jdbcType=DECIMAL}, 
-      #{change,jdbcType=DECIMAL}, #{afterBal,jdbcType=VARCHAR}, #{insertTime,jdbcType=TIMESTAMP}
+      #{change,jdbcType=DECIMAL}, #{afterBal,jdbcType=VARCHAR}, #{insertTime,jdbcType=TIMESTAMP}, 
+      #{flowType,jdbcType=VARCHAR}, #{flowTypeDetail,jdbcType=VARCHAR}, #{sourceId,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctSettleInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into acct_settle_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -118,6 +141,15 @@
       </if>
       <if test="insertTime != null">
         insert_time,
+      </if>
+      <if test="flowType != null">
+        flow_type,
+      </if>
+      <if test="flowTypeDetail != null">
+        flow_type_detail,
+      </if>
+      <if test="sourceId != null">
+        source_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -139,6 +171,15 @@
       <if test="insertTime != null">
         #{insertTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="flowType != null">
+        #{flowType,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeDetail != null">
+        #{flowTypeDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null">
+        #{sourceId,jdbcType=BIGINT},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample" resultType="java.lang.Long">
@@ -150,6 +191,9 @@
   <update id="updateByExampleSelective" parameterType="map">
     update acct_settle_info
     <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
       <if test="record.orderId != null">
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
@@ -168,6 +212,15 @@
       <if test="record.insertTime != null">
         insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.flowType != null">
+        flow_type = #{record.flowType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flowTypeDetail != null">
+        flow_type_detail = #{record.flowTypeDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceId != null">
+        source_id = #{record.sourceId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -175,14 +228,64 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update acct_settle_info
-    set order_id = #{record.orderId,jdbcType=VARCHAR},
+    set id = #{record.id,jdbcType=BIGINT},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
       acct_id = #{record.acctId,jdbcType=VARCHAR},
       befor_bal = #{record.beforBal,jdbcType=DECIMAL},
       change = #{record.change,jdbcType=DECIMAL},
       after_bal = #{record.afterBal,jdbcType=VARCHAR},
-      insert_time = #{record.insertTime,jdbcType=TIMESTAMP}
+      insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
+      flow_type = #{record.flowType,jdbcType=VARCHAR},
+      flow_type_detail = #{record.flowTypeDetail,jdbcType=VARCHAR},
+      source_id = #{record.sourceId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.AcctSettleInfo">
+    update acct_settle_info
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="acctId != null">
+        acct_id = #{acctId,jdbcType=VARCHAR},
+      </if>
+      <if test="beforBal != null">
+        befor_bal = #{beforBal,jdbcType=DECIMAL},
+      </if>
+      <if test="change != null">
+        change = #{change,jdbcType=DECIMAL},
+      </if>
+      <if test="afterBal != null">
+        after_bal = #{afterBal,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null">
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flowType != null">
+        flow_type = #{flowType,jdbcType=VARCHAR},
+      </if>
+      <if test="flowTypeDetail != null">
+        flow_type_detail = #{flowTypeDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null">
+        source_id = #{sourceId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.AcctSettleInfo">
+    update acct_settle_info
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      acct_id = #{acctId,jdbcType=VARCHAR},
+      befor_bal = #{beforBal,jdbcType=DECIMAL},
+      change = #{change,jdbcType=DECIMAL},
+      after_bal = #{afterBal,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      flow_type = #{flowType,jdbcType=VARCHAR},
+      flow_type_detail = #{flowTypeDetail,jdbcType=VARCHAR},
+      source_id = #{sourceId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
