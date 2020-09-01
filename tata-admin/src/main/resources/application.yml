@@ -13,7 +13,10 @@ spring:
 #    - classpath:dao/*.xml
 #    - classpath*:com/**/mapper/*.xml
 mybatis-plus:
-  mapper-locations: classpath:/mapper/mysql/*:xml
+  mapper-locations:
+    - classpath*:dao/*.xml
+    - classpath*:com/**/mapper/*.xml
+
   global-config:
     banner: false
     db-config:
@@ -61,14 +64,14 @@ secure:
 
 aliyun:
   oss:
-    endpoint: oss-cn-shenzhen.aliyuncs.com # oss对外服务的访问域名
-    accessKeyId: test # 访问身份验证中用到用户标识
-    accessKeySecret: test # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
-    bucketName: macro-oss # oss的存储空间
+    endpoint: oss-cn-shanghai.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI4G5J7xp9V8CTWY63x2ST # 访问身份验证中用到用户标识
+    accessKeySecret: CjWWNZSQR29pDgVynn1SNbEDxiJuZG # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: vandi # oss的存储空间
     policy:
       expire: 300 # 签名有效期(S)
     maxSize: 10 # 上传文件大小(M)
-    callback: http://39.98.190.128:8080/aliyun/oss/callback # 文件上传成功后的回调地址
+    callback: http://39.101.188.199:8080/aliyun/oss/callback # 文件上传成功后的回调地址
     dir:
       prefix: jiuye/images/ # 上传文件夹路径前缀
 
