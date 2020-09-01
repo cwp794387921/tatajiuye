@@ -23,25 +23,25 @@ public class WxConfig implements WXPayConfig {
     }
     @Override
     public String  getAppID() {
-        return "";
+        return "wxdaa9fb4025511958";
     }
 
     //商户号
     @Override
     public String getMchID() {
-        return "";
+        return "1494508502";
     }
 
     public String getAppSecret() {
-        return "";
+        return "56bcec96c36b270da318979e4c41f8fc";
     }
     @Override
     public String getKey() {
-        return "";
+        return "xiamenshihuliquceyiwangluo111111";
     }
 
     public String getNotifyUrl(){
-        return "http://localhost/pay/wxNotify";
+        return "http://www.cyjyt.com:8085/pay/wxNotify";
     }
 
     public InputStream getCertStream() {

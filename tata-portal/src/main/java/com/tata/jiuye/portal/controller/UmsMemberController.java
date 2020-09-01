@@ -143,31 +143,31 @@ public class UmsMemberController {
     @ResponseBody
     public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam(value = "phone", required=false) String phone,@RequestParam(value = "code", required=false) String code,@RequestParam(value = "fatherId", required=false) String fatherId) {
         if (StrUtil.isEmpty(wxCode)) {
-            return CommonResult.validateFailed("参数缺失");
+            return CommonResult.validateFailed("参数缺失");//404
         }
         if(phone!=null&&code==null){
-            return CommonResult.validateFailed("请输入验证码");
+            return CommonResult.validateFailed("请输入验证码");//404
         }else{
             //从缓存中取出验证码
             if(redisService.get(phone)==null){
-                return CommonResult.validateFailed("验证码已过期");
+                return CommonResult.validateFailed("验证码已过期");  //404
             }
             String valiCode=redisService.get(phone).toString();
             if(!valiCode.equals(code)){
-                return CommonResult.validateFailed("验证码错误");
+                return CommonResult.validateFailed("验证码错误");  //404
             }
             //验证通过，删除验证码
             redisService.del(phone);
         }
         String token = memberService.Wxlogin(wxCode,phone,fatherId);
         if (token == null) {
-            return CommonResult.failed("登陆或注册失败,请联系管理员");
+            return CommonResult.failed("登陆或注册失败,请联系管理员");  //500
         }
         if(token.equals("1")){
-            return CommonResult.validateFailed("请验证手机号");
+            return CommonResult.CodeAndMessage(400,"请验证手机号");  //400
         }
         if (token.equals("2")){
-            return CommonResult.failed("该手机号已绑定其他账号");
+            return CommonResult.validateFailed("该手机号已绑定其他账号");   //500
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
