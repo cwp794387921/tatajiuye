@@ -18,7 +18,7 @@ spring:
         enabled: true
   elasticsearch:
     rest:
-      uris: localhost:9200
+      uris: 47.101.209.225:9200
 
 logging:
   level:

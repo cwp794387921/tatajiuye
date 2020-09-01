@@ -9,7 +9,7 @@ server:
 
 mybatis-plus:
   mapper-locations:
-    - classpath:dao/*.xml
+    - classpath*:dao/*.xml
     - classpath*:com/**/mapper/*.xml
 
 
