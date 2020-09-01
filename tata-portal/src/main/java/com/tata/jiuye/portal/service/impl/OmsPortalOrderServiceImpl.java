@@ -15,9 +15,11 @@ import com.tata.jiuye.portal.dao.SmsCouponHistoryDao;
 import com.tata.jiuye.portal.domain.*;
 import com.tata.jiuye.portal.service.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
  * 前台订单管理Service
  * Created by macro on 2018/8/30.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
@@ -416,6 +419,30 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
     }
 
+
+
+    @Override
+    public OmsOrder getOmsOrderByOrderSn(String orderSn){
+        log.info("-------------------------------通过订单号获取订单  开始-------------------------------");
+        log.info("-------------------------------参数 订单号为: "+orderSn);
+        if(StringUtils.isEmpty(orderSn)){
+            Asserts.fail("订单号为空");
+        }
+        OmsOrderExample omsOrderExample = new OmsOrderExample();
+        OmsOrderExample.Criteria criteria = omsOrderExample.createCriteria();
+        criteria.andOrderSnEqualTo(orderSn);
+        List<OmsOrder> omsOrders = orderMapper.selectByExample(omsOrderExample);
+        log.info("--------------------查询结果 omsOrders  : "+omsOrders);
+        if(CollectionUtils.isEmpty(omsOrders)){
+            return null;
+        }
+        OmsOrder resultOmsOrder = omsOrders.get(0);
+        log.info("--------------------查询结果 resultOmsOrder  : "+resultOmsOrder);
+        log.info("-------------------------------通过订单号获取订单  结束-------------------------------");
+        return resultOmsOrder;
+    }
+
+    /******************************************以下为私有方法**************************************************************/
     /**
      * 生成18位订单编号:8位日期+2位平台号码+2位支付方式+6位以上自增id
      */
@@ -744,5 +771,4 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         calcAmount.setPayAmount(totalAmount.subtract(promotionAmount));
         return calcAmount;
     }
-
 }

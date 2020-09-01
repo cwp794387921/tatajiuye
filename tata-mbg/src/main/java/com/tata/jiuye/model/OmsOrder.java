@@ -1,5 +1,6 @@
 package com.tata.jiuye.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ public class OmsOrder implements Serializable {
 
     private String channelOrderNum;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "提交时间")
     private Date createTime;
 
@@ -123,6 +125,7 @@ public class OmsOrder implements Serializable {
     @ApiModelProperty(value = "下单时使用的积分")
     private Integer useIntegration;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "支付时间")
     private Date paymentTime;
 

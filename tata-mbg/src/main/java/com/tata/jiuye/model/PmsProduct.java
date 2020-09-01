@@ -1,6 +1,5 @@
 package com.tata.jiuye.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -92,11 +91,9 @@ public class PmsProduct implements Serializable {
 
     private String detailTitle;
 
-    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "促销开始时间")
     private Date promotionStartTime;
 
-    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "促销结束时间")
     private Date promotionEndTime;
 
@@ -111,6 +108,18 @@ public class PmsProduct implements Serializable {
 
     @ApiModelProperty(value = "商品分类名称")
     private String productCategoryName;
+
+    @ApiModelProperty(value = "直推分佣金额")
+    private BigDecimal directPushAmount;
+
+    @ApiModelProperty(value = "间推分佣金额")
+    private BigDecimal indirectPushAmount;
+
+    @ApiModelProperty(value = "配送分佣金额")
+    private BigDecimal deliveryAmount;
+
+    @ApiModelProperty(value = "是否为加入VIP需购买的商品: 0->不是, 1->是")
+    private Integer ifJoinVipProduct;
 
     @ApiModelProperty(value = "商品描述")
     private String description;
@@ -429,6 +438,38 @@ public class PmsProduct implements Serializable {
         this.productCategoryName = productCategoryName;
     }
 
+    public BigDecimal getDirectPushAmount() {
+        return directPushAmount;
+    }
+
+    public void setDirectPushAmount(BigDecimal directPushAmount) {
+        this.directPushAmount = directPushAmount;
+    }
+
+    public BigDecimal getIndirectPushAmount() {
+        return indirectPushAmount;
+    }
+
+    public void setIndirectPushAmount(BigDecimal indirectPushAmount) {
+        this.indirectPushAmount = indirectPushAmount;
+    }
+
+    public BigDecimal getDeliveryAmount() {
+        return deliveryAmount;
+    }
+
+    public void setDeliveryAmount(BigDecimal deliveryAmount) {
+        this.deliveryAmount = deliveryAmount;
+    }
+
+    public Integer getIfJoinVipProduct() {
+        return ifJoinVipProduct;
+    }
+
+    public void setIfJoinVipProduct(Integer ifJoinVipProduct) {
+        this.ifJoinVipProduct = ifJoinVipProduct;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -505,6 +546,10 @@ public class PmsProduct implements Serializable {
         sb.append(", promotionType=").append(promotionType);
         sb.append(", brandName=").append(brandName);
         sb.append(", productCategoryName=").append(productCategoryName);
+        sb.append(", directPushAmount=").append(directPushAmount);
+        sb.append(", indirectPushAmount=").append(indirectPushAmount);
+        sb.append(", deliveryAmount=").append(deliveryAmount);
+        sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
         sb.append(", description=").append(description);
         sb.append(", detailDesc=").append(detailDesc);
         sb.append(", detailHtml=").append(detailHtml);

@@ -5,6 +5,7 @@ import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.domain.MemberDetails;
+import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
@@ -62,7 +63,10 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private  UmsMemberLevelMapper memberLevelMapper;
     @Resource
     private  UmsMemberCacheService memberCacheService;
-
+    @Resource
+    private OmsOrderItemService omsOrderItemService;
+    @Resource
+    private UmsMemberLevelMapper umsMemberLevelMapper;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -325,4 +329,20 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         return token;
     }
 
+
+    @Override
+    public void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName){
+        //判断购买的订单商品是否为升级VIP需购买的商品,是则升级会员等级为VIP(且要VIP才能继续购买别的商品)
+        UmsMemberLevelExample umsMemberLevelExample = new UmsMemberLevelExample();
+        UmsMemberLevelExample.Criteria criteria = umsMemberLevelExample.createCriteria();
+        criteria.andNameEqualTo(umsMemberLevelName);
+        List<UmsMemberLevel> umsMemberLevels = umsMemberLevelMapper.selectByExample(umsMemberLevelExample);
+        if(CollectionUtils.isEmpty(umsMemberLevels)){
+            Asserts.fail("传入的会员等级名称找不到对应的记录");
+        }
+        UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
+        member.setMemberLevelId(umsMemberLevel.getId());
+        memberMapper.updateByPrimaryKeySelective(member);
+        memberCacheService.setMember(member);
+    }
 }

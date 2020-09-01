@@ -66,4 +66,12 @@ public interface UmsMemberService {
      * 微信小程序登陆后获取token
      */
     String Wxlogin(String wxCode,String phone,String fatherId);
+
+    /**
+     * 升级用户会员等级
+     * @param member                            待升级用户对象
+     * @param umsMemberLevelName               升级的会员等级名称
+     */
+    @Transactional
+    void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName);
 }

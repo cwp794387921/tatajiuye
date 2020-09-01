@@ -2,7 +2,6 @@ package com.tata.jiuye.portal.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
-import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
@@ -14,7 +13,6 @@ import com.tata.jiuye.portal.service.HomeService;
 import com.tata.jiuye.portal.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -105,7 +103,7 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public CommonPage<PmsProduct> getPmsProductByProductCategoryId(Integer pageNum, Integer pageSize,Long productCategoryId){
+    public CommonPage<PmsProduct> getPmsProductByProductCategoryId(Integer pageNum, Integer pageSize, Long productCategoryId){
         log.info("-------------------------根据商品分类获取分页分类商品列表 开始-----------------------------------------------");
         if(productCategoryId == null){
             Asserts.fail("商品分类ID为空");

@@ -60,6 +60,18 @@ public class OmsOrderItem implements Serializable {
     @ApiModelProperty(value = "商品销售属性:[{'key':'颜色','value':'颜色'},{'key':'容量','value':'4G'}]")
     private String productAttr;
 
+    @ApiModelProperty(value = "直推分佣金额")
+    private BigDecimal directPushAmount;
+
+    @ApiModelProperty(value = "间推分佣金额")
+    private BigDecimal indirectPushAmount;
+
+    @ApiModelProperty(value = "配送分佣金额")
+    private BigDecimal deliveryAmount;
+
+    @ApiModelProperty(value = "是否为加入VIP需购买的商品: 0->不是, 1->是")
+    private Integer ifJoinVipProduct;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -230,6 +242,38 @@ public class OmsOrderItem implements Serializable {
         this.productAttr = productAttr;
     }
 
+    public BigDecimal getDirectPushAmount() {
+        return directPushAmount;
+    }
+
+    public void setDirectPushAmount(BigDecimal directPushAmount) {
+        this.directPushAmount = directPushAmount;
+    }
+
+    public BigDecimal getIndirectPushAmount() {
+        return indirectPushAmount;
+    }
+
+    public void setIndirectPushAmount(BigDecimal indirectPushAmount) {
+        this.indirectPushAmount = indirectPushAmount;
+    }
+
+    public BigDecimal getDeliveryAmount() {
+        return deliveryAmount;
+    }
+
+    public void setDeliveryAmount(BigDecimal deliveryAmount) {
+        this.deliveryAmount = deliveryAmount;
+    }
+
+    public Integer getIfJoinVipProduct() {
+        return ifJoinVipProduct;
+    }
+
+    public void setIfJoinVipProduct(Integer ifJoinVipProduct) {
+        this.ifJoinVipProduct = ifJoinVipProduct;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -257,6 +301,10 @@ public class OmsOrderItem implements Serializable {
         sb.append(", giftIntegration=").append(giftIntegration);
         sb.append(", giftGrowth=").append(giftGrowth);
         sb.append(", productAttr=").append(productAttr);
+        sb.append(", directPushAmount=").append(directPushAmount);
+        sb.append(", indirectPushAmount=").append(indirectPushAmount);
+        sb.append(", deliveryAmount=").append(deliveryAmount);
+        sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

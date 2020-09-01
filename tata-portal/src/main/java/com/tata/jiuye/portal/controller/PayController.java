@@ -5,10 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.OmsOrderMapper;
+import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.OmsOrder;
-import com.tata.jiuye.portal.domain.OmsOrderDetail;
+import com.tata.jiuye.model.OmsOrderItem;
+import com.tata.jiuye.model.UmsMember;
+import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
+import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.MD5Util;
 import com.tata.jiuye.portal.util.WxConfig;
@@ -16,10 +21,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Api("支付接口")
@@ -45,6 +51,16 @@ public class PayController {
     private OmsPortalOrderService portalOrderService;
     @Resource
     private OmsOrderMapper orderMapper;
+    @Resource
+    private OmsOrderItemService omsOrderItemService;
+    @Resource
+    private UmsMemberMapper umsMemberMapper;
+    @Resource
+    private UmsMemberService umsMemberService;
+
+
+    @Value("${umsmemberlevelname.vip}")
+    private String UMS_MEMBER_LEVEL_NAME_VIP;
 
     @ApiOperation("微信web支付接口")
     @PostMapping("/wxWebRechargePay")
@@ -149,15 +165,30 @@ public class PayController {
                 resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
                         + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
                 //业务处理开始
-                String orderNum=map.get("out_trade_no");
+                String orderSn=map.get("out_trade_no");
                 String wxOrderNum=map.get("transaction_id");
-                OmsOrder omsOrder = orderMapper.selectByPrimaryKey(Long.parseLong(orderNum));
-                if(omsOrder!=null&!omsOrder.getStatus().equals("0")){
+                String openId = map.get("openid");
+                OmsOrder omsOrder = portalOrderService.getOmsOrderByOrderSn(orderSn);
+                if(omsOrder!=null & !omsOrder.getStatus().equals("0")){
                     //更新交易记录
                     omsOrder.setChannelOrderNum(wxOrderNum);//微信订单号
                     omsOrder.setModifyTime(new Date());
                     omsOrder.setStatus(1);
                     orderMapper.updateByPrimaryKey(omsOrder);
+                }
+                UmsMember umsMember = umsMemberMapper.selectById(openId);
+                if(umsMember == null){
+                    Asserts.fail("找不到 openId : "+openId+" 对应的用户信息");
+                }
+                List<OmsOrderItem> orderItemList = omsOrderItemService.getItemForOrderSn(orderSn);
+                if(CollectionUtils.isEmpty(orderItemList)){
+                    Asserts.fail("找不到订单号 :"+orderSn +"的订单商品信息");
+                }
+                //会员等级提升到VIP用户
+                for(OmsOrderItem omsOrderItem : orderItemList){
+                    if(omsOrderItem.getIfJoinVipProduct() == 1){
+                        umsMemberService.updateUmsMemberLevel(umsMember,UMS_MEMBER_LEVEL_NAME_VIP);
+                    }
                 }
                 //业务处理结束
             }

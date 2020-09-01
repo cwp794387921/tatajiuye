@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 import com.tata.jiuye.common.api.CommonPage;
+import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
 import com.tata.jiuye.portal.domain.OmsOrderDetail;
 import com.tata.jiuye.portal.domain.OrderParam;
@@ -68,4 +69,11 @@ public interface OmsPortalOrderService {
      * 用户根据订单ID删除订单
      */
     void deleteOrder(Long orderId);
+
+    /**
+     * 根据订单号获取订单对象
+     * @param orderSn               订单号
+     * @return
+     */
+    OmsOrder getOmsOrderByOrderSn(String orderSn);
 }
