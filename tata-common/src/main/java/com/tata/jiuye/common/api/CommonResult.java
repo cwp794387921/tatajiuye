@@ -84,6 +84,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultCode.VALIDATE_FAILED.getCode(), message, null);
     }
 
+    public static <T> CommonResult<T> CodeAndMessage(int Code,String message) {
+        return new CommonResult<T>(Code, message, null);
+    }
+
     /**
      * 未登录返回结果
      */
