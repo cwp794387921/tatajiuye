@@ -115,7 +115,7 @@ public class GetWeiXinCode {
         String result = SendPushPost.sendGet(currentOpenIdurl);
         JSONObject obj = JSONObject.parseObject(result);
         System.out.println(obj);
-        if(obj.get("access_token")==null){
+        if(obj.get("errcode").toString().equals("41002")){
             return null;
         }
         String accessToken = obj.get("access_token").toString();

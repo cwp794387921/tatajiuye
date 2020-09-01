@@ -55,3 +55,12 @@ rabbitmq:
     name:
       cancelOrder: cancelOrderQueue
 
+
+
+aliyun:
+  sms:
+    regionid: "cn-hangzhou"
+    accesskeyid: "LTAI4G5J7xp9V8CTWY63x2ST"
+    secret: "CjWWNZSQR29pDgVynn1SNbEDxiJuZG"
+    signname: "格知教育"
+    templatecode: "SMS_196642878"

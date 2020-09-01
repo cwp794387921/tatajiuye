@@ -1,11 +1,13 @@
 package com.tata.jiuye.portal.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.impl.UmsMemberServiceImpl;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.ValidateCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +55,9 @@ public class UmsMemberController {
 
     @Resource
     private  UmsMemberService memberService;
+
+    @Resource
+    private AliyunSmsUtil aliyunSmsUtil;
 
     @Resource
     private  RedisService redisService;
@@ -136,13 +141,33 @@ public class UmsMemberController {
     @ApiOperation("微信小程序登陆")
     @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam String phone,@RequestParam(value = "fatherId", required=false) String fatherId) {
-        if (StrUtil.isEmpty(wxCode)||StrUtil.isEmpty(phone)) {
+    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam(value = "phone", required=false) String phone,@RequestParam(value = "code", required=false) String code,@RequestParam(value = "fatherId", required=false) String fatherId) {
+        if (StrUtil.isEmpty(wxCode)) {
             return CommonResult.validateFailed("参数缺失");
+        }
+        if(phone!=null&&code==null){
+            return CommonResult.validateFailed("请输入验证码");
+        }else{
+            //从缓存中取出验证码
+            if(redisService.get(phone)==null){
+                return CommonResult.validateFailed("验证码已过期");
+            }
+            String valiCode=redisService.get(phone).toString();
+            if(!valiCode.equals(code)){
+                return CommonResult.validateFailed("验证码错误");
+            }
+            //验证通过，删除验证码
+            redisService.del(phone);
         }
         String token = memberService.Wxlogin(wxCode,phone,fatherId);
         if (token == null) {
             return CommonResult.failed("登陆或注册失败,请联系管理员");
+        }
+        if(token.equals("1")){
+            return CommonResult.validateFailed("请验证手机号");
+        }
+        if (token.equals("2")){
+            return CommonResult.failed("该手机号已绑定其他账号");
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
@@ -155,7 +180,7 @@ public class UmsMemberController {
      * @return
      */
     @ApiOperation("图文验证码")
-    @RequestMapping(value="/validateCode")
+    @RequestMapping(value="/validateCode", method = RequestMethod.POST)
     public String validateCode(String phone,Model model, HttpServletResponse response) throws Exception{
         // 设置响应的类型格式为图片格式
         if(StrUtil.isEmpty(phone)){
@@ -169,9 +194,7 @@ public class UmsMemberController {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        HttpSession session = request.getSession();
         log.info("图形验证码="+vCode.getCode());
-        session.setAttribute("verifyCode", vCode.getCode());
         vCode.write(response.getOutputStream());
         return null;
     }
@@ -181,8 +204,16 @@ public class UmsMemberController {
     @RequestMapping(value = "/smsAPI", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult smsAPI(@RequestParam String phone) {
-
-
+        log.info("===>接收到发送短信验证码请求：手机号["+phone+"]");
+        //生成4位随机数
+        int code=(int)((Math.random()*9+1)*1000);
+        //存入redis
+        redisService.set(phone,String.valueOf(code),5*60);
+        JSONObject result=new JSONObject();
+        result=aliyunSmsUtil.sendSms(phone,String.valueOf(code));
+        if(result==null){
+            return CommonResult.failed("短信发送失败");
+        }
         return CommonResult.success("短信发送成功");
     }
 

@@ -212,19 +212,33 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         String token = null;
         try {
             JSONObject result = GetWeiXinCode.getOpenId(wxCode);
+            if(result==null){
+                return null;
+            }
             String accessToken = result.get("access_token").toString();
             String openId = result.get("openid").toString();
            // String openId="1111";
            // String accessToken="1111";
             //查询是否已有该用户
-            UmsMember umsMember = memberMapper.selectByUsername(phone);
+            UmsMember umsMember = memberMapper.selectById(openId);
             if(umsMember!=null){
                 //已注册 直接登陆
                 log.info("===》用户已存在，直接登录");
-                //绑定openid
-                umsMember.setOpenId(openId);
-                memberMapper.updateByPrimaryKey(umsMember);
             }else{
+                if(phone==null){
+                    //openid未绑定,验证手机号注册或绑定
+                    log.info("==>需要验证手机号");
+                    return "1";
+                }else{
+                    UmsMember umsMember1 = memberMapper.selectByUsername(phone);
+                    if(umsMember1!=null){
+                        //手机号已绑定
+                        log.info("===>["+phone+"]该手机号已绑定另外一个账号");
+                        return "2";
+                    }
+                    //openid未绑定 手机号未注册  开始注册流程
+                }
+                log.info("===》开始注册流程");
                 //没有该用户进行添加操作
                 JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
                 log.info("==========微信用户信息==========："+object);
