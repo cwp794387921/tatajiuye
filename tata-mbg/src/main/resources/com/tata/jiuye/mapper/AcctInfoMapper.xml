@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.AcctInfoMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.AcctInfo">
+    <id column="acct_id" jdbcType="VARCHAR" property="acctId" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="member_no" jdbcType="VARCHAR" property="memberNo" />
+    <result column="branch_no" jdbcType="VARCHAR" property="branchNo" />
+    <result column="eff_date" jdbcType="TIMESTAMP" property="effDate" />
+    <result column="expir_date" jdbcType="TIMESTAMP" property="expirDate" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="insert_time" jdbcType="TIMESTAMP" property="insertTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remake" jdbcType="VARCHAR" property="remake" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    acct_id, balance, member_no, branch_no, eff_date, expir_date, status, insert_time, 
+    update_time, remake
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from acct_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from acct_info
+    where acct_id = #{acctId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from acct_info
+    where acct_id = #{acctId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.AcctInfoExample">
+    delete from acct_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.AcctInfo">
+    insert into acct_info (acct_id, balance, member_no, 
+      branch_no, eff_date, expir_date, 
+      status, insert_time, update_time, 
+      remake)
+    values (#{acctId,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{memberNo,jdbcType=VARCHAR}, 
+      #{branchNo,jdbcType=VARCHAR}, #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{insertTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remake,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctInfo">
+    insert into acct_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="acctId != null">
+        acct_id,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+      <if test="memberNo != null">
+        member_no,
+      </if>
+      <if test="branchNo != null">
+        branch_no,
+      </if>
+      <if test="effDate != null">
+        eff_date,
+      </if>
+      <if test="expirDate != null">
+        expir_date,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="insertTime != null">
+        insert_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remake != null">
+        remake,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="acctId != null">
+        #{acctId,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="memberNo != null">
+        #{memberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="branchNo != null">
+        #{branchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="effDate != null">
+        #{effDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expirDate != null">
+        #{expirDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="insertTime != null">
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remake != null">
+        #{remake,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.tata.jiuye.model.AcctInfoExample" resultType="java.lang.Long">
+    select count(*) from acct_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update acct_info
+    <set>
+      <if test="record.acctId != null">
+        acct_id = #{record.acctId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.balance != null">
+        balance = #{record.balance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.memberNo != null">
+        member_no = #{record.memberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.branchNo != null">
+        branch_no = #{record.branchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.effDate != null">
+        eff_date = #{record.effDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expirDate != null">
+        expir_date = #{record.expirDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.insertTime != null">
+        insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remake != null">
+        remake = #{record.remake,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update acct_info
+    set acct_id = #{record.acctId,jdbcType=VARCHAR},
+      balance = #{record.balance,jdbcType=DECIMAL},
+      member_no = #{record.memberNo,jdbcType=VARCHAR},
+      branch_no = #{record.branchNo,jdbcType=VARCHAR},
+      eff_date = #{record.effDate,jdbcType=TIMESTAMP},
+      expir_date = #{record.expirDate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remake = #{record.remake,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.AcctInfo">
+    update acct_info
+    <set>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="memberNo != null">
+        member_no = #{memberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="branchNo != null">
+        branch_no = #{branchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="effDate != null">
+        eff_date = #{effDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expirDate != null">
+        expir_date = #{expirDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="insertTime != null">
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remake != null">
+        remake = #{remake,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where acct_id = #{acctId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.AcctInfo">
+    update acct_info
+    set balance = #{balance,jdbcType=DECIMAL},
+      member_no = #{memberNo,jdbcType=VARCHAR},
+      branch_no = #{branchNo,jdbcType=VARCHAR},
+      eff_date = #{effDate,jdbcType=TIMESTAMP},
+      expir_date = #{expirDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remake = #{remake,jdbcType=VARCHAR}
+    where acct_id = #{acctId,jdbcType=VARCHAR}
+  </update>
+</mapper>

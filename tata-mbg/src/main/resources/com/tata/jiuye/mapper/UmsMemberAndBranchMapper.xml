@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.UmsMemberAndBranchMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.UmsMemberAndBranch">
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="is_branch" jdbcType="INTEGER" property="isBranch" />
+    <result column="parent" jdbcType="VARCHAR" property="parent" />
+    <result column="user_barnch" jdbcType="VARCHAR" property="userBarnch" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    user_name, is_branch, parent, user_barnch
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ums_member_and_branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample">
+    delete from ums_member_and_branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
+    insert into ums_member_and_branch (user_name, is_branch, parent, 
+      user_barnch)
+    values (#{userName,jdbcType=VARCHAR}, #{isBranch,jdbcType=INTEGER}, #{parent,jdbcType=VARCHAR}, 
+      #{userBarnch,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
+    insert into ums_member_and_branch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="isBranch != null">
+        is_branch,
+      </if>
+      <if test="parent != null">
+        parent,
+      </if>
+      <if test="userBarnch != null">
+        user_barnch,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="isBranch != null">
+        #{isBranch,jdbcType=INTEGER},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=VARCHAR},
+      </if>
+      <if test="userBarnch != null">
+        #{userBarnch,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ums_member_and_branch
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="countByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample" resultType="java.lang.Long">
+    select count(*) from ums_member_and_branch
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ums_member_and_branch
+    <set>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isBranch != null">
+        is_branch = #{record.isBranch,jdbcType=INTEGER},
+      </if>
+      <if test="record.parent != null">
+        parent = #{record.parent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userBarnch != null">
+        user_barnch = #{record.userBarnch,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ums_member_and_branch
+    set user_name = #{record.userName,jdbcType=VARCHAR},
+      is_branch = #{record.isBranch,jdbcType=INTEGER},
+      parent = #{record.parent,jdbcType=VARCHAR},
+      user_barnch = #{record.userBarnch,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
