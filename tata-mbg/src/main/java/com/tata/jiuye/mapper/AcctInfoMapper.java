@@ -1,11 +1,13 @@
 package com.tata.jiuye.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.AcctInfoExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface AcctInfoMapper {
+import java.util.List;
+
+public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
     long countByExample(AcctInfoExample example);
 
     int deleteByExample(AcctInfoExample example);
