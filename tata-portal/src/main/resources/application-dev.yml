@@ -24,7 +24,7 @@ spring:
     timeout: 300ms # 连接超时时间（毫秒）
 
   rabbitmq:
-    host: 39.101.188.199
+    host: 47.101.209.225
     port: 5672
     virtual-host: /mall
     username: mall
