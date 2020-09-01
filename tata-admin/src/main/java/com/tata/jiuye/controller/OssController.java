@@ -8,9 +8,12 @@ import com.tata.jiuye.service.OssService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -24,7 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class OssController {
 
-    private final OssService ossService;
+    private static final Logger log = LoggerFactory.getLogger(OssController.class);
+    @Resource
+    private  OssService ossService;
 
     @ApiOperation(value = "oss上传签名生成")
     @RequestMapping(value = "/policy", method = RequestMethod.GET)
@@ -38,6 +43,7 @@ public class OssController {
     @RequestMapping(value = "callback", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult<OssCallbackResult> callback(HttpServletRequest request) {
+        log.info("oss上传成功回调");
         OssCallbackResult ossCallbackResult = ossService.callback(request);
         return CommonResult.success(ossCallbackResult);
     }

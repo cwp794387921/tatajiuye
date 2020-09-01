@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +30,9 @@ public class OssServiceImpl implements OssService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OssServiceImpl.class);
 
-    private final OSSClient ossClient;
+
+    @Resource
+    private  OSSClient ossClient;
 
     @Value("${aliyun.oss.policy.expire}")
     private int ALIYUN_OSS_EXPIRE;
@@ -84,6 +87,7 @@ public class OssServiceImpl implements OssService {
         } catch (Exception e) {
             LOGGER.error("签名生成失败", e);
         }
+        LOGGER.info(result.toString());
         return result;
     }
 
