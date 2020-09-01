@@ -1,11 +1,13 @@
 package com.tata.jiuye.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.OmsOrderItem;
 import com.tata.jiuye.model.OmsOrderItemExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface OmsOrderItemMapper {
+public interface OmsOrderItemMapper extends BaseMapper<OmsOrderItem> {
+
     long countByExample(OmsOrderItemExample example);
 
     int deleteByExample(OmsOrderItemExample example);

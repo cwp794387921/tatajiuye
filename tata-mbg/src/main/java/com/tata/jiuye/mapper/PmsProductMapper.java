@@ -1,11 +1,13 @@
 package com.tata.jiuye.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.PmsProductExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface PmsProductMapper {
+public interface PmsProductMapper extends BaseMapper<PmsProduct> {
+
     long countByExample(PmsProductExample example);
 
     int deleteByExample(PmsProductExample example);
