@@ -15,9 +15,9 @@ public class GetWeiXinCode {
     public static final String tokenKey = "tata_access_token";
 
 
-    private  final static String appid = "";
+    private  final static String appid = "wxdaa9fb4025511958";
 
-    private  final static String appsecret="";
+    private  final static String appsecret="56bcec96c36b270da318979e4c41f8fc";
 
 
 
