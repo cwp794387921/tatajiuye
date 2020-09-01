@@ -23,13 +23,18 @@ public class OmsOrderItemServiceImpl implements OmsOrderItemService {
 
     @Override
     public List<OmsOrderItem> getItemForOrderSn(String orderSn){
+        log.info("------------------------------通过订单号获取订单-商品列表 开始------------------------------");
         if(StringUtils.isEmpty(orderSn)){
             Asserts.fail("订单号不能为空");
         }
+        log.info("------------------------------参数 orderSn 订单号为 : "+orderSn);
         OmsOrderItemExample omsOrderItemExample = new OmsOrderItemExample();
         OmsOrderItemExample.Criteria criteria = omsOrderItemExample.createCriteria();
         criteria.andOrderSnEqualTo(orderSn);
-        return omsOrderItemMapper.selectByExample(omsOrderItemExample);
+        List<OmsOrderItem> omsOrderItemList = omsOrderItemMapper.selectByExample(omsOrderItemExample);
+        log.info("------------------------------查询结果  omsOrderItemList: "+omsOrderItemList);
+        log.info("------------------------------通过订单号获取订单-商品列表 结束------------------------------");
+        return omsOrderItemList;
     }
 
 

@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, parent_id, name, level, product_count, product_unit, nav_status, show_status, 
+    id, parent_id, name, level, product_count, product_unit, nav_status, show_status,
     sort, icon, keywords
   </sql>
   <sql id="Blob_Column_List">
@@ -113,7 +113,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
@@ -134,13 +134,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pms_product_category (parent_id, name, level, 
-      product_count, product_unit, nav_status, 
-      show_status, sort, icon, 
+    insert into pms_product_category (parent_id, name, level,
+      product_count, product_unit, nav_status,
+      show_status, sort, icon,
       keywords, description)
-    values (#{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
-      #{productCount,jdbcType=INTEGER}, #{productUnit,jdbcType=VARCHAR}, #{navStatus,jdbcType=INTEGER}, 
-      #{showStatus,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
+    values (#{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER},
+      #{productCount,jdbcType=INTEGER}, #{productUnit,jdbcType=VARCHAR}, #{navStatus,jdbcType=INTEGER},
+      #{showStatus,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR},
       #{keywords,jdbcType=VARCHAR}, #{description,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsProductCategory">
@@ -372,4 +372,14 @@
       keywords = #{keywords,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="getProductCategoryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+      SELECT
+          *
+      FROM
+          pms_product_category
+      WHERE
+          `name` = #{categoryName,jdbcType=VARCHAR}
+  </select>
 </mapper>

@@ -35,4 +35,11 @@ public interface PmsProductCategoryMapper extends BaseMapper<PmsProductCategory>
     int updateByPrimaryKeyWithBLOBs(PmsProductCategory record);
 
     int updateByPrimaryKey(PmsProductCategory record);
+
+    /**
+     * 通过分类名称获取分类对象列表
+     * @param categoryName              分类名称
+     * @return
+     */
+    List<PmsProductCategory> getProductCategoryByName(@Param("categoryName") String categoryName);
 }

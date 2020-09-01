@@ -64,3 +64,11 @@ aliyun:
     secret: "CjWWNZSQR29pDgVynn1SNbEDxiJuZG"
     signname: "格知教育"
     templatecode: "SMS_196642878"
+
+umsmemberlevelname:
+  vip: "VIP会员"
+
+
+
+pmsproductcategoryname:
+  memberrepurchase: "会员复购"

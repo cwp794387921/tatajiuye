@@ -33,4 +33,11 @@ public interface PmsProductMapper {
     int updateByPrimaryKeyWithBLOBs(PmsProduct record);
 
     int updateByPrimaryKey(PmsProduct record);
+
+    /**
+     * 查找所有加入VIP需要购买的商品
+     * @param ifJoinVipProduct
+     * @return
+     */
+    List<PmsProduct> getProductByIfJoinVipProduct(@Param("ifJoinVipProduct") Integer ifJoinVipProduct);
 }

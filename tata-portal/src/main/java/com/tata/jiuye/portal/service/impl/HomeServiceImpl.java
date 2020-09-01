@@ -13,6 +13,7 @@ import com.tata.jiuye.portal.service.HomeService;
 import com.tata.jiuye.portal.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -36,23 +37,34 @@ public class HomeServiceImpl implements HomeService {
     private final PmsProductCategoryMapper productCategoryMapper;
     private final SmsFlashPromotionSessionMapper promotionSessionMapper;
 
+
+    @Value("${pmsproductcategoryname.memberrepurchase}")
+    private String PMS_PRODUCT_CATEGORY_NAME_MEMBERREPURCHASE;
+
+    @Value("${umsmemberlevelname.vip}")
+    private String UMS_MEMBER_LEVEL_NAME_VIP;
     @Override
     public HomeContentResult content() {
 
         HomeContentResult result = new HomeContentResult();
         //获取首页广告
         result.setAdvertiseList(getHomeAdvertiseList());
+        //获取特殊商品"加入VIP"的商品ID
+        Long upgradeToVipProductId = getProductByIfJoinVipProduct();
+        result.setUpgradeToVipProductId(upgradeToVipProductId);
+        //获取分类为"会员复购"的分类ID
+        Long productCategoryId = getPmsProductCategoryIdByMemberRepurchase();
+        result.setProductCategoryId(productCategoryId);
         //获取推荐品牌
-        result.setBrandList(homeDao.getRecommendBrandList(0, 6));
+        //result.setBrandList(homeDao.getRecommendBrandList(0, 6));
         //获取秒杀信息
-        result.setHomeFlashPromotion(getHomeFlashPromotion());
+        //result.setHomeFlashPromotion(getHomeFlashPromotion());
+        //获取人气推荐(热卖)
+        result.setHotProductList(homeDao.getHotProductList(0, 2));
         //获取新品推荐
-        result.setNewProductList(homeDao.getNewProductList(0, 4));
-        //获取人气推荐
-        result.setHotProductList(homeDao.getHotProductList(0, 4));
+        result.setNewProductList(homeDao.getNewProductList(0, 9));
         //获取推荐专题
-        result.setSubjectList(homeDao.getRecommendSubjectList(0, 4));
-
+        //result.setSubjectList(homeDao.getRecommendSubjectList(0, 4));
         return result;
     }
 
@@ -192,5 +204,38 @@ public class HomeServiceImpl implements HomeService {
             return promotionSessionList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 获取 会员复购 的分类ID
+     * @return
+     */
+    private Long getPmsProductCategoryIdByMemberRepurchase(){
+        log.info("------------------------------获取会员复购分类ID方法 开始------------------------------");
+        List<PmsProductCategory> pmsProductCategories = productCategoryMapper.getProductCategoryByName(PMS_PRODUCT_CATEGORY_NAME_MEMBERREPURCHASE);
+        if(CollectionUtils.isEmpty(pmsProductCategories)){
+            Asserts.fail("查询不到分类名称为 '"+PMS_PRODUCT_CATEGORY_NAME_MEMBERREPURCHASE+"'的商品分类");
+        }
+        Long productCategoryId = pmsProductCategories.get(0).getId();
+        log.info("------------------------------分类名称'"+PMS_PRODUCT_CATEGORY_NAME_MEMBERREPURCHASE+"' 对应的 分类ID 为 :"+productCategoryId);
+        log.info("------------------------------获取会员复购分类ID方法 结束------------------------------");
+        return productCategoryId;
+    }
+
+    /**
+     * 获取加入VIP的商品ID
+     * @return
+     */
+    private Long getProductByIfJoinVipProduct(){
+        log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
+        //获取所有升级为VIP商品
+        List<PmsProduct> pmsProducts = productMapper.getProductByIfJoinVipProduct(1);
+        if(CollectionUtils.isEmpty(pmsProducts)){
+            Asserts.fail("暂无加入VIP的商品");
+        }
+        Long ifJoinVipProductId = pmsProducts.get(0).getId();
+        log.info("------------------------------加入VIP的商品ID 为 : "+ifJoinVipProductId);
+        log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
+        return ifJoinVipProductId;
     }
 }
