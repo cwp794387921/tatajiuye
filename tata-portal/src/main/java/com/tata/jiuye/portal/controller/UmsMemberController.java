@@ -147,12 +147,16 @@ public class UmsMemberController {
         }
         if(phone!=null&&code==null){
             return CommonResult.validateFailed("请输入验证码");//404
-        }else{
+        }
+        if(phone!=null&&code!=null)
+        {
+            log.info("==》开始校验短信验证码，phone["+phone+"],code["+code+"]");
             //从缓存中取出验证码
             if(redisService.get(phone)==null){
                 return CommonResult.validateFailed("验证码已过期");  //404
             }
             String valiCode=redisService.get(phone).toString();
+            log.info("==》验证码["+valiCode+"]");
             if(!valiCode.equals(code)){
                 return CommonResult.validateFailed("验证码错误");  //404
             }
