@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 //import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
+import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,7 +68,15 @@ public interface UmsMemberService {
     /**
      * 微信小程序登陆后获取token
      */
-    String Wxlogin(String wxCode,String phone,String fatherId);
+    String Wxlogin(String wxCode,String phone,String invitorPhone);
+
+    /**
+     * 微信小程序注册并获取token
+     * @param registeredMemberParam
+     * @return
+     */
+    @Transactional
+    String registeredMember(RegisteredMemberParam registeredMemberParam);
 
     /**
      * 升级用户会员等级

@@ -73,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, order_no, acct_id, befor_bal, change, after_bal, insert_time, flow_type, flow_type_detail, 
+    id, order_no, acct_id, befor_bal, change, after_bal, insert_time, flow_type, flow_type_detail,
     source_id, update_time
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample" resultMap="BaseResultMap">
@@ -91,7 +91,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from acct_settle_info
     where id = #{id,jdbcType=BIGINT}
@@ -110,13 +110,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into acct_settle_info (order_no, acct_id, befor_bal, 
-      change, after_bal, insert_time, 
-      flow_type, flow_type_detail, source_id, 
+    insert into acct_settle_info (order_no, acct_id, befor_bal,
+      change, after_bal, insert_time,
+      flow_type, flow_type_detail, source_id,
       update_time)
-    values (#{orderNo,jdbcType=VARCHAR}, #{acctId,jdbcType=BIGINT}, #{beforBal,jdbcType=DECIMAL}, 
-      #{change,jdbcType=DECIMAL}, #{afterBal,jdbcType=DECIMAL}, #{insertTime,jdbcType=TIMESTAMP}, 
-      #{flowType,jdbcType=VARCHAR}, #{flowTypeDetail,jdbcType=VARCHAR}, #{sourceId,jdbcType=BIGINT}, 
+    values (#{orderNo,jdbcType=VARCHAR}, #{acctId,jdbcType=BIGINT}, #{beforBal,jdbcType=DECIMAL},
+      #{change,jdbcType=DECIMAL}, #{afterBal,jdbcType=DECIMAL}, #{insertTime,jdbcType=TIMESTAMP},
+      #{flowType,jdbcType=VARCHAR}, #{flowTypeDetail,jdbcType=VARCHAR}, #{sourceId,jdbcType=BIGINT},
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctSettleInfo">

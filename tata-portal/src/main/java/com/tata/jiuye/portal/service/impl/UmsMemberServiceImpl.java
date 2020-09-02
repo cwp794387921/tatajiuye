@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctInfoMapper;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
@@ -8,12 +9,12 @@ import com.tata.jiuye.mapper.UmsMemberLevelMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.domain.MemberDetails;
-import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberLevelService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.GlobalConstants;
+import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -60,8 +62,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Resource
     private  UmsMemberCacheService memberCacheService;
     @Resource
-    private OmsOrderItemService omsOrderItemService;
-    @Resource
     private UmsMemberLevelMapper umsMemberLevelMapper;
     @Resource
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
@@ -73,6 +73,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private Long AUTH_CODE_EXPIRE_SECONDS;
     @Value("${umsmemberlevelname.deliverycenter}")
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
+    @Value("${auth.wechat.sessionHost}")
+    private String WECHAT_SESSION_HOST;
+    //小程序APPID
+    @Value("${auth.wechat.appId}")
+    private String WECHAT_APP_ID;
+    //小程序秘钥
+    @Value("${auth.wechat.secret}")
+    private String WECHAT_SECRET;
     @Override
     public UmsMember getByUsername(String username) {
         UmsMember member = memberCacheService.getMember(username);
@@ -220,8 +228,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             if(result==null){
                 return null;
             }
-            String accessToken = result.get("access_token").toString();
+            //String accessToken = result.get("access_token").toString();
             String openId = result.get("openid").toString();
+            log.info("openId为 "+openId);
            // String openId="1111";
            // String accessToken="1111";
             //查询是否已有该用户
@@ -243,73 +252,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                     }
                     //openid未绑定 手机号未注册  开始注册流程
                 }
-                log.info("===》开始注册流程");
-                //没有该用户进行添加操作
-                JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
-                log.info("==========微信用户信息==========："+object);
-                log.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
-                log.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
-                umsMember = new UmsMember();
-                umsMember.setUsername(phone);
-                umsMember.setPhone(phone);
-                umsMember.setPassword(passwordEncoder.encode("123456"));
-                umsMember.setCreateTime(new Date());
-                umsMember.setStatus(1);
-                //umsMember.setIcon(object.get("headimgurl").toString());
-                //umsMember.setGender((int) object.get("sex"));
-                umsMember.setOpenId(openId);
-                //获取默认会员等级并设置
-                UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
-                levelExample.createCriteria().andDefaultStatusEqualTo(1);
-                List<UmsMemberLevel> memberLevelList = memberLevelMapper.selectByExample(levelExample);
-                if (!CollectionUtils.isEmpty(memberLevelList)) {
-                    umsMember.setMemberLevelId(memberLevelList.get(0).getId());
-                }
-                //插入会员信息
-                memberMapper.insert(umsMember);
-                //绑定关系
-                Long grandpaMemberId;
-                Long parentMemberId;
-                //上级配送中心用户ID
-                Long superiorDistributionCenterMemberId;
-                if(invitorPhone!=null){
-                    log.info("邀请人手机号:"+invitorPhone);
-                    UmsMember fatherUmsMember = memberMapper.getUmsMemberByPhone(invitorPhone);
-                    parentMemberId = fatherUmsMember.getId();
-                    //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
-                    UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
-                    //邀请人角色角色等级(是否配送中心)
-                    UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
-                    if(fatherUmsMember == null||fatherInfo == null||umsMemberLevel == null){
-                        log.info("邀请人信息不存在");
-                        return null;
-                    }
-                    grandpaMemberId=fatherInfo.getFatherMemberId();
-                }else{
-                    log.info("未携带邀请码注册");
-                    log.info("上级绑定到平台");
-                    invitorPhone="00000000000";
-                    grandpaMemberId=0L;
-                    parentMemberId=0L;
-                }
-                //生成会员关系表
-                UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
-                umsMemberInviteRelation.setCreateTime(new Date());
-                umsMemberInviteRelation.setFatherMemberId(parentMemberId);
-                umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
-                umsMemberInviteRelation.setMemberId(umsMember.getId());
-                //生成会员账户信息表
-                String acctId=phone+ GlobalConstants.ACCTITAIL2;
-                AcctInfo acctInfo=new AcctInfo();
-                //acctInfo.setAcctId(acctId);
-                acctInfo.setBalance(BigDecimal.ZERO);
-                acctInfo.setMemberId(umsMember.getId());
-                acctInfo.setEffDate(new Date());
-                acctInfo.setInsertTime(new Date());
-                acctInfo.setUpdateTime(new Date());
-                acctInfo.setStatus(1);
-                umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
-                acctInfoMapper.insert(acctInfo);
             }
             UserDetails userDetails=new MemberDetails(umsMember);
             token = jwtTokenUtil.generateToken(userDetails);
@@ -319,6 +261,99 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             log.info(e.getMessage());
             throw new RuntimeException();
         }
+        return token;
+    }
+
+    //注册
+    @Override
+    public String registeredMember(RegisteredMemberParam registeredMemberParam){
+        log.info("===》开始注册流程");
+        if(StringUtils.isEmpty(registeredMemberParam.getWxCode())){
+            Asserts.fail("微信小程序CODE为空");
+        }
+        if(StringUtils.isEmpty(registeredMemberParam.getPhone())){
+            Asserts.fail("用户手机号为空");
+        }
+        if(StringUtils.isEmpty(registeredMemberParam.getUserInfoJson())){
+            Asserts.fail("用户信息为空");
+        }
+        //没有该用户进行添加操作
+        //JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
+        JSONObject object = JSONObject.parseObject(registeredMemberParam.getUserInfoJson());
+        log.info("==========微信用户信息==========："+object);
+        //log.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
+        //log.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
+        UmsMember umsMember = new UmsMember();
+        umsMember.setUsername(registeredMemberParam.getPhone());
+        umsMember.setPhone(registeredMemberParam.getPhone());
+        umsMember.setPassword(passwordEncoder.encode("123456"));
+        umsMember.setCreateTime(new Date());
+        umsMember.setStatus(1);
+        umsMember.setNickname(object.getString("nickName"));
+        umsMember.setIcon(object.getString("avatarUrl"));
+        umsMember.setCity(object.getString("city"));
+        umsMember.setGender(object.getInteger("gender"));
+        JSONObject result = GetWeiXinCode.getOpenId(registeredMemberParam.getWxCode());
+        if(result==null){
+            Asserts.fail("获取openId失败");
+        }
+        String openId = result.get("openid").toString();
+        log.info("openId 为 "+openId);
+        umsMember.setOpenId(openId);
+        //String accessToken = result.get("access_token").toString();
+        //获取默认会员等级并设置
+        UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
+        levelExample.createCriteria().andDefaultStatusEqualTo(1);
+        List<UmsMemberLevel> memberLevelList = memberLevelMapper.selectByExample(levelExample);
+        if (!CollectionUtils.isEmpty(memberLevelList)) {
+            umsMember.setMemberLevelId(memberLevelList.get(0).getId());
+        }
+        //插入会员信息
+        memberMapper.insert(umsMember);
+        //绑定关系
+        Long grandpaMemberId;
+        Long parentMemberId;
+        String invitorPhone = registeredMemberParam.getInvitorPhone();
+        if(!StringUtils.isEmpty(invitorPhone)){
+            log.info("邀请人手机号:"+invitorPhone);
+            UmsMember fatherUmsMember = memberMapper.getUmsMemberByPhone(invitorPhone);
+            if(fatherUmsMember == null){
+                log.info("邀请人信息不存在");
+                return null;
+            }
+            //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
+            UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
+            //邀请人角色角色等级(是否配送中心)
+            //UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
+            parentMemberId = fatherUmsMember.getId();
+            grandpaMemberId=fatherInfo.getFatherMemberId();
+        }else{
+            log.info("未携带邀请码注册");
+            log.info("上级绑定到平台");
+            invitorPhone="00000000000";
+            grandpaMemberId=0L;
+            parentMemberId=0L;
+        }
+        //生成会员关系表
+        UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
+        umsMemberInviteRelation.setCreateTime(new Date());
+        umsMemberInviteRelation.setFatherMemberId(parentMemberId);
+        umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
+        umsMemberInviteRelation.setMemberId(umsMember.getId());
+        //生成会员账户信息表
+        //String acctId=phone+ GlobalConstants.ACCTITAIL2;
+        AcctInfo acctInfo=new AcctInfo();
+        //acctInfo.setAcctId(acctId);
+        acctInfo.setBalance(BigDecimal.ZERO);
+        acctInfo.setMemberId(umsMember.getId());
+        acctInfo.setEffDate(new Date());
+        acctInfo.setInsertTime(new Date());
+        acctInfo.setUpdateTime(new Date());
+        acctInfo.setStatus(1);
+        umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
+        acctInfoMapper.insert(acctInfo);
+        UserDetails userDetails=new MemberDetails(umsMember);
+        String token = jwtTokenUtil.generateToken(userDetails);
         return token;
     }
 
@@ -353,7 +388,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
 
-    //获取上级配送中心用户的用户ID
     @Override
     public Long getSuperiorDistributionCenterMemberId(Long memberId){
         if(memberId == null){
@@ -376,4 +410,28 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         return umsMember.getId();
     }
 
+    //第一步,小程序端通过wxCode请求后台,后台利用wxCode获取openId和session_key
+    public String getOpenIdAndSeesionKey(String wxCode){
+        String result = HttpRequest.sendGet(WECHAT_SESSION_HOST,
+                "appid=" + WECHAT_APP_ID +
+                        "&secret="+ WECHAT_SECRET +
+                        "&js_code="+ wxCode + //前端传来的code
+                        "&grant_type=authorization_code");
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        if (jsonObject.containsKey("errcode")) {
+            Asserts.fail("code无效");
+        }
+        String jsonObjectStr = jsonObject.toJSONString();
+        String openId = jsonObject.get("openid").toString();
+        if (StringUtils.isEmpty(openId)) {
+            Asserts.fail("openid为空");
+        }
+
+        //查询是否已有该用户
+        UmsMember umsMember = memberMapper.getUmsMemberByOpenId(openId);
+        if(umsMember != null){
+            log.info("--------------已存在,则返回session_key给前端让前端申请授权");
+        }
+        return jsonObjectStr;
+    }
 }

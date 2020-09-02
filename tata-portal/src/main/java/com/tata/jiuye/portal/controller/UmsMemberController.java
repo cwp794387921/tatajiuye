@@ -1,12 +1,16 @@
 package com.tata.jiuye.portal.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.wall.violation.ErrorCode;
 import com.alibaba.fastjson.JSONObject;
+import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
+import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,10 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,15 @@ import java.util.Map;
 @RequestMapping("/sso")
 @RequiredArgsConstructor
 public class UmsMemberController {
+
+    @Value("${auth.wechat.sessionHost}")
+    private String WECHAT_SESSION_HOST;
+    //小程序APPID
+    @Value("${auth.wechat.appId}")
+    private String WECHAT_APP_ID;
+    //小程序秘钥
+    @Value("${auth.wechat.secret}")
+    private String WECHAT_SECRET;
 
     private static final Logger log = LoggerFactory.getLogger(UmsMemberController.class);
 
@@ -138,27 +149,10 @@ public class UmsMemberController {
         if(!StrUtil.isEmpty(phone)&&StrUtil.isEmpty(code)){
             return CommonResult.validateFailed("请输入验证码");//404
         }
-        if(!StrUtil.isEmpty(phone)&&!StrUtil.isEmpty(code))
-        {
-            log.info("==》开始校验短信验证码，phone["+phone+"],code["+code+"]");
-            //从缓存中取出验证码
-            if(redisService.get(phone)==null){
-                return CommonResult.validateFailed("验证码已过期");  //404
-            }
-            String valiCode=redisService.get(phone).toString();
-            log.info("==》验证码["+valiCode+"]");
-            if(!valiCode.equals(code)){
-                return CommonResult.validateFailed("验证码错误");  //404
-            }
-            //验证通过，删除验证码
-            redisService.del(phone);
-        }
+
         String token = memberService.Wxlogin(wxCode,phone,invitorPhone);
         if (token == null) {
             return CommonResult.failed("登陆或注册失败,请联系管理员");  //500
-        }
-        if(token.equals("1")){
-            return CommonResult.CodeAndMessage(400,"请验证手机号");  //400
         }
         if (token.equals("2")){
             return CommonResult.validateFailed("该手机号已绑定其他账号");   //500
@@ -168,6 +162,32 @@ public class UmsMemberController {
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }
+
+    @ApiOperation("微信小程序注册")
+    @RequestMapping(value = "/registeredMember", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult registeredMember(@RequestBody RegisteredMemberParam registeredMemberParam){
+        String phone = registeredMemberParam.getPhone();
+        String verificationCode = registeredMemberParam.getVerificationCode();
+        if(!StrUtil.isEmpty(phone)&&!StrUtil.isEmpty(verificationCode))
+        {
+            log.info("==》开始校验短信验证码，phone["+phone+"],code["+verificationCode+"]");
+            //从缓存中取出验证码
+            if(redisService.get(phone)==null){
+                return CommonResult.validateFailed("验证码已过期");  //404
+            }
+            String valiCode=redisService.get(phone).toString();
+            log.info("==》验证码["+valiCode+"]");
+            if(!valiCode.equals(verificationCode)){
+                return CommonResult.validateFailed("验证码错误");  //404
+            }
+            //验证通过，删除验证码
+            redisService.del(phone);
+        }
+        String token = memberService.registeredMember(registeredMemberParam);
+        return CommonResult.success(token);
+    }
+
 
     /**
      * 响应验证码页面
@@ -201,6 +221,7 @@ public class UmsMemberController {
         log.info("===>接收到发送短信验证码请求：手机号["+phone+"]");
         //生成4位随机数
         int code=(int)((Math.random()*9+1)*1000);
+        log.info("验证码为 "+code);
         //存入redis
         redisService.set(phone,String.valueOf(code),5*60);
         JSONObject result=new JSONObject();
@@ -211,5 +232,24 @@ public class UmsMemberController {
         return CommonResult.success("短信发送成功");
     }
 
-
+    @ApiOperation("获取短信验证码")
+    @RequestMapping(value = "/testGetOpenId", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getOpenIdAndSessionKey(@RequestParam @ApiParam("微信的CODE") String code){
+        String result = HttpRequest.sendGet(WECHAT_SESSION_HOST,
+                "appid=" + WECHAT_APP_ID +
+                        "&secret="+ WECHAT_SECRET +
+                        "&js_code="+ code + //前端传来的code
+                        "&grant_type=authorization_code");
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        if (jsonObject.containsKey("errcode")) {
+            Asserts.fail("code无效");
+        }
+        String jsonObjectStr = jsonObject.toJSONString();
+        String openId = jsonObject.get("openid").toString();
+        if (StringUtils.isEmpty(openId)) {
+            Asserts.fail("openid为空");
+        }
+        return CommonResult.success(openId);
+    }
 }

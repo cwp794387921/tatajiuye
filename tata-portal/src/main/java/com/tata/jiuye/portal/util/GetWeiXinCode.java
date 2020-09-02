@@ -2,6 +2,7 @@ package com.tata.jiuye.portal.util;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,11 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class GetWeiXinCode {
-
+    private final static String WECHAT_SESSION_HOST = "https://api.weixin.qq.com/sns/jscode2session";
+    //小程序APPID
+    private final static String WECHAT_APP_ID = "wxdaa9fb4025511958";
+    //小程序秘钥
+    private final static String WECHAT_SECRET = "56bcec96c36b270da318979e4c41f8fc";
     private static RedisService redisUtils;
     public static final String tokenKey = "tata_access_token";
 
@@ -108,7 +113,7 @@ public class GetWeiXinCode {
 
 
 
-    public static JSONObject getOpenId(String code){
+    /*public static JSONObject getOpenId(String code){
 
         String currentOpenIdurl = GetWeiXinCode.getCurrentOpenId
                 (code, appid, appsecret);
@@ -123,6 +128,24 @@ public class GetWeiXinCode {
         redisUtils.set(tokenKey, accessToken, expiresIn);
         //String openId = (String) obj.get("openid");
         return obj;
+    }*/
+
+    public static JSONObject getOpenId(String code){
+        String result = HttpRequest.sendGet(WECHAT_SESSION_HOST,
+                "appid=" + WECHAT_APP_ID +
+                        "&secret="+ WECHAT_SECRET +
+                        "&js_code="+ code + //前端传来的code
+                        "&grant_type=authorization_code");
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        if (jsonObject.containsKey("errcode")) {
+            Asserts.fail("code无效");
+        }
+        String jsonObjectStr = jsonObject.toJSONString();
+        String openId = jsonObject.get("openid").toString();
+        if (StringUtils.isEmpty(openId)) {
+            Asserts.fail("openid为空");
+        }
+        return jsonObject;
     }
 
     public static JSONObject getTicket(String accessToken) throws Exception{
@@ -164,4 +187,4 @@ public class GetWeiXinCode {
         return JSONObject.parseObject(auth);
     }
 
-} 
+}

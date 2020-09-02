@@ -454,4 +454,14 @@
           phone = #{phone,jdbcType=VARCHAR}
       limit 1
   </select>
+
+  <select id="getUmsMemberByOpenId" parameterType="java.lang.String" resultType="com.tata.jiuye.model.UmsMember">
+      SELECT
+          *
+      FROM
+          ums_member
+      WHERE
+          openid = #{openId,jdbcType=INTEGER}
+      limit 1
+  </select>
 </mapper>

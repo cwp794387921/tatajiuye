@@ -72,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, balance, member_id, branch_id, eff_date, expir_date, status, insert_time, update_time, 
+    id, balance, member_id, branch_id, eff_date, expir_date, status, insert_time, update_time,
     remake
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctInfoExample" resultMap="BaseResultMap">
@@ -90,7 +90,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from acct_info
     where id = #{id,jdbcType=BIGINT}
@@ -109,12 +109,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into acct_info (balance, member_id, branch_id, 
-      eff_date, expir_date, status, 
+    insert into acct_info (balance, member_id, branch_id,
+      eff_date, expir_date, status,
       insert_time, update_time, remake
       )
-    values (#{balance,jdbcType=DECIMAL}, #{memberId,jdbcType=BIGINT}, #{branchId,jdbcType=BIGINT}, 
-      #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+    values (#{balance,jdbcType=DECIMAL}, #{memberId,jdbcType=BIGINT}, #{branchId,jdbcType=BIGINT},
+      #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
       #{insertTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remake,jdbcType=VARCHAR}
       )
   </insert>
@@ -288,4 +288,11 @@
       remake = #{remake,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+    <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.AcctInfo">
+        select *
+        from acct_info
+        where member_id = #{memberId,jdbcType=BIGINT}
+        limit 1
+    </select>
 </mapper>

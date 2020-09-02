@@ -30,4 +30,11 @@ public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
     int updateByPrimaryKeySelective(AcctInfo record);
 
     int updateByPrimaryKey(AcctInfo record);
+
+    /**
+     * 通过用户ID获取账户
+     * @param memberId
+     * @return
+     */
+    AcctInfo getByMemberId(@Param("memberId") Long memberId);
 }

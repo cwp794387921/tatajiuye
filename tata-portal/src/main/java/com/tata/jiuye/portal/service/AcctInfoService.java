@@ -13,4 +13,11 @@ public interface AcctInfoService extends IService<AcctInfo> {
      */
     @Transactional
     void saveOrUpdateAcctInfo(AcctInfo acctInfo);
+
+    /**
+     * 通过用户ID获取账户信息
+     * @param memberId
+     * @return
+     */
+    AcctInfo getAcctInfoByMemberId(Long memberId);
 }

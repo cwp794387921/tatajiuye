@@ -43,4 +43,11 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
      * @return
      */
     UmsMember getUmsMemberByPhone(@Param("phone")String phone);
+
+    /**
+     * 通过openID获取用户信息
+     * @param openId
+     * @return
+     */
+    UmsMember getUmsMemberByOpenId(@Param("openId")String openId);
 }

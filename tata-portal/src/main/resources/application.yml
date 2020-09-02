@@ -74,4 +74,10 @@ pmsproductcategoryname:
   memberrepurchase: "会员复购"
 
 
-
+  # wechat Auth
+auth:
+  wechat:
+    sessionHost: 'https://api.weixin.qq.com/sns/jscode2session'
+    appId: 'wxdaa9fb4025511958'
+    secret: '56bcec96c36b270da318979e4c41f8fc'
+    grantType: 'authorization_code'
