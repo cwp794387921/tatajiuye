@@ -353,16 +353,16 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
-    public UmsMemberAndMemberResult getInvitationChainByMemberId(Long memberId){
+    public UmsMemberInviteRelation getInvitationChainByMemberId(Long memberId){
         log.info("------------------------- 通过被邀请人用户ID获取邀请链条 开始 -------------------------");
         log.info("------------------------- 参数 用户ID : "+ memberId);
         if(memberId == null){
             Asserts.fail("用户ID为空");
         }
-        UmsMemberAndMemberResult umsMemberAndMemberResult = umsMemberInviteRelationMapper.getInvitationChainByMemberId(memberId);
-        log.info("------------------------- 邀请链条为 : "+ umsMemberAndMemberResult);
+        UmsMemberInviteRelation umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(memberId);
+        log.info("------------------------- 邀请链条为 : "+ umsMemberInviteRelation);
         log.info("------------------------- 通过被邀请人用户ID获取邀请链条 结束 -------------------------");
-        return umsMemberAndMemberResult;
+        return umsMemberInviteRelation;
     }
 
 }

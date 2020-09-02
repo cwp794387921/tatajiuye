@@ -30,6 +30,4 @@ public interface UmsMemberInviteRelationMapper {
     int updateByPrimaryKey(UmsMemberInviteRelation record);
 
     UmsMemberInviteRelation getByMemberId(@Param("memberId") Long memberId);
-
-    UmsMemberAndMemberResult getInvitationChainByMemberId(@Param("memberId") Long memberId);
 }
