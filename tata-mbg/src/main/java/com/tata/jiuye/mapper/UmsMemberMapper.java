@@ -36,4 +36,11 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
     int updateByPrimaryKeySelective(UmsMember record);
 
     int updateByPrimaryKey(UmsMember record);
+
+    /**
+     * 通过手机号定位用户信息
+     * @param phone
+     * @return
+     */
+    UmsMember getUmsMemberByPhone(@Param("phone")String phone);
 }

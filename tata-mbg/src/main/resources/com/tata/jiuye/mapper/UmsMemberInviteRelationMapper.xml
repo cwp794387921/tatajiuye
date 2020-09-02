@@ -85,7 +85,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ums_member_invite_relation
     where id = #{id,jdbcType=BIGINT}
@@ -104,9 +104,9 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ums_member_invite_relation (father_member_id, grandpa_member_id, member_id, 
+    insert into ums_member_invite_relation (father_member_id, grandpa_member_id, member_id,
       create_time, update_time)
-    values (#{fatherMemberId,jdbcType=BIGINT}, #{grandpaMemberId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, 
+    values (#{fatherMemberId,jdbcType=BIGINT}, #{grandpaMemberId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.UmsMemberInviteRelation">
@@ -223,4 +223,13 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.UmsMemberInviteRelation">
+      SELECT
+          *
+      FROM
+          ums_member_invite_relation
+      WHERE
+          member_id = #{memberId,jdbcType=BIGINT}
+      limit 1
+    </select>
 </mapper>

@@ -6,13 +6,14 @@ import com.tata.jiuye.model.AcctInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
     long countByExample(AcctInfoExample example);
 
     int deleteByExample(AcctInfoExample example);
 
-    int deleteByPrimaryKey(String acctId);
+    int deleteByPrimaryKey(Long id);
 
     int insert(AcctInfo record);
 
@@ -20,7 +21,7 @@ public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
 
     List<AcctInfo> selectByExample(AcctInfoExample example);
 
-    AcctInfo selectByPrimaryKey(String acctId);
+    AcctInfo selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") AcctInfo record, @Param("example") AcctInfoExample example);
 
