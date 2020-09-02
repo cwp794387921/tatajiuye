@@ -1,5 +1,6 @@
 package com.tata.jiuye.mapper;
 
+import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.UmsMemberInviteRelationExample;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface UmsMemberInviteRelationMapper {
     int updateByPrimaryKey(UmsMemberInviteRelation record);
 
     UmsMemberInviteRelation getByMemberId(@Param("memberId") Long memberId);
+
+    UmsMemberAndMemberResult getInvitationChainByMemberId(@Param("memberId") Long memberId);
 }

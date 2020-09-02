@@ -232,4 +232,15 @@
           member_id = #{memberId,jdbcType=BIGINT}
       limit 1
     </select>
+
+
+    <select id="getInvitationChainByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.DTO.UmsMemberAndMemberResult">
+      SELECT
+          father_id,
+	      grandpa_id
+      FROM
+          ums_member_and_member
+      WHERE member_id = #{memberId,jdbcType=BIGINT}
+      limit 1
+  </select>
 </mapper>

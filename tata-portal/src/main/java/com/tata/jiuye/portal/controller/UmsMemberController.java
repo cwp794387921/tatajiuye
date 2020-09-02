@@ -6,18 +6,15 @@ import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
-import com.tata.jiuye.portal.service.impl.UmsMemberServiceImpl;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.ValidateCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +37,6 @@ import java.util.Map;
 @Api(tags = "UmsMemberController", description = "会员登录注册管理")
 @RequestMapping("/sso")
 @RequiredArgsConstructor
-@Slf4j
 public class UmsMemberController {
 
     private static final Logger log = LoggerFactory.getLogger(UmsMemberController.class);
@@ -141,7 +131,7 @@ public class UmsMemberController {
     @ApiOperation("微信小程序登陆")
     @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam(value = "phone", required=false) String phone,@RequestParam(value = "code", required=false) String code,@RequestParam(value = "fatherId", required=false) String fatherId) {
+    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam(value = "phone", required=false) String phone,@RequestParam(value = "code", required=false) String code,@RequestParam(value = "invitorPhone", required=false)@ApiParam("邀请码即邀请人手机号") String invitorPhone) {
         if (StrUtil.isEmpty(wxCode)) {
             return CommonResult.validateFailed("参数缺失");//404
         }
@@ -163,7 +153,7 @@ public class UmsMemberController {
             //验证通过，删除验证码
             redisService.del(phone);
         }
-        String token = memberService.Wxlogin(wxCode,phone,fatherId);
+        String token = memberService.Wxlogin(wxCode,phone,invitorPhone);
         if (token == null) {
             return CommonResult.failed("登陆或注册失败,请联系管理员");  //500
         }

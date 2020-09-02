@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
@@ -34,6 +35,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -45,16 +47,12 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class UmsMemberServiceImpl implements UmsMemberService {
-
-    private static final Logger log = LoggerFactory.getLogger(UmsMemberServiceImpl.class);
     @Resource
     private  PasswordEncoder passwordEncoder;
     @Resource
     private  JwtTokenUtil jwtTokenUtil;
     @Resource
     private  UmsMemberMapper memberMapper;
-    @Resource
-    private UmsMemberAndMemberMapper memberAndMemberMapper;
     @Resource
     private UmsMemberAndBranchMapper memberAndBranchMapper;
     @Resource
@@ -67,6 +65,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private OmsOrderItemService omsOrderItemService;
     @Resource
     private UmsMemberLevelMapper umsMemberLevelMapper;
+    @Resource
+    private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
+
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -212,7 +213,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
-    public String Wxlogin(String wxCode,String phone,String fatherId){
+    public String Wxlogin(String wxCode,String phone,String invitorPhone){
         String token = null;
         try {
             JSONObject result = GetWeiXinCode.getOpenId(wxCode);
@@ -264,57 +265,62 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 if (!CollectionUtils.isEmpty(memberLevelList)) {
                     umsMember.setMemberLevelId(memberLevelList.get(0).getId());
                 }
+                //插入会员信息
+                memberMapper.insert(umsMember);
                 //绑定关系
-                String grandPaId;
-                String parent;
-                if(fatherId!=null){
-                    log.info("邀请人手机号:"+fatherId);
-                    UmsMember father = memberMapper.selectByUsername(fatherId);
-                    UmsMemberAndMember fatherInfo=memberAndMemberMapper.selectByUsername(fatherId);
-                    UmsMemberAndBranch fatherBranchInfo=memberAndBranchMapper.selectById(fatherId);
-                    if(father==null||fatherInfo==null||fatherBranchInfo==null){
+                Long grandpaMemberId;
+                Long parentMemberId;
+                Long parentBranchId;
+                if(invitorPhone!=null){
+                    log.info("邀请人手机号:"+invitorPhone);
+                    UmsMember fatherUmsMember = memberMapper.getUmsMemberByPhone(invitorPhone);
+                    parentMemberId = fatherUmsMember.getId();
+                    //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
+                    UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
+                    //邀请人角色层次上级与上上级
+                    UmsMemberAndBranch fatherBranchInfo = memberAndBranchMapper.getByMemberId(fatherUmsMember.getId());
+                    if(fatherUmsMember == null||fatherInfo == null||fatherBranchInfo == null){
                         log.info("邀请人信息不存在");
                         return null;
                     }
-                    grandPaId=fatherInfo.getFatherId();
-                    if(fatherBranchInfo.getIsBranch()==0){
-                        parent=fatherBranchInfo.getParent();
+                    grandpaMemberId=fatherInfo.getFatherMemberId();
+                    if(fatherBranchInfo.getIsBranch() == 0){
+                        parentBranchId=fatherBranchInfo.getParent();
                     }else{
-                        log.info("邀请人配送中心编号:"+fatherBranchInfo.getUserBarnch());
-                        parent=fatherBranchInfo.getUserBarnch();
+                        log.info("邀请人配送中心编号:"+fatherBranchInfo.getUserBarnchId());
+                        parentBranchId=fatherBranchInfo.getUserBarnchId();
                     }
                 }else{
                     log.info("未携带邀请码注册");
                     log.info("上级绑定到平台");
-                    fatherId="00000000";
-                    grandPaId="00000000";
-                    parent="0000000000";
+                    invitorPhone="00000000000";
+                    grandpaMemberId=0L;
+                    parentMemberId=0L;
+                    parentBranchId=0L;
                 }
                 //生成会员关系表
-                UmsMemberAndMember umsMemberAndMember=new UmsMemberAndMember();
-                umsMemberAndMember.setUserName(phone);
-                umsMemberAndMember.setCreateTime(new Date());
-                umsMemberAndMember.setFatherId(fatherId);
-                umsMemberAndMember.setGrandpaId(grandPaId);
-                umsMemberAndMember.setRecommendId(fatherId);
+                UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
+                umsMemberInviteRelation.setCreateTime(new Date());
+                umsMemberInviteRelation.setFatherMemberId(parentMemberId);
+                umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
+                umsMemberInviteRelation.setMemberId(umsMember.getId());
                 //生成会员配送中心关系表
                 UmsMemberAndBranch umsMemberAndBranch=new UmsMemberAndBranch();
                 umsMemberAndBranch.setIsBranch(0);
-                umsMemberAndBranch.setParent(parent);
+                umsMemberAndBranch.setParent(parentBranchId);
                 umsMemberAndBranch.setUserName(phone);
                 //生成会员账户信息表
                 String acctId=phone+ GlobalConstants.ACCTITAIL2;
                 AcctInfo acctInfo=new AcctInfo();
-                acctInfo.setAcctId(acctId);
-                acctInfo.setBalance(new BigDecimal(0));
-                acctInfo.setMemberNo(phone);
+                //acctInfo.setAcctId(acctId);
+                acctInfo.setBalance(BigDecimal.ZERO);
+                acctInfo.setMemberId(umsMember.getId());
                 acctInfo.setEffDate(new Date());
                 acctInfo.setInsertTime(new Date());
                 acctInfo.setUpdateTime(new Date());
                 acctInfo.setStatus(1);
-                //插入会员信息
-                memberMapper.insert(umsMember);
-                memberAndMemberMapper.insert(umsMemberAndMember);
+
+                umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
                 memberAndBranchMapper.insert(umsMemberAndBranch);
                 acctInfoMapper.insert(acctInfo);
             }
@@ -345,4 +351,18 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         memberMapper.updateByPrimaryKeySelective(member);
         memberCacheService.setMember(member);
     }
+
+    @Override
+    public UmsMemberAndMemberResult getInvitationChainByMemberId(Long memberId){
+        log.info("------------------------- 通过被邀请人用户ID获取邀请链条 开始 -------------------------");
+        log.info("------------------------- 参数 用户ID : "+ memberId);
+        if(memberId == null){
+            Asserts.fail("用户ID为空");
+        }
+        UmsMemberAndMemberResult umsMemberAndMemberResult = umsMemberInviteRelationMapper.getInvitationChainByMemberId(memberId);
+        log.info("------------------------- 邀请链条为 : "+ umsMemberAndMemberResult);
+        log.info("------------------------- 通过被邀请人用户ID获取邀请链条 结束 -------------------------");
+        return umsMemberAndMemberResult;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service;
 
+import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.model.UmsMember;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,4 +75,11 @@ public interface UmsMemberService {
      */
     @Transactional
     void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName);
+
+    /**
+     * 通过被邀请人用户ID获取邀请链条
+     * @param memberId                          待查询的用户ID
+     * @return
+     */
+    UmsMemberAndMemberResult getInvitationChainByMemberId(Long memberId);
 }
