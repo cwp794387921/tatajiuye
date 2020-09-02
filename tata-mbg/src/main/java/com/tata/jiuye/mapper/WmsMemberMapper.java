@@ -20,6 +20,8 @@ public interface WmsMemberMapper {
 
     WmsMember selectByPrimaryKey(Long id);
 
+    WmsMember selectByUmsId(Long id);
+
     int updateByExampleSelective(@Param("record") WmsMember record, @Param("example") WmsMemberExample example);
 
     int updateByExample(@Param("record") WmsMember record, @Param("example") WmsMemberExample example);

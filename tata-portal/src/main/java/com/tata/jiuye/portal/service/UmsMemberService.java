@@ -1,6 +1,6 @@
 package com.tata.jiuye.portal.service;
 
-import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
+//import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import org.springframework.security.core.userdetails.UserDetails;

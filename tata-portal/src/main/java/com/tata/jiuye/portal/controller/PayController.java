@@ -6,11 +6,11 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.mapper.OmsOrderMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
-import com.tata.jiuye.model.OmsOrder;
-import com.tata.jiuye.model.OmsOrderItem;
-import com.tata.jiuye.model.UmsMember;
+import com.tata.jiuye.mapper.WmsMemberMapper;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
@@ -57,7 +57,10 @@ public class PayController {
     private UmsMemberMapper umsMemberMapper;
     @Resource
     private UmsMemberService umsMemberService;
-
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
+    @Resource
+    private OmsDistributionMapper distributionMapper;
 
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
@@ -65,15 +68,15 @@ public class PayController {
     @ApiOperation("微信web支付接口")
     @PostMapping("/wxWebRechargePay")
     @ResponseBody
-    public CommonResult wxWebRechargePay(@RequestParam @ApiParam("订单编号")String orderNum, @RequestParam @ApiParam("微信code")String code, HttpServletRequest httpRequest,
+    public CommonResult wxWebRechargePay(@RequestParam @ApiParam("订单编号")String orderNum, HttpServletRequest httpRequest,
                                          HttpServletResponse httpResponse)throws ServletException, IOException {
         log.info("===========微信web支付:进入============");
         log.info("===========用户请求IP:{}============",getIp(httpRequest));
-        if(StrUtil.isEmpty(orderNum)||StrUtil.isEmpty(code)){
+        if(StrUtil.isEmpty(orderNum)){
             return CommonResult.validateFailed("参数错误");
         }
-        JSONObject result = GetWeiXinCode.getOpenId(code);
-        String openId = result.get("openid").toString();
+        UmsMember member = umsMemberService.getCurrentMember();
+        String openId=member.getOpenId();
         if (openId==null){
             return CommonResult.failed("获取openid失败");
         }
@@ -81,7 +84,6 @@ public class PayController {
         JSONObject jsonObject=new JSONObject();
         if(omsOrder!=null) {
             BigDecimal money = null;
-
             if (omsOrder.getPayAmount() == null) {
                 return CommonResult.failed("订单金额不存在");
             } else {
@@ -158,7 +160,6 @@ public class PayController {
             inStream.close();
             String result = new String(outSteam.toByteArray(), "utf-8");// 获取微信调用我们notify_url的返回信息
             Map<String, String> map = WXPayUtil.xmlToMap(result);
-
             if (wxPay.isPayResultNotifySignatureValid(map)) {
                 System.out.println("微信支付-签名验证成功");
                 System.out.println(map.toString());
@@ -178,17 +179,45 @@ public class PayController {
                 }
                 UmsMember umsMember = umsMemberMapper.selectById(openId);
                 if(umsMember == null){
-                    Asserts.fail("找不到 openId : "+openId+" 对应的用户信息");
+                    Asserts.fail("==>找不到 openId : "+openId+" 对应的用户信息");
                 }
                 List<OmsOrderItem> orderItemList = omsOrderItemService.getItemForOrderSn(orderSn);
                 if(CollectionUtils.isEmpty(orderItemList)){
-                    Asserts.fail("找不到订单号 :"+orderSn +"的订单商品信息");
+                    Asserts.fail("==>找不到订单号 :"+orderSn +"的订单商品信息");
                 }
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(omsOrderItem.getIfJoinVipProduct() == 1){
                         umsMemberService.updateUmsMemberLevel(umsMember,UMS_MEMBER_LEVEL_NAME_VIP);
                     }
+                }
+                //生成配送单
+                Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
+                WmsMember wmsMember=null;
+                if(id!=null){
+                     wmsMember=wmsMemberMapper.selectByUmsId(id);
+                    if (wmsMember==null){
+                        Asserts.fail("==>找不到对应配送中心信息");
+                    }
+                }else {
+                    Asserts.fail("==>找不到上级配送中心");
+                }
+                String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
+                for(OmsOrderItem omsOrderItem : orderItemList){
+                    OmsDistribution distribution=new OmsDistribution();
+                    distribution.setOrderSn(omsOrder.getOrderSn());
+                    distribution.setStatus(0);
+                    distribution.setGoodsImg(omsOrderItem.getProductPic());
+                    distribution.setGoodsTitle(omsOrderItem.getProductName());
+                    distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                    distribution.setPrice(omsOrderItem.getProductPrice());
+                    distribution.setNumber(omsOrderItem.getProductQuantity());
+                    distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                    distribution.setName(omsOrder.getReceiverName());
+                    distribution.setAddress(address);
+                    distribution.setCreateTime(new Date());
+                    distribution.setWmsMemberId(wmsMember.getUmsMemberId());
+                    distributionMapper.insert(distribution);
                 }
                 //业务处理结束
             }
@@ -198,8 +227,10 @@ public class PayController {
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 

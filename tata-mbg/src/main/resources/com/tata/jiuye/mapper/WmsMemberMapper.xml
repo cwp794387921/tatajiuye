@@ -108,6 +108,12 @@
     from wms_member
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from wms_member
+    where ums_member_id = #{id,jdbcType=BIGINT}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from wms_member
     where id = #{id,jdbcType=BIGINT}

@@ -1,7 +1,6 @@
 package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.UmsMemberInviteRelationExample;
 import java.util.List;

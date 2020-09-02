@@ -2,6 +2,7 @@ package com.tata.jiuye.portal.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
@@ -39,6 +40,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Resource
     private  UmsMemberService memberService;
     @Resource
+    private UmsMemberLevelService memberLevelService;
+    @Resource
     private  OmsCartItemService cartItemService;
     @Resource
     private  UmsMemberReceiveAddressService memberReceiveAddressService;
@@ -66,12 +69,14 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private  OmsOrderItemMapper orderItemMapper;
     @Resource
     private  CancelOrderSender cancelOrderSender;
-
+    @Resource
+    private  OmsDistributionMapper DistributionMapper;
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
     @Value("${redis.database}")
     private String REDIS_DATABASE;
-
+    @Value("${umsmemberlevelname.deliverycenter}")
+    private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
 
     @Override
     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
@@ -419,6 +424,20 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
     }
 
+    @Override
+    public JSONObject queryDistribution(){
+        UmsMember member = memberService.getCurrentMember();
+        if(memberLevelService.isDeliveryCenter(member.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER)){
+            log.info("==》不是配送中心");
+            return null;
+        }
+        JSONObject result=new JSONObject();
+        List<OmsDistribution> list= DistributionMapper.queryList(member.getId());
+        if(list!=null){
+            result.put("list",list);
+        }
+        return result;
+    }
 
 
     @Override

@@ -37,7 +37,7 @@ secure:
       - /home/**
       - /product/**
       - /brand/**
-
+      - /pay/**
 # 自定义redis key
 redis:
   database: mall

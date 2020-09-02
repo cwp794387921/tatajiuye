@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
@@ -113,4 +114,13 @@ public class OmsPortalOrderController {
         portalOrderService.deleteOrder(orderId);
         return CommonResult.success(null);
     }
+
+    @ApiOperation("查询配送单列表")
+    @RequestMapping(value = "/queryDistribution", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult queryDistribution() {
+        JSONObject jsonObject=portalOrderService.queryDistribution();
+        return CommonResult.success(jsonObject);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
@@ -76,4 +77,6 @@ public interface OmsPortalOrderService {
      * @return
      */
     OmsOrder getOmsOrderByOrderSn(String orderSn);
+
+    JSONObject queryDistribution();
 }
