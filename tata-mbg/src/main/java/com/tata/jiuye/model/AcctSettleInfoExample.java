@@ -166,73 +166,73 @@ public class AcctSettleInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdIsNull() {
-            addCriterion("order_id is null");
+        public Criteria andOrderNoIsNull() {
+            addCriterion("order_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdIsNotNull() {
-            addCriterion("order_id is not null");
+        public Criteria andOrderNoIsNotNull() {
+            addCriterion("order_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdEqualTo(String value) {
-            addCriterion("order_id =", value, "orderId");
+        public Criteria andOrderNoEqualTo(String value) {
+            addCriterion("order_no =", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdNotEqualTo(String value) {
-            addCriterion("order_id <>", value, "orderId");
+        public Criteria andOrderNoNotEqualTo(String value) {
+            addCriterion("order_no <>", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdGreaterThan(String value) {
-            addCriterion("order_id >", value, "orderId");
+        public Criteria andOrderNoGreaterThan(String value) {
+            addCriterion("order_no >", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdGreaterThanOrEqualTo(String value) {
-            addCriterion("order_id >=", value, "orderId");
+        public Criteria andOrderNoGreaterThanOrEqualTo(String value) {
+            addCriterion("order_no >=", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdLessThan(String value) {
-            addCriterion("order_id <", value, "orderId");
+        public Criteria andOrderNoLessThan(String value) {
+            addCriterion("order_no <", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdLessThanOrEqualTo(String value) {
-            addCriterion("order_id <=", value, "orderId");
+        public Criteria andOrderNoLessThanOrEqualTo(String value) {
+            addCriterion("order_no <=", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdLike(String value) {
-            addCriterion("order_id like", value, "orderId");
+        public Criteria andOrderNoLike(String value) {
+            addCriterion("order_no like", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdNotLike(String value) {
-            addCriterion("order_id not like", value, "orderId");
+        public Criteria andOrderNoNotLike(String value) {
+            addCriterion("order_no not like", value, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdIn(List<String> values) {
-            addCriterion("order_id in", values, "orderId");
+        public Criteria andOrderNoIn(List<String> values) {
+            addCriterion("order_no in", values, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdNotIn(List<String> values) {
-            addCriterion("order_id not in", values, "orderId");
+        public Criteria andOrderNoNotIn(List<String> values) {
+            addCriterion("order_no not in", values, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdBetween(String value1, String value2) {
-            addCriterion("order_id between", value1, value2, "orderId");
+        public Criteria andOrderNoBetween(String value1, String value2) {
+            addCriterion("order_no between", value1, value2, "orderNo");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIdNotBetween(String value1, String value2) {
-            addCriterion("order_id not between", value1, value2, "orderId");
+        public Criteria andOrderNoNotBetween(String value1, String value2) {
+            addCriterion("order_no not between", value1, value2, "orderNo");
             return (Criteria) this;
         }
 
@@ -246,62 +246,52 @@ public class AcctSettleInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdEqualTo(String value) {
+        public Criteria andAcctIdEqualTo(Long value) {
             addCriterion("acct_id =", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotEqualTo(String value) {
+        public Criteria andAcctIdNotEqualTo(Long value) {
             addCriterion("acct_id <>", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdGreaterThan(String value) {
+        public Criteria andAcctIdGreaterThan(Long value) {
             addCriterion("acct_id >", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdGreaterThanOrEqualTo(String value) {
+        public Criteria andAcctIdGreaterThanOrEqualTo(Long value) {
             addCriterion("acct_id >=", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLessThan(String value) {
+        public Criteria andAcctIdLessThan(Long value) {
             addCriterion("acct_id <", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLessThanOrEqualTo(String value) {
+        public Criteria andAcctIdLessThanOrEqualTo(Long value) {
             addCriterion("acct_id <=", value, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLike(String value) {
-            addCriterion("acct_id like", value, "acctId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAcctIdNotLike(String value) {
-            addCriterion("acct_id not like", value, "acctId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAcctIdIn(List<String> values) {
+        public Criteria andAcctIdIn(List<Long> values) {
             addCriterion("acct_id in", values, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotIn(List<String> values) {
+        public Criteria andAcctIdNotIn(List<Long> values) {
             addCriterion("acct_id not in", values, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdBetween(String value1, String value2) {
+        public Criteria andAcctIdBetween(Long value1, Long value2) {
             addCriterion("acct_id between", value1, value2, "acctId");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotBetween(String value1, String value2) {
+        public Criteria andAcctIdNotBetween(Long value1, Long value2) {
             addCriterion("acct_id not between", value1, value2, "acctId");
             return (Criteria) this;
         }
@@ -436,62 +426,52 @@ public class AcctSettleInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalEqualTo(String value) {
+        public Criteria andAfterBalEqualTo(BigDecimal value) {
             addCriterion("after_bal =", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalNotEqualTo(String value) {
+        public Criteria andAfterBalNotEqualTo(BigDecimal value) {
             addCriterion("after_bal <>", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalGreaterThan(String value) {
+        public Criteria andAfterBalGreaterThan(BigDecimal value) {
             addCriterion("after_bal >", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalGreaterThanOrEqualTo(String value) {
+        public Criteria andAfterBalGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("after_bal >=", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalLessThan(String value) {
+        public Criteria andAfterBalLessThan(BigDecimal value) {
             addCriterion("after_bal <", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalLessThanOrEqualTo(String value) {
+        public Criteria andAfterBalLessThanOrEqualTo(BigDecimal value) {
             addCriterion("after_bal <=", value, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalLike(String value) {
-            addCriterion("after_bal like", value, "afterBal");
-            return (Criteria) this;
-        }
-
-        public Criteria andAfterBalNotLike(String value) {
-            addCriterion("after_bal not like", value, "afterBal");
-            return (Criteria) this;
-        }
-
-        public Criteria andAfterBalIn(List<String> values) {
+        public Criteria andAfterBalIn(List<BigDecimal> values) {
             addCriterion("after_bal in", values, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalNotIn(List<String> values) {
+        public Criteria andAfterBalNotIn(List<BigDecimal> values) {
             addCriterion("after_bal not in", values, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalBetween(String value1, String value2) {
+        public Criteria andAfterBalBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("after_bal between", value1, value2, "afterBal");
             return (Criteria) this;
         }
 
-        public Criteria andAfterBalNotBetween(String value1, String value2) {
+        public Criteria andAfterBalNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("after_bal not between", value1, value2, "afterBal");
             return (Criteria) this;
         }
@@ -753,6 +733,66 @@ public class AcctSettleInfoExample {
 
         public Criteria andSourceIdNotBetween(Long value1, Long value2) {
             addCriterion("source_id not between", value1, value2, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
     }

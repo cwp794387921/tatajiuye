@@ -11,10 +11,10 @@ public class AcctSettleInfo implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "订单编号")
-    private String orderId;
+    private String orderNo;
 
     @ApiModelProperty(value = "账户ID")
-    private String acctId;
+    private Long acctId;
 
     @ApiModelProperty(value = "变动前金额")
     private BigDecimal beforBal;
@@ -23,7 +23,7 @@ public class AcctSettleInfo implements Serializable {
     private BigDecimal change;
 
     @ApiModelProperty(value = "变动后金额")
-    private String afterBal;
+    private BigDecimal afterBal;
 
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "变动时间")
@@ -38,6 +38,10 @@ public class AcctSettleInfo implements Serializable {
     @ApiModelProperty(value = "流水来源ID(收入专用)")
     private Long sourceId;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "更新时间")
+    private Date updateTime;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -48,19 +52,19 @@ public class AcctSettleInfo implements Serializable {
         this.id = id;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public String getOrderNo() {
+        return orderNo;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 
-    public String getAcctId() {
+    public Long getAcctId() {
         return acctId;
     }
 
-    public void setAcctId(String acctId) {
+    public void setAcctId(Long acctId) {
         this.acctId = acctId;
     }
 
@@ -80,11 +84,11 @@ public class AcctSettleInfo implements Serializable {
         this.change = change;
     }
 
-    public String getAfterBal() {
+    public BigDecimal getAfterBal() {
         return afterBal;
     }
 
-    public void setAfterBal(String afterBal) {
+    public void setAfterBal(BigDecimal afterBal) {
         this.afterBal = afterBal;
     }
 
@@ -120,6 +124,14 @@ public class AcctSettleInfo implements Serializable {
         this.sourceId = sourceId;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -127,7 +139,7 @@ public class AcctSettleInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", orderId=").append(orderId);
+        sb.append(", orderNo=").append(orderNo);
         sb.append(", acctId=").append(acctId);
         sb.append(", beforBal=").append(beforBal);
         sb.append(", change=").append(change);
@@ -136,6 +148,7 @@ public class AcctSettleInfo implements Serializable {
         sb.append(", flowType=").append(flowType);
         sb.append(", flowTypeDetail=").append(flowTypeDetail);
         sb.append(", sourceId=").append(sourceId);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

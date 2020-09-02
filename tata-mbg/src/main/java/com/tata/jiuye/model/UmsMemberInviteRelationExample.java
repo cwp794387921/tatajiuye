@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UmsMemberAndBranchExample {
+public class UmsMemberInviteRelationExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public UmsMemberAndBranchExample() {
+    public UmsMemberInviteRelationExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,253 +165,123 @@ public class UmsMemberAndBranchExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserNameIsNull() {
-            addCriterion("user_name is null");
+        public Criteria andFatherMemberIdIsNull() {
+            addCriterion("father_member_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameIsNotNull() {
-            addCriterion("user_name is not null");
+        public Criteria andFatherMemberIdIsNotNull() {
+            addCriterion("father_member_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameEqualTo(String value) {
-            addCriterion("user_name =", value, "userName");
+        public Criteria andFatherMemberIdEqualTo(Long value) {
+            addCriterion("father_member_id =", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameNotEqualTo(String value) {
-            addCriterion("user_name <>", value, "userName");
+        public Criteria andFatherMemberIdNotEqualTo(Long value) {
+            addCriterion("father_member_id <>", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameGreaterThan(String value) {
-            addCriterion("user_name >", value, "userName");
+        public Criteria andFatherMemberIdGreaterThan(Long value) {
+            addCriterion("father_member_id >", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameGreaterThanOrEqualTo(String value) {
-            addCriterion("user_name >=", value, "userName");
+        public Criteria andFatherMemberIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("father_member_id >=", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameLessThan(String value) {
-            addCriterion("user_name <", value, "userName");
+        public Criteria andFatherMemberIdLessThan(Long value) {
+            addCriterion("father_member_id <", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameLessThanOrEqualTo(String value) {
-            addCriterion("user_name <=", value, "userName");
+        public Criteria andFatherMemberIdLessThanOrEqualTo(Long value) {
+            addCriterion("father_member_id <=", value, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameLike(String value) {
-            addCriterion("user_name like", value, "userName");
+        public Criteria andFatherMemberIdIn(List<Long> values) {
+            addCriterion("father_member_id in", values, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameNotLike(String value) {
-            addCriterion("user_name not like", value, "userName");
+        public Criteria andFatherMemberIdNotIn(List<Long> values) {
+            addCriterion("father_member_id not in", values, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameIn(List<String> values) {
-            addCriterion("user_name in", values, "userName");
+        public Criteria andFatherMemberIdBetween(Long value1, Long value2) {
+            addCriterion("father_member_id between", value1, value2, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameNotIn(List<String> values) {
-            addCriterion("user_name not in", values, "userName");
+        public Criteria andFatherMemberIdNotBetween(Long value1, Long value2) {
+            addCriterion("father_member_id not between", value1, value2, "fatherMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameBetween(String value1, String value2) {
-            addCriterion("user_name between", value1, value2, "userName");
+        public Criteria andGrandpaMemberIdIsNull() {
+            addCriterion("grandpa_member_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserNameNotBetween(String value1, String value2) {
-            addCriterion("user_name not between", value1, value2, "userName");
+        public Criteria andGrandpaMemberIdIsNotNull() {
+            addCriterion("grandpa_member_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchIsNull() {
-            addCriterion("is_branch is null");
+        public Criteria andGrandpaMemberIdEqualTo(Long value) {
+            addCriterion("grandpa_member_id =", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchIsNotNull() {
-            addCriterion("is_branch is not null");
+        public Criteria andGrandpaMemberIdNotEqualTo(Long value) {
+            addCriterion("grandpa_member_id <>", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchEqualTo(Integer value) {
-            addCriterion("is_branch =", value, "isBranch");
+        public Criteria andGrandpaMemberIdGreaterThan(Long value) {
+            addCriterion("grandpa_member_id >", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchNotEqualTo(Integer value) {
-            addCriterion("is_branch <>", value, "isBranch");
+        public Criteria andGrandpaMemberIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("grandpa_member_id >=", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchGreaterThan(Integer value) {
-            addCriterion("is_branch >", value, "isBranch");
+        public Criteria andGrandpaMemberIdLessThan(Long value) {
+            addCriterion("grandpa_member_id <", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_branch >=", value, "isBranch");
+        public Criteria andGrandpaMemberIdLessThanOrEqualTo(Long value) {
+            addCriterion("grandpa_member_id <=", value, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchLessThan(Integer value) {
-            addCriterion("is_branch <", value, "isBranch");
+        public Criteria andGrandpaMemberIdIn(List<Long> values) {
+            addCriterion("grandpa_member_id in", values, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchLessThanOrEqualTo(Integer value) {
-            addCriterion("is_branch <=", value, "isBranch");
+        public Criteria andGrandpaMemberIdNotIn(List<Long> values) {
+            addCriterion("grandpa_member_id not in", values, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchIn(List<Integer> values) {
-            addCriterion("is_branch in", values, "isBranch");
+        public Criteria andGrandpaMemberIdBetween(Long value1, Long value2) {
+            addCriterion("grandpa_member_id between", value1, value2, "grandpaMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andIsBranchNotIn(List<Integer> values) {
-            addCriterion("is_branch not in", values, "isBranch");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsBranchBetween(Integer value1, Integer value2) {
-            addCriterion("is_branch between", value1, value2, "isBranch");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsBranchNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_branch not between", value1, value2, "isBranch");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIsNull() {
-            addCriterion("parent is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIsNotNull() {
-            addCriterion("parent is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentEqualTo(Long value) {
-            addCriterion("parent =", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentNotEqualTo(Long value) {
-            addCriterion("parent <>", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentGreaterThan(Long value) {
-            addCriterion("parent >", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentGreaterThanOrEqualTo(Long value) {
-            addCriterion("parent >=", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentLessThan(Long value) {
-            addCriterion("parent <", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentLessThanOrEqualTo(Long value) {
-            addCriterion("parent <=", value, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentIn(List<Long> values) {
-            addCriterion("parent in", values, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentNotIn(List<Long> values) {
-            addCriterion("parent not in", values, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentBetween(Long value1, Long value2) {
-            addCriterion("parent between", value1, value2, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentNotBetween(Long value1, Long value2) {
-            addCriterion("parent not between", value1, value2, "parent");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdIsNull() {
-            addCriterion("user_barnch_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdIsNotNull() {
-            addCriterion("user_barnch_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdEqualTo(Long value) {
-            addCriterion("user_barnch_id =", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdNotEqualTo(Long value) {
-            addCriterion("user_barnch_id <>", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdGreaterThan(Long value) {
-            addCriterion("user_barnch_id >", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_barnch_id >=", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdLessThan(Long value) {
-            addCriterion("user_barnch_id <", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdLessThanOrEqualTo(Long value) {
-            addCriterion("user_barnch_id <=", value, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdIn(List<Long> values) {
-            addCriterion("user_barnch_id in", values, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdNotIn(List<Long> values) {
-            addCriterion("user_barnch_id not in", values, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdBetween(Long value1, Long value2) {
-            addCriterion("user_barnch_id between", value1, value2, "userBarnchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserBarnchIdNotBetween(Long value1, Long value2) {
-            addCriterion("user_barnch_id not between", value1, value2, "userBarnchId");
+        public Criteria andGrandpaMemberIdNotBetween(Long value1, Long value2) {
+            addCriterion("grandpa_member_id not between", value1, value2, "grandpaMemberId");
             return (Criteria) this;
         }
 

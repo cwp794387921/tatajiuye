@@ -1,35 +1,40 @@
 package com.tata.jiuye.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class AcctInfo implements Serializable {
-    @ApiModelProperty(value = "账户id")
-    private String acctId;
+    @ApiModelProperty(value = "账户ID")
+    private Long id;
 
     @ApiModelProperty(value = "余额")
     private BigDecimal balance;
 
-    @ApiModelProperty(value = "所属会员手机号")
-    private String memberNo;
+    @ApiModelProperty(value = "所属会员ID")
+    private Long memberId;
 
-    @ApiModelProperty(value = "所属机构id")
-    private String branchNo;
+    @ApiModelProperty(value = "所属机构ID")
+    private Long branchId;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "生效日期")
     private Date effDate;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "失效日期")
     private Date expirDate;
 
     @ApiModelProperty(value = "状态 00失效  01生效")
     private Integer status;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "插入时间")
     private Date insertTime;
 
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
@@ -38,12 +43,12 @@ public class AcctInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getAcctId() {
-        return acctId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAcctId(String acctId) {
-        this.acctId = acctId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public BigDecimal getBalance() {
@@ -54,20 +59,20 @@ public class AcctInfo implements Serializable {
         this.balance = balance;
     }
 
-    public String getMemberNo() {
-        return memberNo;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setMemberNo(String memberNo) {
-        this.memberNo = memberNo;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public String getBranchNo() {
-        return branchNo;
+    public Long getBranchId() {
+        return branchId;
     }
 
-    public void setBranchNo(String branchNo) {
-        this.branchNo = branchNo;
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
     }
 
     public Date getEffDate() {
@@ -124,10 +129,10 @@ public class AcctInfo implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", acctId=").append(acctId);
+        sb.append(", id=").append(id);
         sb.append(", balance=").append(balance);
-        sb.append(", memberNo=").append(memberNo);
-        sb.append(", branchNo=").append(branchNo);
+        sb.append(", memberId=").append(memberId);
+        sb.append(", branchId=").append(branchId);
         sb.append(", effDate=").append(effDate);
         sb.append(", expirDate=").append(expirDate);
         sb.append(", status=").append(status);

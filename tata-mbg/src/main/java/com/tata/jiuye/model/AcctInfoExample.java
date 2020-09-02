@@ -106,73 +106,63 @@ public class AcctInfoExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andAcctIdIsNull() {
-            addCriterion("acct_id is null");
+        public Criteria andIdIsNull() {
+            addCriterion("id is null");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdIsNotNull() {
-            addCriterion("acct_id is not null");
+        public Criteria andIdIsNotNull() {
+            addCriterion("id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdEqualTo(String value) {
-            addCriterion("acct_id =", value, "acctId");
+        public Criteria andIdEqualTo(Long value) {
+            addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotEqualTo(String value) {
-            addCriterion("acct_id <>", value, "acctId");
+        public Criteria andIdNotEqualTo(Long value) {
+            addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdGreaterThan(String value) {
-            addCriterion("acct_id >", value, "acctId");
+        public Criteria andIdGreaterThan(Long value) {
+            addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdGreaterThanOrEqualTo(String value) {
-            addCriterion("acct_id >=", value, "acctId");
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLessThan(String value) {
-            addCriterion("acct_id <", value, "acctId");
+        public Criteria andIdLessThan(Long value) {
+            addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLessThanOrEqualTo(String value) {
-            addCriterion("acct_id <=", value, "acctId");
+        public Criteria andIdLessThanOrEqualTo(Long value) {
+            addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdLike(String value) {
-            addCriterion("acct_id like", value, "acctId");
+        public Criteria andIdIn(List<Long> values) {
+            addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotLike(String value) {
-            addCriterion("acct_id not like", value, "acctId");
+        public Criteria andIdNotIn(List<Long> values) {
+            addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdIn(List<String> values) {
-            addCriterion("acct_id in", values, "acctId");
+        public Criteria andIdBetween(Long value1, Long value2) {
+            addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andAcctIdNotIn(List<String> values) {
-            addCriterion("acct_id not in", values, "acctId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAcctIdBetween(String value1, String value2) {
-            addCriterion("acct_id between", value1, value2, "acctId");
-            return (Criteria) this;
-        }
-
-        public Criteria andAcctIdNotBetween(String value1, String value2) {
-            addCriterion("acct_id not between", value1, value2, "acctId");
+        public Criteria andIdNotBetween(Long value1, Long value2) {
+            addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
 
@@ -236,143 +226,123 @@ public class AcctInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoIsNull() {
-            addCriterion("member_no is null");
+        public Criteria andMemberIdIsNull() {
+            addCriterion("member_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoIsNotNull() {
-            addCriterion("member_no is not null");
+        public Criteria andMemberIdIsNotNull() {
+            addCriterion("member_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoEqualTo(String value) {
-            addCriterion("member_no =", value, "memberNo");
+        public Criteria andMemberIdEqualTo(Long value) {
+            addCriterion("member_id =", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoNotEqualTo(String value) {
-            addCriterion("member_no <>", value, "memberNo");
+        public Criteria andMemberIdNotEqualTo(Long value) {
+            addCriterion("member_id <>", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoGreaterThan(String value) {
-            addCriterion("member_no >", value, "memberNo");
+        public Criteria andMemberIdGreaterThan(Long value) {
+            addCriterion("member_id >", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoGreaterThanOrEqualTo(String value) {
-            addCriterion("member_no >=", value, "memberNo");
+        public Criteria andMemberIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("member_id >=", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoLessThan(String value) {
-            addCriterion("member_no <", value, "memberNo");
+        public Criteria andMemberIdLessThan(Long value) {
+            addCriterion("member_id <", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoLessThanOrEqualTo(String value) {
-            addCriterion("member_no <=", value, "memberNo");
+        public Criteria andMemberIdLessThanOrEqualTo(Long value) {
+            addCriterion("member_id <=", value, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoLike(String value) {
-            addCriterion("member_no like", value, "memberNo");
+        public Criteria andMemberIdIn(List<Long> values) {
+            addCriterion("member_id in", values, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoNotLike(String value) {
-            addCriterion("member_no not like", value, "memberNo");
+        public Criteria andMemberIdNotIn(List<Long> values) {
+            addCriterion("member_id not in", values, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoIn(List<String> values) {
-            addCriterion("member_no in", values, "memberNo");
+        public Criteria andMemberIdBetween(Long value1, Long value2) {
+            addCriterion("member_id between", value1, value2, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoNotIn(List<String> values) {
-            addCriterion("member_no not in", values, "memberNo");
+        public Criteria andMemberIdNotBetween(Long value1, Long value2) {
+            addCriterion("member_id not between", value1, value2, "memberId");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoBetween(String value1, String value2) {
-            addCriterion("member_no between", value1, value2, "memberNo");
+        public Criteria andBranchIdIsNull() {
+            addCriterion("branch_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andMemberNoNotBetween(String value1, String value2) {
-            addCriterion("member_no not between", value1, value2, "memberNo");
+        public Criteria andBranchIdIsNotNull() {
+            addCriterion("branch_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoIsNull() {
-            addCriterion("branch_no is null");
+        public Criteria andBranchIdEqualTo(Long value) {
+            addCriterion("branch_id =", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoIsNotNull() {
-            addCriterion("branch_no is not null");
+        public Criteria andBranchIdNotEqualTo(Long value) {
+            addCriterion("branch_id <>", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoEqualTo(String value) {
-            addCriterion("branch_no =", value, "branchNo");
+        public Criteria andBranchIdGreaterThan(Long value) {
+            addCriterion("branch_id >", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoNotEqualTo(String value) {
-            addCriterion("branch_no <>", value, "branchNo");
+        public Criteria andBranchIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("branch_id >=", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoGreaterThan(String value) {
-            addCriterion("branch_no >", value, "branchNo");
+        public Criteria andBranchIdLessThan(Long value) {
+            addCriterion("branch_id <", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoGreaterThanOrEqualTo(String value) {
-            addCriterion("branch_no >=", value, "branchNo");
+        public Criteria andBranchIdLessThanOrEqualTo(Long value) {
+            addCriterion("branch_id <=", value, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoLessThan(String value) {
-            addCriterion("branch_no <", value, "branchNo");
+        public Criteria andBranchIdIn(List<Long> values) {
+            addCriterion("branch_id in", values, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoLessThanOrEqualTo(String value) {
-            addCriterion("branch_no <=", value, "branchNo");
+        public Criteria andBranchIdNotIn(List<Long> values) {
+            addCriterion("branch_id not in", values, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoLike(String value) {
-            addCriterion("branch_no like", value, "branchNo");
+        public Criteria andBranchIdBetween(Long value1, Long value2) {
+            addCriterion("branch_id between", value1, value2, "branchId");
             return (Criteria) this;
         }
 
-        public Criteria andBranchNoNotLike(String value) {
-            addCriterion("branch_no not like", value, "branchNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBranchNoIn(List<String> values) {
-            addCriterion("branch_no in", values, "branchNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBranchNoNotIn(List<String> values) {
-            addCriterion("branch_no not in", values, "branchNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBranchNoBetween(String value1, String value2) {
-            addCriterion("branch_no between", value1, value2, "branchNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andBranchNoNotBetween(String value1, String value2) {
-            addCriterion("branch_no not between", value1, value2, "branchNo");
+        public Criteria andBranchIdNotBetween(Long value1, Long value2) {
+            addCriterion("branch_id not between", value1, value2, "branchId");
             return (Criteria) this;
         }
 

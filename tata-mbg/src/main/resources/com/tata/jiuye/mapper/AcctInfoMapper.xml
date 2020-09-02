@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tata.jiuye.mapper.AcctInfoMapper">
   <resultMap id="BaseResultMap" type="com.tata.jiuye.model.AcctInfo">
-    <id column="acct_id" jdbcType="VARCHAR" property="acctId" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="balance" jdbcType="DECIMAL" property="balance" />
-    <result column="member_no" jdbcType="VARCHAR" property="memberNo" />
-    <result column="branch_no" jdbcType="VARCHAR" property="branchNo" />
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <result column="branch_id" jdbcType="BIGINT" property="branchId" />
     <result column="eff_date" jdbcType="TIMESTAMP" property="effDate" />
     <result column="expir_date" jdbcType="TIMESTAMP" property="expirDate" />
     <result column="status" jdbcType="INTEGER" property="status" />
@@ -72,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    acct_id, balance, member_no, branch_no, eff_date, expir_date, status, insert_time, 
-    update_time, remake
+    id, balance, member_id, branch_id, eff_date, expir_date, status, insert_time, update_time, 
+    remake
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctInfoExample" resultMap="BaseResultMap">
     select
@@ -89,15 +89,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from acct_info
-    where acct_id = #{acctId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from acct_info
-    where acct_id = #{acctId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.tata.jiuye.model.AcctInfoExample">
     delete from acct_info
@@ -106,29 +106,32 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.tata.jiuye.model.AcctInfo">
-    insert into acct_info (acct_id, balance, member_no, 
-      branch_no, eff_date, expir_date, 
-      status, insert_time, update_time, 
-      remake)
-    values (#{acctId,jdbcType=VARCHAR}, #{balance,jdbcType=DECIMAL}, #{memberNo,jdbcType=VARCHAR}, 
-      #{branchNo,jdbcType=VARCHAR}, #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{insertTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remake,jdbcType=VARCHAR})
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into acct_info (balance, member_id, branch_id, 
+      eff_date, expir_date, status, 
+      insert_time, update_time, remake
+      )
+    values (#{balance,jdbcType=DECIMAL}, #{memberId,jdbcType=BIGINT}, #{branchId,jdbcType=BIGINT}, 
+      #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{insertTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remake,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into acct_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="acctId != null">
-        acct_id,
-      </if>
       <if test="balance != null">
         balance,
       </if>
-      <if test="memberNo != null">
-        member_no,
+      <if test="memberId != null">
+        member_id,
       </if>
-      <if test="branchNo != null">
-        branch_no,
+      <if test="branchId != null">
+        branch_id,
       </if>
       <if test="effDate != null">
         eff_date,
@@ -150,17 +153,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="acctId != null">
-        #{acctId,jdbcType=VARCHAR},
-      </if>
       <if test="balance != null">
         #{balance,jdbcType=DECIMAL},
       </if>
-      <if test="memberNo != null">
-        #{memberNo,jdbcType=VARCHAR},
+      <if test="memberId != null">
+        #{memberId,jdbcType=BIGINT},
       </if>
-      <if test="branchNo != null">
-        #{branchNo,jdbcType=VARCHAR},
+      <if test="branchId != null">
+        #{branchId,jdbcType=BIGINT},
       </if>
       <if test="effDate != null">
         #{effDate,jdbcType=TIMESTAMP},
@@ -191,17 +191,17 @@
   <update id="updateByExampleSelective" parameterType="map">
     update acct_info
     <set>
-      <if test="record.acctId != null">
-        acct_id = #{record.acctId,jdbcType=VARCHAR},
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.balance != null">
         balance = #{record.balance,jdbcType=DECIMAL},
       </if>
-      <if test="record.memberNo != null">
-        member_no = #{record.memberNo,jdbcType=VARCHAR},
+      <if test="record.memberId != null">
+        member_id = #{record.memberId,jdbcType=BIGINT},
       </if>
-      <if test="record.branchNo != null">
-        branch_no = #{record.branchNo,jdbcType=VARCHAR},
+      <if test="record.branchId != null">
+        branch_id = #{record.branchId,jdbcType=BIGINT},
       </if>
       <if test="record.effDate != null">
         eff_date = #{record.effDate,jdbcType=TIMESTAMP},
@@ -228,10 +228,10 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update acct_info
-    set acct_id = #{record.acctId,jdbcType=VARCHAR},
+    set id = #{record.id,jdbcType=BIGINT},
       balance = #{record.balance,jdbcType=DECIMAL},
-      member_no = #{record.memberNo,jdbcType=VARCHAR},
-      branch_no = #{record.branchNo,jdbcType=VARCHAR},
+      member_id = #{record.memberId,jdbcType=BIGINT},
+      branch_id = #{record.branchId,jdbcType=BIGINT},
       eff_date = #{record.effDate,jdbcType=TIMESTAMP},
       expir_date = #{record.expirDate,jdbcType=TIMESTAMP},
       status = #{record.status,jdbcType=INTEGER},
@@ -248,11 +248,11 @@
       <if test="balance != null">
         balance = #{balance,jdbcType=DECIMAL},
       </if>
-      <if test="memberNo != null">
-        member_no = #{memberNo,jdbcType=VARCHAR},
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=BIGINT},
       </if>
-      <if test="branchNo != null">
-        branch_no = #{branchNo,jdbcType=VARCHAR},
+      <if test="branchId != null">
+        branch_id = #{branchId,jdbcType=BIGINT},
       </if>
       <if test="effDate != null">
         eff_date = #{effDate,jdbcType=TIMESTAMP},
@@ -273,19 +273,19 @@
         remake = #{remake,jdbcType=VARCHAR},
       </if>
     </set>
-    where acct_id = #{acctId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.AcctInfo">
     update acct_info
     set balance = #{balance,jdbcType=DECIMAL},
-      member_no = #{memberNo,jdbcType=VARCHAR},
-      branch_no = #{branchNo,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=BIGINT},
+      branch_id = #{branchId,jdbcType=BIGINT},
       eff_date = #{effDate,jdbcType=TIMESTAMP},
       expir_date = #{expirDate,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER},
       insert_time = #{insertTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remake = #{remake,jdbcType=VARCHAR}
-    where acct_id = #{acctId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

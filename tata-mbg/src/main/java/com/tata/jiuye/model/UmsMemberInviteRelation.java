@@ -4,21 +4,14 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UmsMemberAndBranch implements Serializable {
-    @ApiModelProperty(value = "id")
+public class UmsMemberInviteRelation implements Serializable {
     private Long id;
 
-    @ApiModelProperty(value = "用户id(手机号)")
-    private String userName;
+    @ApiModelProperty(value = "直推人id")
+    private Long fatherMemberId;
 
-    @ApiModelProperty(value = "是否是配送中心(00否  01是)")
-    private Integer isBranch;
-
-    @ApiModelProperty(value = "父级配送中心id")
-    private Long parent;
-
-    @ApiModelProperty(value = "会员配送中心id")
-    private Long userBarnchId;
+    @ApiModelProperty(value = "间推人id")
+    private Long grandpaMemberId;
 
     @ApiModelProperty(value = "自身用户ID")
     private Long memberId;
@@ -39,36 +32,20 @@ public class UmsMemberAndBranch implements Serializable {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getFatherMemberId() {
+        return fatherMemberId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setFatherMemberId(Long fatherMemberId) {
+        this.fatherMemberId = fatherMemberId;
     }
 
-    public Integer getIsBranch() {
-        return isBranch;
+    public Long getGrandpaMemberId() {
+        return grandpaMemberId;
     }
 
-    public void setIsBranch(Integer isBranch) {
-        this.isBranch = isBranch;
-    }
-
-    public Long getParent() {
-        return parent;
-    }
-
-    public void setParent(Long parent) {
-        this.parent = parent;
-    }
-
-    public Long getUserBarnchId() {
-        return userBarnchId;
-    }
-
-    public void setUserBarnchId(Long userBarnchId) {
-        this.userBarnchId = userBarnchId;
+    public void setGrandpaMemberId(Long grandpaMemberId) {
+        this.grandpaMemberId = grandpaMemberId;
     }
 
     public Long getMemberId() {
@@ -102,10 +79,8 @@ public class UmsMemberAndBranch implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userName=").append(userName);
-        sb.append(", isBranch=").append(isBranch);
-        sb.append(", parent=").append(parent);
-        sb.append(", userBarnchId=").append(userBarnchId);
+        sb.append(", fatherMemberId=").append(fatherMemberId);
+        sb.append(", grandpaMemberId=").append(grandpaMemberId);
         sb.append(", memberId=").append(memberId);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
