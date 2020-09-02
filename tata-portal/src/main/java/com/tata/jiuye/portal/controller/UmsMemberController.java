@@ -135,10 +135,10 @@ public class UmsMemberController {
         if (StrUtil.isEmpty(wxCode)) {
             return CommonResult.validateFailed("参数缺失");//404
         }
-        if(phone!=null&&code==null){
+        if(!StrUtil.isEmpty(phone)&&StrUtil.isEmpty(code)){
             return CommonResult.validateFailed("请输入验证码");//404
         }
-        if(phone!=null&&code!=null)
+        if(!StrUtil.isEmpty(phone)&&!StrUtil.isEmpty(code))
         {
             log.info("==》开始校验短信验证码，phone["+phone+"],code["+code+"]");
             //从缓存中取出验证码
