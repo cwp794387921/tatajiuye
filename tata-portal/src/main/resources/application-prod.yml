@@ -1,6 +1,9 @@
 server:
   port: 8085
-
+  ssl:
+    key-store: classpath:4424315_cyjyt.com.pfx
+    key-store-password: 0NY3y6m5
+    key-store-type: PKCS12
 spring:
   datasource:
     url: jdbc:mysql://db:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai

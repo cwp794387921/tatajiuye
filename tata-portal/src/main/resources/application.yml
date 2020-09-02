@@ -67,8 +67,11 @@ aliyun:
 
 umsmemberlevelname:
   vip: "VIP会员"
-
+  deliverycenter: "配送中心"
 
 
 pmsproductcategoryname:
   memberrepurchase: "会员复购"
+
+
+
