@@ -1,12 +1,13 @@
 package com.tata.jiuye.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.UmsMemberInviteRelationExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface UmsMemberInviteRelationMapper {
+public interface UmsMemberInviteRelationMapper extends BaseMapper<UmsMemberInviteRelation> {
     long countByExample(UmsMemberInviteRelationExample example);
 
     int deleteByExample(UmsMemberInviteRelationExample example);

@@ -4,46 +4,45 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UmsBranch implements Serializable {
-    @ApiModelProperty(value = "配送中心id")
-    private String branchId;
+public class WmsMemberRoleRelation implements Serializable {
+    private Long id;
 
-    @ApiModelProperty(value = "配送中心名称")
-    private String branchName;
+    @ApiModelProperty(value = "角色ID")
+    private Long roleId;
 
-    @ApiModelProperty(value = "等级")
-    private Integer branchLevel;
+    @ApiModelProperty(value = "成员ID(用户ID)")
+    private Long memberId;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "修改时间")
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
-    public String getBranchId() {
-        return branchId;
+    public Long getId() {
+        return id;
     }
 
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getBranchName() {
-        return branchName;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public Integer getBranchLevel() {
-        return branchLevel;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setBranchLevel(Integer branchLevel) {
-        this.branchLevel = branchLevel;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public Date getCreateTime() {
@@ -68,9 +67,9 @@ public class UmsBranch implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", branchId=").append(branchId);
-        sb.append(", branchName=").append(branchName);
-        sb.append(", branchLevel=").append(branchLevel);
+        sb.append(", id=").append(id);
+        sb.append(", roleId=").append(roleId);
+        sb.append(", memberId=").append(memberId);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

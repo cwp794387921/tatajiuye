@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tata.jiuye.mapper.UmsMemberAndBranchMapper">
-  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.UmsMemberAndBranch">
+<mapper namespace="com.tata.jiuye.mapper.WmsMemberRoleRelationMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.WmsMemberRoleRelation">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="is_branch" jdbcType="INTEGER" property="isBranch" />
-    <result column="parent" jdbcType="BIGINT" property="parent" />
-    <result column="user_barnch_id" jdbcType="BIGINT" property="userBarnchId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
     <result column="member_id" jdbcType="BIGINT" property="memberId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -70,15 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_name, is_branch, parent, user_barnch_id, member_id, create_time, update_time
+    id, role_id, member_id, create_time, update_time
   </sql>
-  <select id="selectByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.WmsMemberRoleRelationExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ums_member_and_branch
+    from wms_member_role_relation
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,49 +84,38 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
-    from ums_member_and_branch
+    from wms_member_role_relation
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from ums_member_and_branch
+    delete from wms_member_role_relation
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample">
-    delete from ums_member_and_branch
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.WmsMemberRoleRelationExample">
+    delete from wms_member_role_relation
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
+  <insert id="insert" parameterType="com.tata.jiuye.model.WmsMemberRoleRelation">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ums_member_and_branch (user_name, is_branch, parent,
-      user_barnch_id, member_id, create_time,
+    insert into wms_member_role_relation (role_id, member_id, create_time, 
       update_time)
-    values (#{userName,jdbcType=VARCHAR}, #{isBranch,jdbcType=INTEGER}, #{parent,jdbcType=BIGINT},
-      #{userBarnchId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+    values (#{roleId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.WmsMemberRoleRelation">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ums_member_and_branch
+    insert into wms_member_role_relation
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userName != null">
-        user_name,
-      </if>
-      <if test="isBranch != null">
-        is_branch,
-      </if>
-      <if test="parent != null">
-        parent,
-      </if>
-      <if test="userBarnchId != null">
-        user_barnch_id,
+      <if test="roleId != null">
+        role_id,
       </if>
       <if test="memberId != null">
         member_id,
@@ -142,17 +128,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="isBranch != null">
-        #{isBranch,jdbcType=INTEGER},
-      </if>
-      <if test="parent != null">
-        #{parent,jdbcType=BIGINT},
-      </if>
-      <if test="userBarnchId != null">
-        #{userBarnchId,jdbcType=BIGINT},
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
       </if>
       <if test="memberId != null">
         #{memberId,jdbcType=BIGINT},
@@ -165,36 +142,20 @@
       </if>
     </trim>
   </insert>
-  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from ums_member_and_branch
-    where user_name = #{userName,jdbcType=VARCHAR}
-  </select>
-
-  <select id="countByExample" parameterType="com.tata.jiuye.model.UmsMemberAndBranchExample" resultType="java.lang.Long">
-    select count(*) from ums_member_and_branch
+  <select id="countByExample" parameterType="com.tata.jiuye.model.WmsMemberRoleRelationExample" resultType="java.lang.Long">
+    select count(*) from wms_member_role_relation
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update ums_member_and_branch
+    update wms_member_role_relation
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userName != null">
-        user_name = #{record.userName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.isBranch != null">
-        is_branch = #{record.isBranch,jdbcType=INTEGER},
-      </if>
-      <if test="record.parent != null">
-        parent = #{record.parent,jdbcType=BIGINT},
-      </if>
-      <if test="record.userBarnchId != null">
-        user_barnch_id = #{record.userBarnchId,jdbcType=BIGINT},
+      <if test="record.roleId != null">
+        role_id = #{record.roleId,jdbcType=BIGINT},
       </if>
       <if test="record.memberId != null">
         member_id = #{record.memberId,jdbcType=BIGINT},
@@ -211,12 +172,9 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update ums_member_and_branch
+    update wms_member_role_relation
     set id = #{record.id,jdbcType=BIGINT},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      is_branch = #{record.isBranch,jdbcType=INTEGER},
-      parent = #{record.parent,jdbcType=BIGINT},
-      user_barnch_id = #{record.userBarnchId,jdbcType=BIGINT},
+      role_id = #{record.roleId,jdbcType=BIGINT},
       member_id = #{record.memberId,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -224,20 +182,11 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
-    update ums_member_and_branch
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.WmsMemberRoleRelation">
+    update wms_member_role_relation
     <set>
-      <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="isBranch != null">
-        is_branch = #{isBranch,jdbcType=INTEGER},
-      </if>
-      <if test="parent != null">
-        parent = #{parent,jdbcType=BIGINT},
-      </if>
-      <if test="userBarnchId != null">
-        user_barnch_id = #{userBarnchId,jdbcType=BIGINT},
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=BIGINT},
       </if>
       <if test="memberId != null">
         member_id = #{memberId,jdbcType=BIGINT},
@@ -251,26 +200,12 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.UmsMemberAndBranch">
-    update ums_member_and_branch
-    set user_name = #{userName,jdbcType=VARCHAR},
-      is_branch = #{isBranch,jdbcType=INTEGER},
-      parent = #{parent,jdbcType=BIGINT},
-      user_barnch_id = #{userBarnchId,jdbcType=BIGINT},
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.WmsMemberRoleRelation">
+    update wms_member_role_relation
+    set role_id = #{roleId,jdbcType=BIGINT},
       member_id = #{memberId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-
-  <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.UmsMemberAndBranch">
-      SELECT
-          *
-      FROM
-          ums_member_and_branch
-      WHERE
-          member_id = #{memberId,jdbcType=BIGINT}
-      limit 1
-  </select>
 </mapper>
