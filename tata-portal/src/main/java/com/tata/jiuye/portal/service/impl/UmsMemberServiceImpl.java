@@ -1,21 +1,22 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
 import com.tata.jiuye.common.exception.Asserts;
-import com.tata.jiuye.mapper.*;
+import com.tata.jiuye.mapper.AcctInfoMapper;
+import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
+import com.tata.jiuye.mapper.UmsMemberLevelMapper;
+import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
+import com.tata.jiuye.portal.service.UmsMemberLevelService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.GlobalConstants;
 import com.tata.jiuye.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,6 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -54,8 +54,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Resource
     private  UmsMemberMapper memberMapper;
     @Resource
-    private UmsMemberAndBranchMapper memberAndBranchMapper;
-    @Resource
     private AcctInfoMapper acctInfoMapper;
     @Resource
     private  UmsMemberLevelMapper memberLevelMapper;
@@ -67,12 +65,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private UmsMemberLevelMapper umsMemberLevelMapper;
     @Resource
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
-
+    @Resource
+    private UmsMemberLevelService umsMemberLevelService;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
     private Long AUTH_CODE_EXPIRE_SECONDS;
-
+    @Value("${umsmemberlevelname.deliverycenter}")
+    private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
     @Override
     public UmsMember getByUsername(String username) {
         UmsMember member = memberCacheService.getMember(username);
@@ -270,33 +270,27 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 //绑定关系
                 Long grandpaMemberId;
                 Long parentMemberId;
-                Long parentBranchId;
+                //上级配送中心用户ID
+                Long superiorDistributionCenterMemberId;
                 if(invitorPhone!=null){
                     log.info("邀请人手机号:"+invitorPhone);
                     UmsMember fatherUmsMember = memberMapper.getUmsMemberByPhone(invitorPhone);
                     parentMemberId = fatherUmsMember.getId();
                     //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
                     UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
-                    //邀请人角色层次上级与上上级
-                    UmsMemberAndBranch fatherBranchInfo = memberAndBranchMapper.getByMemberId(fatherUmsMember.getId());
-                    if(fatherUmsMember == null||fatherInfo == null||fatherBranchInfo == null){
+                    //邀请人角色角色等级(是否配送中心)
+                    UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
+                    if(fatherUmsMember == null||fatherInfo == null||umsMemberLevel == null){
                         log.info("邀请人信息不存在");
                         return null;
                     }
                     grandpaMemberId=fatherInfo.getFatherMemberId();
-                    if(fatherBranchInfo.getIsBranch() == 0){
-                        parentBranchId=fatherBranchInfo.getParent();
-                    }else{
-                        log.info("邀请人配送中心编号:"+fatherBranchInfo.getUserBarnchId());
-                        parentBranchId=fatherBranchInfo.getUserBarnchId();
-                    }
                 }else{
                     log.info("未携带邀请码注册");
                     log.info("上级绑定到平台");
                     invitorPhone="00000000000";
                     grandpaMemberId=0L;
                     parentMemberId=0L;
-                    parentBranchId=0L;
                 }
                 //生成会员关系表
                 UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
@@ -356,6 +350,30 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         log.info("------------------------- 邀请链条为 : "+ umsMemberInviteRelation);
         log.info("------------------------- 通过被邀请人用户ID获取邀请链条 结束 -------------------------");
         return umsMemberInviteRelation;
+    }
+
+
+    //获取上级配送中心用户的用户ID
+    @Override
+    public Long getSuperiorDistributionCenterMemberId(Long memberId){
+        if(memberId == null){
+            Asserts.fail("传入的用户ID为空");
+        }
+        UmsMember umsMember = memberMapper.selectById(memberId);
+        //通过用户ID查找用户信息,再用用户信息上的用户等级ID获取用户等级,是否为配送中心
+        Boolean isDeliveryCenter = umsMemberLevelService.isDeliveryCenter(umsMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
+        // 判断用户等级,若不为配送中心,则查找绑定关系表找到上级,再看其是否配送中心
+        if(!isDeliveryCenter){
+            //查找上级
+            UmsMemberInviteRelation umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(memberId);
+            if(umsMemberInviteRelation == null){
+                UmsMember currentMember = memberMapper.selectByPrimaryKey(umsMemberInviteRelation.getFatherMemberId());
+                Asserts.fail("用户"+currentMember.getPhone()+"没有上级");
+            }
+            Long fatherMemberId = umsMemberInviteRelation.getFatherMemberId();
+            getSuperiorDistributionCenterMemberId(fatherMemberId);
+        }
+        return umsMember.getId();
     }
 
 }

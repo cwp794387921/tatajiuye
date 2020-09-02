@@ -35,13 +35,18 @@ public class UmsMemberLevelServiceImpl extends ServiceImpl<UmsMemberLevelMapper,
 
     @Override
     public Boolean isDeliveryCenter(Long memberLevelId,String memberLevelName){
+        log.info("--------------------------是否某个用户等级判断   开始--------------------------");
         if(memberLevelId == null){
             Asserts.fail("用户等级ID为空");
         }
         UmsMemberLevel umsMemberLevel = this.getById(memberLevelId);
         if(memberLevelName.equals(umsMemberLevel.getName())){
+            log.info("--------------------------判断结果为 用户等级ID为: "+memberLevelId+"的用户,用户等级为"+memberLevelName);
+            log.info("--------------------------是否某个用户等级判断   结束--------------------------");
             return true;
         }
+        log.info("--------------------------判断结果为 用户等级ID为: "+memberLevelId+"的用户,用户等级不为"+memberLevelName);
+        log.info("--------------------------是否某个用户等级判断   结束--------------------------");
         return false;
     }
 }

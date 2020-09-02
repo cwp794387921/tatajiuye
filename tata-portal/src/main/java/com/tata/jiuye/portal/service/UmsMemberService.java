@@ -83,4 +83,11 @@ public interface UmsMemberService {
      * @return
      */
     UmsMemberInviteRelation getInvitationChainByMemberId(Long memberId);
+
+    /**
+     * 通过用户ID获取其上级配送中心用户的用户ID
+     * @param memberId                          用户ID
+     * @return
+     */
+    Long getSuperiorDistributionCenterMemberId(Long memberId);
 }
