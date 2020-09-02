@@ -304,11 +304,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 umsMemberInviteRelation.setFatherMemberId(parentMemberId);
                 umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
                 umsMemberInviteRelation.setMemberId(umsMember.getId());
-                //生成会员配送中心关系表
-                UmsMemberAndBranch umsMemberAndBranch=new UmsMemberAndBranch();
-                umsMemberAndBranch.setIsBranch(0);
-                umsMemberAndBranch.setParent(parentBranchId);
-                umsMemberAndBranch.setUserName(phone);
                 //生成会员账户信息表
                 String acctId=phone+ GlobalConstants.ACCTITAIL2;
                 AcctInfo acctInfo=new AcctInfo();
@@ -319,9 +314,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 acctInfo.setInsertTime(new Date());
                 acctInfo.setUpdateTime(new Date());
                 acctInfo.setStatus(1);
-
                 umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
-                memberAndBranchMapper.insert(umsMemberAndBranch);
                 acctInfoMapper.insert(acctInfo);
             }
             UserDetails userDetails=new MemberDetails(umsMember);
