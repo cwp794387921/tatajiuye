@@ -2,6 +2,7 @@ package com.tata.jiuye.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class WmsMember implements Serializable {
@@ -34,7 +35,7 @@ public class WmsMember implements Serializable {
     @ApiModelProperty(value = "生日")
     private Date birthday;
 
-    @ApiModelProperty(value = "所做城市")
+    @ApiModelProperty(value = "所在城市")
     private String city;
 
     @ApiModelProperty(value = "职业")
@@ -69,6 +70,9 @@ public class WmsMember implements Serializable {
 
     @ApiModelProperty(value = "关联销售体系用户ID")
     private Long umsMemberId;
+
+    @ApiModelProperty(value = "授信额度")
+    private BigDecimal creditLine;
 
     private static final long serialVersionUID = 1L;
 
@@ -248,6 +252,14 @@ public class WmsMember implements Serializable {
         this.umsMemberId = umsMemberId;
     }
 
+    public BigDecimal getCreditLine() {
+        return creditLine;
+    }
+
+    public void setCreditLine(BigDecimal creditLine) {
+        this.creditLine = creditLine;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -276,6 +288,7 @@ public class WmsMember implements Serializable {
         sb.append(", updateTime=").append(updateTime);
         sb.append(", parentId=").append(parentId);
         sb.append(", umsMemberId=").append(umsMemberId);
+        sb.append(", creditLine=").append(creditLine);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

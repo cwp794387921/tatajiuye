@@ -1,5 +1,6 @@
 package com.tata.jiuye.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -1539,6 +1540,66 @@ public class WmsMemberExample {
 
         public Criteria andUmsMemberIdNotBetween(Long value1, Long value2) {
             addCriterion("ums_member_id not between", value1, value2, "umsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineIsNull() {
+            addCriterion("credit_line is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineIsNotNull() {
+            addCriterion("credit_line is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineEqualTo(BigDecimal value) {
+            addCriterion("credit_line =", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineNotEqualTo(BigDecimal value) {
+            addCriterion("credit_line <>", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineGreaterThan(BigDecimal value) {
+            addCriterion("credit_line >", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("credit_line >=", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineLessThan(BigDecimal value) {
+            addCriterion("credit_line <", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("credit_line <=", value, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineIn(List<BigDecimal> values) {
+            addCriterion("credit_line in", values, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineNotIn(List<BigDecimal> values) {
+            addCriterion("credit_line not in", values, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("credit_line between", value1, value2, "creditLine");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditLineNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("credit_line not between", value1, value2, "creditLine");
             return (Criteria) this;
         }
     }

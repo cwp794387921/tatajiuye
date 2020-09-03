@@ -24,6 +24,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="ums_member_id" jdbcType="BIGINT" property="umsMemberId" />
+    <result column="credit_line" jdbcType="DECIMAL" property="creditLine" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -86,8 +87,14 @@
   <sql id="Base_Column_List">
     id, username, password, nickname, phone, status, create_time, icon, gender, birthday, 
     city, job, personalized_signature, source_type, integration, growth, luckey_count, 
-    history_integration, openid, update_time, parent_id, ums_member_id
+    history_integration, openid, update_time, parent_id, ums_member_id, credit_line
   </sql>
+  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from wms_member
+    where ums_member_id = #{id,jdbcType=BIGINT}
+  </select>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WmsMemberExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -107,12 +114,6 @@
     <include refid="Base_Column_List" />
     from wms_member
     where id = #{id,jdbcType=BIGINT}
-  </select>
-  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from wms_member
-    where ums_member_id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from wms_member
@@ -134,16 +135,16 @@
       city, job, personalized_signature, 
       source_type, integration, growth, 
       luckey_count, history_integration, openid, 
-      update_time, parent_id, ums_member_id
-      )
+      update_time, parent_id, ums_member_id, 
+      credit_line)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{icon,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{birthday,jdbcType=DATE}, 
       #{city,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{personalizedSignature,jdbcType=VARCHAR}, 
       #{sourceType,jdbcType=INTEGER}, #{integration,jdbcType=INTEGER}, #{growth,jdbcType=INTEGER}, 
       #{luckeyCount,jdbcType=INTEGER}, #{historyIntegration,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}, #{umsMemberId,jdbcType=BIGINT}
-      )
+      #{updateTime,jdbcType=TIMESTAMP}, #{parentId,jdbcType=BIGINT}, #{umsMemberId,jdbcType=BIGINT}, 
+      #{creditLine,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.WmsMember">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -214,6 +215,9 @@
       <if test="umsMemberId != null">
         ums_member_id,
       </if>
+      <if test="creditLine != null">
+        credit_line,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -278,6 +282,9 @@
       </if>
       <if test="umsMemberId != null">
         #{umsMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="creditLine != null">
+        #{creditLine,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -356,6 +363,9 @@
       <if test="record.umsMemberId != null">
         ums_member_id = #{record.umsMemberId,jdbcType=BIGINT},
       </if>
+      <if test="record.creditLine != null">
+        credit_line = #{record.creditLine,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -384,7 +394,8 @@
       openid = #{record.openid,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       parent_id = #{record.parentId,jdbcType=BIGINT},
-      ums_member_id = #{record.umsMemberId,jdbcType=BIGINT}
+      ums_member_id = #{record.umsMemberId,jdbcType=BIGINT},
+      credit_line = #{record.creditLine,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -455,6 +466,9 @@
       <if test="umsMemberId != null">
         ums_member_id = #{umsMemberId,jdbcType=BIGINT},
       </if>
+      <if test="creditLine != null">
+        credit_line = #{creditLine,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -480,7 +494,8 @@
       openid = #{openid,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       parent_id = #{parentId,jdbcType=BIGINT},
-      ums_member_id = #{umsMemberId,jdbcType=BIGINT}
+      ums_member_id = #{umsMemberId,jdbcType=BIGINT},
+      credit_line = #{creditLine,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
