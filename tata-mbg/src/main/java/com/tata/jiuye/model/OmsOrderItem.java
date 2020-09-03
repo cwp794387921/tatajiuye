@@ -72,6 +72,9 @@ public class OmsOrderItem implements Serializable {
     @ApiModelProperty(value = "是否为加入VIP需购买的商品: 0->不是, 1->是")
     private Integer ifJoinVipProduct;
 
+    @ApiModelProperty(value = "是否为升级配送中心商品:0 -> 不是, 1->是")
+    private Integer ifUpgradeDistributionCenterProduct;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -274,6 +277,14 @@ public class OmsOrderItem implements Serializable {
         this.ifJoinVipProduct = ifJoinVipProduct;
     }
 
+    public Integer getIfUpgradeDistributionCenterProduct() {
+        return ifUpgradeDistributionCenterProduct;
+    }
+
+    public void setIfUpgradeDistributionCenterProduct(Integer ifUpgradeDistributionCenterProduct) {
+        this.ifUpgradeDistributionCenterProduct = ifUpgradeDistributionCenterProduct;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -305,6 +316,7 @@ public class OmsOrderItem implements Serializable {
         sb.append(", indirectPushAmount=").append(indirectPushAmount);
         sb.append(", deliveryAmount=").append(deliveryAmount);
         sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
+        sb.append(", ifUpgradeDistributionCenterProduct=").append(ifUpgradeDistributionCenterProduct);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
