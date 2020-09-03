@@ -2805,6 +2805,426 @@ public class PmsProductExample {
             addCriterion("if_upgrade_distribution_center_product not between", value1, value2, "ifUpgradeDistributionCenterProduct");
             return (Criteria) this;
         }
+
+        public Criteria andVipPriceIsNull() {
+            addCriterion("vip_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceIsNotNull() {
+            addCriterion("vip_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceEqualTo(BigDecimal value) {
+            addCriterion("vip_price =", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotEqualTo(BigDecimal value) {
+            addCriterion("vip_price <>", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceGreaterThan(BigDecimal value) {
+            addCriterion("vip_price >", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("vip_price >=", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceLessThan(BigDecimal value) {
+            addCriterion("vip_price <", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("vip_price <=", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceIn(List<BigDecimal> values) {
+            addCriterion("vip_price in", values, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotIn(List<BigDecimal> values) {
+            addCriterion("vip_price not in", values, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("vip_price between", value1, value2, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("vip_price not between", value1, value2, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIsNull() {
+            addCriterion("delivery_center_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIsNotNull() {
+            addCriterion("delivery_center_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price =", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price <>", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceGreaterThan(BigDecimal value) {
+            addCriterion("delivery_center_price >", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price >=", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceLessThan(BigDecimal value) {
+            addCriterion("delivery_center_price <", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price <=", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_price in", values, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_price not in", values, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_price between", value1, value2, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_price not between", value1, value2, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentIsNull() {
+            addCriterion("regional_warehouse_replenishment is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentIsNotNull() {
+            addCriterion("regional_warehouse_replenishment is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentEqualTo(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment =", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentNotEqualTo(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment <>", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentGreaterThan(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment >", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment >=", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentLessThan(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment <", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("regional_warehouse_replenishment <=", value, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentIn(List<BigDecimal> values) {
+            addCriterion("regional_warehouse_replenishment in", values, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentNotIn(List<BigDecimal> values) {
+            addCriterion("regional_warehouse_replenishment not in", values, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("regional_warehouse_replenishment between", value1, value2, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalWarehouseReplenishmentNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("regional_warehouse_replenishment not between", value1, value2, "regionalWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentIsNull() {
+            addCriterion("webmaster_warehouse_replenishment is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentIsNotNull() {
+            addCriterion("webmaster_warehouse_replenishment is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentEqualTo(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment =", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentNotEqualTo(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment <>", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentGreaterThan(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment >", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment >=", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentLessThan(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment <", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("webmaster_warehouse_replenishment <=", value, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentIn(List<BigDecimal> values) {
+            addCriterion("webmaster_warehouse_replenishment in", values, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentNotIn(List<BigDecimal> values) {
+            addCriterion("webmaster_warehouse_replenishment not in", values, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("webmaster_warehouse_replenishment between", value1, value2, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterWarehouseReplenishmentNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("webmaster_warehouse_replenishment not between", value1, value2, "webmasterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueIsNull() {
+            addCriterion("regional_product_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueIsNotNull() {
+            addCriterion("regional_product_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueEqualTo(BigDecimal value) {
+            addCriterion("regional_product_value =", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueNotEqualTo(BigDecimal value) {
+            addCriterion("regional_product_value <>", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueGreaterThan(BigDecimal value) {
+            addCriterion("regional_product_value >", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("regional_product_value >=", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueLessThan(BigDecimal value) {
+            addCriterion("regional_product_value <", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("regional_product_value <=", value, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueIn(List<BigDecimal> values) {
+            addCriterion("regional_product_value in", values, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueNotIn(List<BigDecimal> values) {
+            addCriterion("regional_product_value not in", values, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("regional_product_value between", value1, value2, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegionalProductValueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("regional_product_value not between", value1, value2, "regionalProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueIsNull() {
+            addCriterion("webmaster_product_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueIsNotNull() {
+            addCriterion("webmaster_product_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueEqualTo(BigDecimal value) {
+            addCriterion("webmaster_product_value =", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueNotEqualTo(BigDecimal value) {
+            addCriterion("webmaster_product_value <>", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueGreaterThan(BigDecimal value) {
+            addCriterion("webmaster_product_value >", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("webmaster_product_value >=", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueLessThan(BigDecimal value) {
+            addCriterion("webmaster_product_value <", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("webmaster_product_value <=", value, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueIn(List<BigDecimal> values) {
+            addCriterion("webmaster_product_value in", values, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueNotIn(List<BigDecimal> values) {
+            addCriterion("webmaster_product_value not in", values, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("webmaster_product_value between", value1, value2, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebmasterProductValueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("webmaster_product_value not between", value1, value2, "webmasterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueIsNull() {
+            addCriterion("delivery_center_product_value is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueIsNotNull() {
+            addCriterion("delivery_center_product_value is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_product_value =", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueNotEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_product_value <>", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueGreaterThan(BigDecimal value) {
+            addCriterion("delivery_center_product_value >", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_product_value >=", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueLessThan(BigDecimal value) {
+            addCriterion("delivery_center_product_value <", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_product_value <=", value, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_product_value in", values, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueNotIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_product_value not in", values, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_product_value between", value1, value2, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterProductValueNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_product_value not between", value1, value2, "deliveryCenterProductValue");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
