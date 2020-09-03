@@ -8,6 +8,65 @@
         <result column="flash_promotion_count" property="flashPromotionCount"/>
         <result column="flash_promotion_limit" property="flashPromotionLimit"/>
     </resultMap>
+
+    <resultMap type="com.tata.jiuye.model.area" id="AllcityMap">
+        <result column="provinces" property="provinces"/>
+        <collection property="citys" ofType="com.tata.jiuye.model.area">
+        <result property="city" column="city" />
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.tata.jiuye.model.area" id="AllareaMap">
+        <result column="provinces" property="provinces"/>
+        <collection property="areas" ofType="com.tata.jiuye.model.area">
+            <result property="area" column="area" />
+        </collection>
+    </resultMap>
+
+    <select id="queryAllCityName" resultMap="AllcityMap" >
+                SELECT
+            DISTINCT a.provinces,
+             a.city
+        FROM
+            (
+        SELECT
+            p.province AS provinces,
+            c.city AS city,
+            a.area AS area
+        FROM
+            areas a
+            LEFT JOIN cities c ON c.cityid = a.cityid
+            LEFT JOIN provinces p ON p.provinceid = c.provinceid
+            ) a
+
+        ORDER BY
+            a.provinces
+	</select>
+
+    <select id="queryAllareaName" resultMap="AllareaMap" >
+                SELECT
+            DISTINCT a.city,
+            a.area
+        FROM
+            (
+        SELECT
+            p.province AS provinces,
+            c.city AS city,
+            a.area AS area
+        FROM
+            areas a
+            LEFT JOIN cities c ON c.cityid = a.cityid
+            LEFT JOIN provinces p ON p.provinceid = c.provinceid
+            ) a
+        <where>
+            <if test="city !=null and city !=''">
+                a.city = #{city}
+            </if>
+        </where>
+        ORDER BY
+            a.provinces
+	</select>
+
     <select id="getRecommendBrandList" resultMap="com.tata.jiuye.mapper.PmsBrandMapper.BaseResultMap">
         SELECT b.*
         FROM

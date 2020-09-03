@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.dao.HomeDao;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +38,8 @@ public class HomeServiceImpl implements HomeService {
     private final SmsFlashPromotionMapper flashPromotionMapper;
     private final PmsProductCategoryMapper productCategoryMapper;
     private final SmsFlashPromotionSessionMapper promotionSessionMapper;
-
-
+    @Resource
+    private RedisService redisService;
     @Value("${pmsproductcategoryname.memberrepurchase}")
     private String PMS_PRODUCT_CATEGORY_NAME_MEMBERREPURCHASE;
 
@@ -66,6 +68,32 @@ public class HomeServiceImpl implements HomeService {
         //获取推荐专题
         //result.setSubjectList(homeDao.getRecommendSubjectList(0, 4));
         return result;
+    }
+
+    @Override
+    public List<area>queryAllCityName(){
+        if(redisService.get("allCity")!=null){
+            List<area> data=(List<area>)redisService.get("allCity");
+            return  data;
+        }
+        List<area>  areas= homeDao.queryAllCityName();
+        if (areas!=null){
+            redisService.set("allCity",areas,60*60*24*7);//缓存7天
+        }
+        return areas;
+    }
+
+    @Override
+    public List<area>queryAllareaName(String city){
+        if(redisService.get(city)!=null){
+            List<area> data=(List<area>)redisService.get(city);
+            return  data;
+        }
+        List<area> areas= homeDao.queryAllareaName(city);
+        if (areas!=null){
+            redisService.set(city,areas,60*60*24*7);//缓存7天
+        }
+        return areas;
     }
 
     @Override

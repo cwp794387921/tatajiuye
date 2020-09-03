@@ -65,6 +65,9 @@ public class GetWeiXinCode {
 
     }
 
+
+
+
     /**
       * 开放平台获取token url
       */
@@ -140,10 +143,8 @@ public class GetWeiXinCode {
         if (jsonObject.containsKey("errcode")) {
             Asserts.fail("code无效");
         }
-        String jsonObjectStr = jsonObject.toJSONString();
-        String openId = jsonObject.get("openid").toString();
-        if (StringUtils.isEmpty(openId)) {
-            Asserts.fail("openid为空");
+        if(jsonObject.get("openid")==null){
+            return null;
         }
         return jsonObject;
     }

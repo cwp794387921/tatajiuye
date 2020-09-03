@@ -1,7 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 import com.tata.jiuye.common.api.CommonPage;
-import com.tata.jiuye.model.CmsSubject;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.PmsProductCategory;
 import com.tata.jiuye.portal.domain.HomeContentResult;
@@ -55,4 +55,8 @@ public interface HomeService {
      * @return                                               指定分类分页商品列表
      */
     CommonPage<PmsProduct> getPmsProductByProductCategoryId(Integer pageNum, Integer pageSize, Long productCategoryId);
+
+    List<area> queryAllCityName();
+
+    List<area> queryAllareaName(String city);
 }

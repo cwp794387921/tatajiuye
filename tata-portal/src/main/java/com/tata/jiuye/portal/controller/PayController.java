@@ -144,7 +144,7 @@ public class PayController {
     @PostMapping("/wxNotify")
     @ResponseBody
     public void wxNotify(HttpServletRequest request, HttpServletResponse response){
-        System.out.println("微信支付回调");
+        System.out.println("==>进入微信支付回调");
         try {
             String resXml = "";
             WxConfig wxConfig = new WxConfig();

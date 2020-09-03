@@ -51,8 +51,8 @@ public class AliyunSmsUtil {
             }
         }
 
-        public JSONObject sendSms(String phone,String code){
-            JSONObject jsonObject=new JSONObject();
+        public String sendSms(String phone,String code){
+            String result="";
             DefaultProfile profile =
                     DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
             IAcsClient client = new DefaultAcsClient(profile);
@@ -69,7 +69,7 @@ public class AliyunSmsUtil {
             try {
                 CommonResponse response = client.getCommonResponse(request);
                 System.out.println(response.getData());
-                jsonObject.put("result",response.getData());
+                result=response.getData();
             } catch (ServerException e) {
                 e.printStackTrace();
             } catch (ClientException e) {
@@ -77,7 +77,7 @@ public class AliyunSmsUtil {
             }catch (Exception e){
                 e.getMessage();
             }
-            return jsonObject;
+            return result;
         }
 
 

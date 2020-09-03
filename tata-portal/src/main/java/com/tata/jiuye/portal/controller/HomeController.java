@@ -5,6 +5,7 @@ import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.CmsSubject;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.PmsProductCategory;
+import com.tata.jiuye.model.area;
 import com.tata.jiuye.portal.domain.HomeContentResult;
 import com.tata.jiuye.portal.service.HomeService;
 import io.swagger.annotations.Api;
@@ -91,4 +92,21 @@ public class HomeController {
         CommonPage<PmsProduct> resultPage = homeService.getPmsProductByProductCategoryId(pageNum, pageSize, productCategoryId);
         return CommonResult.success(resultPage);
     }
+
+    @ApiOperation("获取城市列表")
+    @RequestMapping(value = "/queryCity", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult queryCity() {
+        List<area> areas=homeService.queryAllCityName();
+        return CommonResult.success(areas);
+    }
+
+    @ApiOperation("获取地区列表")
+    @RequestMapping(value = "/queryArea", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult queryArea(String city) {
+        List<area> areas=homeService.queryAllareaName(city);
+        return CommonResult.success(areas);
+    }
+
 }

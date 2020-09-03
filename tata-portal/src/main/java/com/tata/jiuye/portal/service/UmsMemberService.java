@@ -69,7 +69,7 @@ public interface UmsMemberService {
     /**
      * 微信小程序登陆后获取token
      */
-    String Wxlogin(String wxCode,String phone,String invitorPhone);
+    String Wxlogin(String wxCode);
 
     /**
      * 微信小程序注册并获取token

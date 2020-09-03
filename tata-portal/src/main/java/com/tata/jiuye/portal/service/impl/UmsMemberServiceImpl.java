@@ -222,25 +222,24 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
-    public String Wxlogin(String wxCode,String phone,String invitorPhone){
+    public String Wxlogin(String wxCode){
         String token = null;
         try {
             JSONObject result = GetWeiXinCode.getOpenId(wxCode);
             if(result==null){
                 return null;
             }
-            //String accessToken = result.get("access_token").toString();
             String openId = result.get("openid").toString();
             log.info("openId为 "+openId);
-           // String openId="1111";
-           // String accessToken="1111";
             //查询是否已有该用户
             UmsMember umsMember = memberMapper.selectById(openId);
             if(umsMember!=null){
                 //已注册 直接登陆
                 log.info("===》用户已存在，直接登录");
             }else{
-                if(phone==null){
+                log.info("==>需要验证手机号");
+                return "1";
+                /*if(phone==null){
                     //openid未绑定,验证手机号注册或绑定
                     log.info("==>需要验证手机号");
                     return "1";
@@ -252,7 +251,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                         return "2";
                     }
                     //openid未绑定 手机号未注册  开始注册流程
-                }
+                }*/
             }
             UserDetails userDetails=new MemberDetails(umsMember);
             token = jwtTokenUtil.generateToken(userDetails);
@@ -279,6 +278,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             Asserts.fail("用户信息为空");
         }
         //没有该用户进行添加操作
+        JSONObject result = GetWeiXinCode.getOpenId(registeredMemberParam.getWxCode());
+        if(result==null){
+            Asserts.fail("获取openId失败");
+        }
+        String openId = result.get("openid").toString();
+        log.info("openId 为 "+openId);
         //JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
         JSONObject object = JSONObject.parseObject(registeredMemberParam.getUserInfoJson());
         log.info("==========微信用户信息==========："+object);
@@ -294,14 +299,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setIcon(object.getString("avatarUrl"));
         umsMember.setCity(object.getString("city"));
         umsMember.setGender(object.getInteger("gender"));
-        JSONObject result = GetWeiXinCode.getOpenId(registeredMemberParam.getWxCode());
-        if(result==null){
-            Asserts.fail("获取openId失败");
-        }
-        String openId = result.get("openid").toString();
-        log.info("openId 为 "+openId);
         umsMember.setOpenId(openId);
-        //String accessToken = result.get("access_token").toString();
         //获取默认会员等级并设置
         UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
         levelExample.createCriteria().andDefaultStatusEqualTo(1);

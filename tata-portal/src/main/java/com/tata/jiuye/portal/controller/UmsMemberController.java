@@ -142,20 +142,16 @@ public class UmsMemberController {
     @ApiOperation("微信小程序登陆")
     @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult WxApplogin(@RequestParam String wxCode,@RequestParam(value = "phone", required=false) String phone,@RequestParam(value = "code", required=false) String code,@RequestParam(value = "invitorPhone", required=false)@ApiParam("邀请码即邀请人手机号") String invitorPhone) {
+    public CommonResult WxApplogin(@RequestParam String wxCode) {
         if (StrUtil.isEmpty(wxCode)) {
             return CommonResult.validateFailed("参数缺失");//404
         }
-        if(!StrUtil.isEmpty(phone)&&StrUtil.isEmpty(code)){
-            return CommonResult.validateFailed("请输入验证码");//404
-        }
-
-        String token = memberService.Wxlogin(wxCode,phone,invitorPhone);
+        String token = memberService.Wxlogin(wxCode);
         if (token == null) {
             return CommonResult.failed("登陆或注册失败,请联系管理员");  //500
         }
-        if (token.equals("2")){
-            return CommonResult.validateFailed("该手机号已绑定其他账号");   //500
+        if (token.equals("1")){
+            return CommonResult.CodeAndMessage(400,"请验证手机号");   //400
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
@@ -173,16 +169,16 @@ public class UmsMemberController {
         {
             log.info("==》开始校验短信验证码，phone["+phone+"],code["+verificationCode+"]");
             //从缓存中取出验证码
-            if(redisService.get(phone)==null){
+            if(redisService.get("SMS_"+phone)==null){
                 return CommonResult.validateFailed("验证码已过期");  //404
             }
-            String valiCode=redisService.get(phone).toString();
+            String valiCode=redisService.get("SMS_"+phone).toString();
             log.info("==》验证码["+valiCode+"]");
             if(!valiCode.equals(verificationCode)){
                 return CommonResult.validateFailed("验证码错误");  //404
             }
             //验证通过，删除验证码
-            redisService.del(phone);
+            redisService.del("SMS_"+phone);
         }
         String token = memberService.registeredMember(registeredMemberParam);
         return CommonResult.success(token);
@@ -221,14 +217,19 @@ public class UmsMemberController {
         log.info("===>接收到发送短信验证码请求：手机号["+phone+"]");
         //生成4位随机数
         int code=(int)((Math.random()*9+1)*1000);
-        log.info("验证码为 "+code);
-        //存入redis
-        redisService.set(phone,String.valueOf(code),5*60);
-        JSONObject result=new JSONObject();
-        result=aliyunSmsUtil.sendSms(phone,String.valueOf(code));
+        String result=aliyunSmsUtil.sendSms(phone,String.valueOf(code));
         if(result==null){
             return CommonResult.failed("短信发送失败");
+        }else {
+            JSONObject resultJson=JSONObject.parseObject(result);
+            String resultCode=resultJson.get("Code").toString();
+            if(!resultCode.equals("OK")){
+                return CommonResult.failed(resultJson.get("Message").toString());
+            }
         }
+        //存入redis
+        redisService.set("SMS_"+phone,String.valueOf(code),5*60);
+        log.info("验证码为 "+code);
         return CommonResult.success("短信发送成功");
     }
 

@@ -1,6 +1,6 @@
 package com.tata.jiuye.portal.dao;
 
-import com.tata.jiuye.model.CmsSubject;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.model.PmsBrand;
 import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.portal.domain.FlashPromotionProduct;
@@ -50,4 +50,9 @@ public interface HomeDao {
      * @return
      */
     List<PmsProduct> getPmsProductByProductCategoryId(@Param("productCategoryId") Long productCategoryId);
+
+
+    List<area> queryAllCityName();
+
+    List<area> queryAllareaName(String city);
 }
