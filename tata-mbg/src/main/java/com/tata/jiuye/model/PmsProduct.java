@@ -127,6 +127,27 @@ public class PmsProduct implements Serializable {
     @ApiModelProperty(value = "是否为升级配送中心商品:0 -> 不是, 1->是")
     private Integer ifUpgradeDistributionCenterProduct;
 
+    @ApiModelProperty(value = "VIP价")
+    private BigDecimal vipPrice;
+
+    @ApiModelProperty(value = "配送中心价")
+    private BigDecimal deliveryCenterPrice;
+
+    @ApiModelProperty(value = "区域仓补")
+    private BigDecimal regionalWarehouseReplenishment;
+
+    @ApiModelProperty(value = "站长仓补")
+    private BigDecimal webmasterWarehouseReplenishment;
+
+    @ApiModelProperty(value = "区域货值(进货价)")
+    private BigDecimal regionalProductValue;
+
+    @ApiModelProperty(value = "站长货值(进货价)")
+    private BigDecimal webmasterProductValue;
+
+    @ApiModelProperty(value = "配送中心货值(进货价)")
+    private BigDecimal deliveryCenterProductValue;
+
     @ApiModelProperty(value = "商品描述")
     private String description;
 
@@ -484,6 +505,62 @@ public class PmsProduct implements Serializable {
         this.ifUpgradeDistributionCenterProduct = ifUpgradeDistributionCenterProduct;
     }
 
+    public BigDecimal getVipPrice() {
+        return vipPrice;
+    }
+
+    public void setVipPrice(BigDecimal vipPrice) {
+        this.vipPrice = vipPrice;
+    }
+
+    public BigDecimal getDeliveryCenterPrice() {
+        return deliveryCenterPrice;
+    }
+
+    public void setDeliveryCenterPrice(BigDecimal deliveryCenterPrice) {
+        this.deliveryCenterPrice = deliveryCenterPrice;
+    }
+
+    public BigDecimal getRegionalWarehouseReplenishment() {
+        return regionalWarehouseReplenishment;
+    }
+
+    public void setRegionalWarehouseReplenishment(BigDecimal regionalWarehouseReplenishment) {
+        this.regionalWarehouseReplenishment = regionalWarehouseReplenishment;
+    }
+
+    public BigDecimal getWebmasterWarehouseReplenishment() {
+        return webmasterWarehouseReplenishment;
+    }
+
+    public void setWebmasterWarehouseReplenishment(BigDecimal webmasterWarehouseReplenishment) {
+        this.webmasterWarehouseReplenishment = webmasterWarehouseReplenishment;
+    }
+
+    public BigDecimal getRegionalProductValue() {
+        return regionalProductValue;
+    }
+
+    public void setRegionalProductValue(BigDecimal regionalProductValue) {
+        this.regionalProductValue = regionalProductValue;
+    }
+
+    public BigDecimal getWebmasterProductValue() {
+        return webmasterProductValue;
+    }
+
+    public void setWebmasterProductValue(BigDecimal webmasterProductValue) {
+        this.webmasterProductValue = webmasterProductValue;
+    }
+
+    public BigDecimal getDeliveryCenterProductValue() {
+        return deliveryCenterProductValue;
+    }
+
+    public void setDeliveryCenterProductValue(BigDecimal deliveryCenterProductValue) {
+        this.deliveryCenterProductValue = deliveryCenterProductValue;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -565,6 +642,13 @@ public class PmsProduct implements Serializable {
         sb.append(", deliveryAmount=").append(deliveryAmount);
         sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
         sb.append(", ifUpgradeDistributionCenterProduct=").append(ifUpgradeDistributionCenterProduct);
+        sb.append(", vipPrice=").append(vipPrice);
+        sb.append(", deliveryCenterPrice=").append(deliveryCenterPrice);
+        sb.append(", regionalWarehouseReplenishment=").append(regionalWarehouseReplenishment);
+        sb.append(", webmasterWarehouseReplenishment=").append(webmasterWarehouseReplenishment);
+        sb.append(", regionalProductValue=").append(regionalProductValue);
+        sb.append(", webmasterProductValue=").append(webmasterProductValue);
+        sb.append(", deliveryCenterProductValue=").append(deliveryCenterProductValue);
         sb.append(", description=").append(description);
         sb.append(", detailDesc=").append(detailDesc);
         sb.append(", detailHtml=").append(detailHtml);
