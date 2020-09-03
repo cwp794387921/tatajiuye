@@ -41,6 +41,9 @@ public class AcctInfo implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remake;
 
+    @ApiModelProperty(value = "账户类型(平台账户->platformAccount,普通用户账户->ordinaryMemberAccount)")
+    private String acctType;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -123,6 +126,14 @@ public class AcctInfo implements Serializable {
         this.remake = remake;
     }
 
+    public String getAcctType() {
+        return acctType;
+    }
+
+    public void setAcctType(String acctType) {
+        this.acctType = acctType;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -139,6 +150,7 @@ public class AcctInfo implements Serializable {
         sb.append(", insertTime=").append(insertTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", remake=").append(remake);
+        sb.append(", acctType=").append(acctType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

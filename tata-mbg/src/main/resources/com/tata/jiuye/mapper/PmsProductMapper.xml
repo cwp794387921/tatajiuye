@@ -44,6 +44,7 @@
     <result column="indirect_push_amount" jdbcType="DECIMAL" property="indirectPushAmount" />
     <result column="delivery_amount" jdbcType="DECIMAL" property="deliveryAmount" />
     <result column="if_join_vip_product" jdbcType="INTEGER" property="ifJoinVipProduct" />
+    <result column="if_upgrade_distribution_center_product" jdbcType="INTEGER" property="ifUpgradeDistributionCenterProduct" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tata.jiuye.model.PmsProduct">
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
@@ -116,7 +117,7 @@
     sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids,
     keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time,
     promotion_per_limit, promotion_type, brand_name, product_category_name, direct_push_amount,
-    indirect_push_amount, delivery_amount, if_join_vip_product
+    indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product
   </sql>
   <sql id="Blob_Column_List">
     description, detail_desc, detail_html, detail_mobile_html
@@ -187,8 +188,9 @@
       promotion_per_limit, promotion_type, brand_name,
       product_category_name, direct_push_amount,
       indirect_push_amount, delivery_amount, if_join_vip_product,
-      description, detail_desc, detail_html,
-      detail_mobile_html)
+      if_upgrade_distribution_center_product, description,
+      detail_desc, detail_html, detail_mobile_html
+      )
     values (#{brandId,jdbcType=BIGINT}, #{productCategoryId,jdbcType=BIGINT}, #{feightTemplateId,jdbcType=BIGINT},
       #{productAttributeCategoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR},
       #{productSn,jdbcType=VARCHAR}, #{deleteStatus,jdbcType=INTEGER}, #{publishStatus,jdbcType=INTEGER},
@@ -203,8 +205,9 @@
       #{promotionPerLimit,jdbcType=INTEGER}, #{promotionType,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR},
       #{productCategoryName,jdbcType=VARCHAR}, #{directPushAmount,jdbcType=DECIMAL},
       #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL}, #{ifJoinVipProduct,jdbcType=INTEGER},
-      #{description,jdbcType=LONGVARCHAR}, #{detailDesc,jdbcType=LONGVARCHAR}, #{detailHtml,jdbcType=LONGVARCHAR},
-      #{detailMobileHtml,jdbcType=LONGVARCHAR})
+      #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR},
+      #{detailDesc,jdbcType=LONGVARCHAR}, #{detailHtml,jdbcType=LONGVARCHAR}, #{detailMobileHtml,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsProduct">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -334,6 +337,9 @@
       </if>
       <if test="ifJoinVipProduct != null">
         if_join_vip_product,
+      </if>
+      <if test="ifUpgradeDistributionCenterProduct != null">
+        if_upgrade_distribution_center_product,
       </if>
       <if test="description != null">
         description,
@@ -471,6 +477,9 @@
       </if>
       <if test="ifJoinVipProduct != null">
         #{ifJoinVipProduct,jdbcType=INTEGER},
+      </if>
+      <if test="ifUpgradeDistributionCenterProduct != null">
+        #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
       </if>
       <if test="description != null">
         #{description,jdbcType=LONGVARCHAR},
@@ -621,6 +630,9 @@
       <if test="record.ifJoinVipProduct != null">
         if_join_vip_product = #{record.ifJoinVipProduct,jdbcType=INTEGER},
       </if>
+      <if test="record.ifUpgradeDistributionCenterProduct != null">
+        if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=LONGVARCHAR},
       </if>
@@ -682,6 +694,7 @@
       indirect_push_amount = #{record.indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{record.deliveryAmount,jdbcType=DECIMAL},
       if_join_vip_product = #{record.ifJoinVipProduct,jdbcType=INTEGER},
+      if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
       description = #{record.description,jdbcType=LONGVARCHAR},
       detail_desc = #{record.detailDesc,jdbcType=LONGVARCHAR},
       detail_html = #{record.detailHtml,jdbcType=LONGVARCHAR},
@@ -733,7 +746,8 @@
       direct_push_amount = #{record.directPushAmount,jdbcType=DECIMAL},
       indirect_push_amount = #{record.indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{record.deliveryAmount,jdbcType=DECIMAL},
-      if_join_vip_product = #{record.ifJoinVipProduct,jdbcType=INTEGER}
+      if_join_vip_product = #{record.ifJoinVipProduct,jdbcType=INTEGER},
+      if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -864,6 +878,9 @@
       <if test="ifJoinVipProduct != null">
         if_join_vip_product = #{ifJoinVipProduct,jdbcType=INTEGER},
       </if>
+      <if test="ifUpgradeDistributionCenterProduct != null">
+        if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      </if>
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
@@ -922,6 +939,7 @@
       indirect_push_amount = #{indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{deliveryAmount,jdbcType=DECIMAL},
       if_join_vip_product = #{ifJoinVipProduct,jdbcType=INTEGER},
+      if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
       description = #{description,jdbcType=LONGVARCHAR},
       detail_desc = #{detailDesc,jdbcType=LONGVARCHAR},
       detail_html = #{detailHtml,jdbcType=LONGVARCHAR},
@@ -970,17 +988,30 @@
       direct_push_amount = #{directPushAmount,jdbcType=DECIMAL},
       indirect_push_amount = #{indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{deliveryAmount,jdbcType=DECIMAL},
-      if_join_vip_product = #{ifJoinVipProduct,jdbcType=INTEGER}
+      if_join_vip_product = #{ifJoinVipProduct,jdbcType=INTEGER},
+      if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
 
-  <select id="getProductByIfJoinVipProduct" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getProductByIfJoinVipProduct" parameterType="java.lang.Integer" resultType="com.tata.jiuye.model.PmsProduct">
       SELECT
           *
       FROM
           pms_product
       WHERE
-          `if_join_vip_product` = #{ifJoinVipProduct,jdbcType=INTEGER}
+          `if_join_vip_product` = 1
+          limit 1
+  </select>
+
+
+  <select id="getProductByIfUpgradeDistributionCenterProduct" parameterType="java.lang.Integer" resultType="com.tata.jiuye.model.PmsProduct">
+      SELECT
+          *
+      FROM
+          pms_product
+      WHERE
+          if_upgrade_distribution_center_product = 1
+          limit 1
   </select>
 </mapper>

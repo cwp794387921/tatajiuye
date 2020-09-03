@@ -2745,6 +2745,66 @@ public class PmsProductExample {
             addCriterion("if_join_vip_product not between", value1, value2, "ifJoinVipProduct");
             return (Criteria) this;
         }
+
+        public Criteria andIfUpgradeDistributionCenterProductIsNull() {
+            addCriterion("if_upgrade_distribution_center_product is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductIsNotNull() {
+            addCriterion("if_upgrade_distribution_center_product is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product =", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <>", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductGreaterThan(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product >", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductGreaterThanOrEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product >=", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductLessThan(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductLessThanOrEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <=", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductIn(List<Integer> values) {
+            addCriterion("if_upgrade_distribution_center_product in", values, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotIn(List<Integer> values) {
+            addCriterion("if_upgrade_distribution_center_product not in", values, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductBetween(Integer value1, Integer value2) {
+            addCriterion("if_upgrade_distribution_center_product between", value1, value2, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotBetween(Integer value1, Integer value2) {
+            addCriterion("if_upgrade_distribution_center_product not between", value1, value2, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

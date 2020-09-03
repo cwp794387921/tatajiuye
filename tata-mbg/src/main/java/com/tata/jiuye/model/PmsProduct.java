@@ -124,6 +124,9 @@ public class PmsProduct implements Serializable {
     @ApiModelProperty(value = "是否为加入VIP需购买的商品: 0->不是, 1->是")
     private Integer ifJoinVipProduct;
 
+    @ApiModelProperty(value = "是否为升级配送中心商品:0 -> 不是, 1->是")
+    private Integer ifUpgradeDistributionCenterProduct;
+
     @ApiModelProperty(value = "商品描述")
     private String description;
 
@@ -473,6 +476,14 @@ public class PmsProduct implements Serializable {
         this.ifJoinVipProduct = ifJoinVipProduct;
     }
 
+    public Integer getIfUpgradeDistributionCenterProduct() {
+        return ifUpgradeDistributionCenterProduct;
+    }
+
+    public void setIfUpgradeDistributionCenterProduct(Integer ifUpgradeDistributionCenterProduct) {
+        this.ifUpgradeDistributionCenterProduct = ifUpgradeDistributionCenterProduct;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -553,6 +564,7 @@ public class PmsProduct implements Serializable {
         sb.append(", indirectPushAmount=").append(indirectPushAmount);
         sb.append(", deliveryAmount=").append(deliveryAmount);
         sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
+        sb.append(", ifUpgradeDistributionCenterProduct=").append(ifUpgradeDistributionCenterProduct);
         sb.append(", description=").append(description);
         sb.append(", detailDesc=").append(detailDesc);
         sb.append(", detailHtml=").append(detailHtml);
