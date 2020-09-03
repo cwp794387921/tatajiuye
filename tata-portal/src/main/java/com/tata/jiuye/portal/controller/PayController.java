@@ -196,32 +196,37 @@ public class PayController {
                     }
                 }
                 //生成配送单
-                Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
-                WmsMember wmsMember=null;
-                if(id!=null){
-                     wmsMember=wmsMemberMapper.selectByUmsId(id);
-                    if (wmsMember==null){
-                        Asserts.fail("==>找不到对应配送中心信息");
+                WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
+                if(isWms!=null){
+                    log.info("==》自身是配送中心，不生成配送单");
+                }else{
+                    Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
+                    WmsMember wmsMember=null;
+                    if(id!=null){
+                        wmsMember=wmsMemberMapper.selectByUmsId(id);
+                        if (wmsMember==null){
+                            Asserts.fail("==>找不到对应配送中心信息");
+                        }
+                    }else {
+                        Asserts.fail("==>找不到上级配送中心");
                     }
-                }else {
-                    Asserts.fail("==>找不到上级配送中心");
-                }
-                String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
-                for(OmsOrderItem omsOrderItem : orderItemList){
-                    OmsDistribution distribution=new OmsDistribution();
-                    distribution.setOrderSn(omsOrder.getOrderSn());
-                    distribution.setStatus(0);
-                    distribution.setGoodsImg(omsOrderItem.getProductPic());
-                    distribution.setGoodsTitle(omsOrderItem.getProductName());
-                    distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
-                    distribution.setPrice(omsOrderItem.getProductPrice());
-                    distribution.setNumber(omsOrderItem.getProductQuantity());
-                    distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
-                    distribution.setName(omsOrder.getReceiverName());
-                    distribution.setAddress(address);
-                    distribution.setCreateTime(new Date());
-                    distribution.setWmsMemberId(wmsMember.getUmsMemberId());
-                    distributionMapper.insert(distribution);
+                    String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
+                    for(OmsOrderItem omsOrderItem : orderItemList){
+                        OmsDistribution distribution=new OmsDistribution();
+                        distribution.setOrderSn(omsOrder.getOrderSn());
+                        distribution.setStatus(0);
+                        distribution.setGoodsImg(omsOrderItem.getProductPic());
+                        distribution.setGoodsTitle(omsOrderItem.getProductName());
+                        distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                        distribution.setPrice(omsOrderItem.getProductPrice());
+                        distribution.setNumber(omsOrderItem.getProductQuantity());
+                        distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                        distribution.setName(omsOrder.getReceiverName());
+                        distribution.setAddress(address);
+                        distribution.setCreateTime(new Date());
+                        distribution.setWmsMemberId(wmsMember.getUmsMemberId());
+                        distributionMapper.insert(distribution);
+                    }
                 }
                 //业务处理结束
             }
