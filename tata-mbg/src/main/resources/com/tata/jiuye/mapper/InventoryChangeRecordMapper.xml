@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.InventoryChangeRecordMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.InventoryChangeRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="change_of_type" jdbcType="VARCHAR" property="changeOfType" />
+    <result column="change_number" jdbcType="INTEGER" property="changeNumber" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="quantity_before_change" jdbcType="INTEGER" property="quantityBeforeChange" />
+    <result column="quantity_after_change" jdbcType="INTEGER" property="quantityAfterChange" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, change_of_type, change_number, create_time, quantity_before_change, quantity_after_change
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.InventoryChangeRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from inventory_change_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inventory_change_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from inventory_change_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.InventoryChangeRecordExample">
+    delete from inventory_change_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.InventoryChangeRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into inventory_change_record (change_of_type, change_number, create_time, 
+      quantity_before_change, quantity_after_change
+      )
+    values (#{changeOfType,jdbcType=VARCHAR}, #{changeNumber,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{quantityBeforeChange,jdbcType=INTEGER}, #{quantityAfterChange,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.InventoryChangeRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into inventory_change_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="changeOfType != null">
+        change_of_type,
+      </if>
+      <if test="changeNumber != null">
+        change_number,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="quantityBeforeChange != null">
+        quantity_before_change,
+      </if>
+      <if test="quantityAfterChange != null">
+        quantity_after_change,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="changeOfType != null">
+        #{changeOfType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeNumber != null">
+        #{changeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quantityBeforeChange != null">
+        #{quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="quantityAfterChange != null">
+        #{quantityAfterChange,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.tata.jiuye.model.InventoryChangeRecordExample" resultType="java.lang.Long">
+    select count(*) from inventory_change_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update inventory_change_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.changeOfType != null">
+        change_of_type = #{record.changeOfType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changeNumber != null">
+        change_number = #{record.changeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.quantityBeforeChange != null">
+        quantity_before_change = #{record.quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="record.quantityAfterChange != null">
+        quantity_after_change = #{record.quantityAfterChange,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update inventory_change_record
+    set id = #{record.id,jdbcType=BIGINT},
+      change_of_type = #{record.changeOfType,jdbcType=VARCHAR},
+      change_number = #{record.changeNumber,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      quantity_before_change = #{record.quantityBeforeChange,jdbcType=INTEGER},
+      quantity_after_change = #{record.quantityAfterChange,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.InventoryChangeRecord">
+    update inventory_change_record
+    <set>
+      <if test="changeOfType != null">
+        change_of_type = #{changeOfType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeNumber != null">
+        change_number = #{changeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quantityBeforeChange != null">
+        quantity_before_change = #{quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="quantityAfterChange != null">
+        quantity_after_change = #{quantityAfterChange,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.InventoryChangeRecord">
+    update inventory_change_record
+    set change_of_type = #{changeOfType,jdbcType=VARCHAR},
+      change_number = #{changeNumber,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      quantity_before_change = #{quantityBeforeChange,jdbcType=INTEGER},
+      quantity_after_change = #{quantityAfterChange,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
