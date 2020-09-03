@@ -13,7 +13,7 @@ public class StaticConstant {
      */
     public static final String FLOW_TYPE_EXPENDITURE = "expenditure";
 
-    /************************************************************************************/
+    /***************************************************************************************/
 
     /********************************流水类型明细常量***************************************/
     /**
@@ -36,5 +36,45 @@ public class StaticConstant {
      */
     public static final String FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW = "withdraw";
 
-    /************************************************************************************/
+    /***************************************************************************************/
+
+    /********************************账户类型类型常量***************************************/
+    /**
+     * 平台账户
+     */
+    public static final String ACCT_TYPE_PLATFORMACCOUNT = "platformAccount";
+
+    /**
+     * 普通会员账户
+     */
+    public static final String ACCT_TYPE_ORDINARYMEMBERACCOUNT = "ordinaryMemberAccount";
+
+    /***************************************************************************************/
+
+    /********************************状态类型常量***************************************/
+    /**
+     * 生效
+     */
+    public static final Integer INTEGER_STATUS_TAKE_EFFECT = 1;
+
+    /**
+     * 失效
+     */
+    public static final Integer INTEGER_STATUS_FAILURE = 0;
+    /***********************************************************************************/
+
+    /********************************角色等级名称常量***************************************/
+    /**
+     * 普通会员
+     */
+    public static final String UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER = "普通会员";
+    /**
+     * VIP会员
+     */
+    public static final String UMS_MEMBER_LEVEL_NAME_VIP_MEMBER = "VIP会员";
+    /**
+     * 配送中心
+     */
+    public static final String UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER = "配送中心";
+    /***********************************************************************************/
 }

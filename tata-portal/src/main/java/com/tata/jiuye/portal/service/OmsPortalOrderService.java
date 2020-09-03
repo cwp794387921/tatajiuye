@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.service;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.OmsOrder;
+import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
 import com.tata.jiuye.portal.domain.OmsOrderDetail;
 import com.tata.jiuye.portal.domain.OrderParam;
@@ -24,9 +25,11 @@ public interface OmsPortalOrderService {
 
     /**
      * 根据提交信息生成订单
+     * @param currentMember         当前登录人
+     * @param orderParam            订单信息
      */
     @Transactional
-    Map<String, Object> generateOrder(OrderParam orderParam);
+    Map<String, Object> generateOrder(OrderParam orderParam, UmsMember currentMember);
 
     /**
      * 支付成功后的回调

@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.OmsOrderItemMapper;
 import com.tata.jiuye.model.OmsOrderItem;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class OmsOrderItemServiceImpl implements OmsOrderItemService {
+public class OmsOrderItemServiceImpl extends ServiceImpl<OmsOrderItemMapper,OmsOrderItem> implements OmsOrderItemService {
     @Autowired
     private OmsOrderItemMapper omsOrderItemMapper;
 
@@ -37,5 +38,8 @@ public class OmsOrderItemServiceImpl implements OmsOrderItemService {
         return omsOrderItemList;
     }
 
-
+    @Override
+    public void saveOrUpdateOmsOrderItemsBatch(List<OmsOrderItem> orderItems){
+        this.saveOrUpdateBatch(orderItems);
+    }
 }

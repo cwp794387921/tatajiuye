@@ -1,10 +1,12 @@
 package com.tata.jiuye.portal.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.tata.jiuye.model.OmsOrderItem;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface OmsOrderItemService {
+public interface OmsOrderItemService extends IService<OmsOrderItem> {
 
 
     /**
@@ -13,4 +15,11 @@ public interface OmsOrderItemService {
      * @return
      */
     List<OmsOrderItem> getItemForOrderSn(String orderSn);
+
+    /**
+     * 批量保存(带事务回滚)
+     * @param orderItems
+     */
+    @Transactional
+    void saveOrUpdateOmsOrderItemsBatch(List<OmsOrderItem> orderItems);
 }

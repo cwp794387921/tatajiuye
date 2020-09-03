@@ -144,4 +144,18 @@ public class PmsProductController {
             return CommonResult.failed();
         }
     }
+
+
+    @ApiOperation("批量设置是否为加入VIP商品")
+    @RequestMapping(value = "/update/ifJoinVipProduct", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateIfJoinVipProduct(@RequestParam("ids") List<Long> ids,
+                                          @RequestParam("ifJoinVipProduct") Integer ifJoinVipProduct) {
+        int count = productService.updateIfJoinVipProduct(ids, ifJoinVipProduct);
+        if (count > 0) {
+            return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
 }

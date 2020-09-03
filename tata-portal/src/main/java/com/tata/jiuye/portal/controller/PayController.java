@@ -11,6 +11,7 @@ import com.tata.jiuye.mapper.OmsOrderMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.*;
+import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
@@ -177,7 +178,7 @@ public class PayController {
                     omsOrder.setStatus(1);
                     orderMapper.updateByPrimaryKey(omsOrder);
                 }
-                UmsMember umsMember = umsMemberMapper.selectById(openId);
+                UmsMember umsMember = umsMemberMapper.getUmsMemberByOpenId(openId);
                 if(umsMember == null){
                     Asserts.fail("==>找不到 openId : "+openId+" 对应的用户信息");
                 }
@@ -188,7 +189,10 @@ public class PayController {
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(omsOrderItem.getIfJoinVipProduct() == 1){
-                        umsMemberService.updateUmsMemberLevel(umsMember,UMS_MEMBER_LEVEL_NAME_VIP);
+                        umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER);
+                    }
+                    if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                        umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER);
                     }
                 }
                 //生成配送单

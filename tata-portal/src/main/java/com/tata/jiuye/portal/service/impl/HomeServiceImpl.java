@@ -229,14 +229,22 @@ public class HomeServiceImpl implements HomeService {
     private Long getProductByIfJoinVipProduct(){
         log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
         //获取所有升级为VIP商品
-        List<PmsProduct> pmsProducts = productMapper.getProductByIfJoinVipProduct(1);
-        if(CollectionUtils.isEmpty(pmsProducts)){
-            return null;
-            //Asserts.fail("暂无加入VIP的商品");
-        }
-        Long ifJoinVipProductId = pmsProducts.get(0).getId();
+        Long ifJoinVipProductId = productMapper.getProductByIfJoinVipProduct();
         log.info("------------------------------加入VIP的商品ID 为 : "+ifJoinVipProductId);
         log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
         return ifJoinVipProductId;
+    }
+
+    /**
+     * 获取加入VIP的商品ID
+     * @return
+     */
+    private Long getProductByIfUpgradeDistributionCenterProduct(){
+        log.info("------------------------------获取升级配送中心的商品ID方法 开始------------------------------");
+        //获取所有升级为VIP商品
+        Long ifUpgradeDistributionCenterProductId = productMapper.getProductByIfUpgradeDistributionCenterProduct();
+        log.info("------------------------------升级配送中心的商品ID 为 : "+ifUpgradeDistributionCenterProductId);
+        log.info("------------------------------获取升级配送中心的商品ID方法 开始------------------------------");
+        return ifUpgradeDistributionCenterProductId;
     }
 }

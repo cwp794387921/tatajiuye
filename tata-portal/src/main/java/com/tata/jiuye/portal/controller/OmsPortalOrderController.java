@@ -3,10 +3,13 @@ package com.tata.jiuye.portal.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
 import com.tata.jiuye.portal.domain.OmsOrderDetail;
 import com.tata.jiuye.portal.domain.OrderParam;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
+import com.tata.jiuye.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +33,8 @@ import java.util.Map;
 public class OmsPortalOrderController {
     @Resource
     private  OmsPortalOrderService portalOrderService;
+    @Resource
+    private UmsMemberService umsMemberService;
 
     @ApiOperation("根据购物车信息生成确认单信息")
     @RequestMapping(value = "/generateConfirmOrder", method = RequestMethod.POST)
@@ -43,7 +48,11 @@ public class OmsPortalOrderController {
     @RequestMapping(value = "/generateOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult generateOrder(@RequestBody OrderParam orderParam) {
-        Map<String, Object> result = portalOrderService.generateOrder(orderParam);
+        UmsMember currentMember = umsMemberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("当前用户未登录");
+        }
+        Map<String, Object> result = portalOrderService.generateOrder(orderParam,currentMember);
         return CommonResult.success(result, "下单成功");
     }
 

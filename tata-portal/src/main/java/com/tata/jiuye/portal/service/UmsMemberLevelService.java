@@ -23,5 +23,12 @@ public interface UmsMemberLevelService extends IService<UmsMemberLevel> {
      * @param memberLevelName
      * @return
      */
-    Boolean isDeliveryCenter(Long memberLevelId,String memberLevelName);
+    Boolean isSomeOneLevel(Long memberLevelId,String memberLevelName);
+
+    /**
+     * 获取指定用户的用户等级名称
+     * @param memberLevelId
+     * @return
+     */
+    String getUmsMemberLevelName(Long memberLevelId);
 }

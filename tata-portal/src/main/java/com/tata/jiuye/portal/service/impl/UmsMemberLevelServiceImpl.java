@@ -26,6 +26,8 @@ public class UmsMemberLevelServiceImpl extends ServiceImpl<UmsMemberLevelMapper,
 
     @Value("${umsmemberlevelname.deliverycenter}")
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
+    @Value("${umsmemberlevelname.ordinarymember}")
+    private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
     @Override
     public List<UmsMemberLevel> list(Integer defaultStatus) {
         UmsMemberLevelExample example = new UmsMemberLevelExample();
@@ -34,7 +36,7 @@ public class UmsMemberLevelServiceImpl extends ServiceImpl<UmsMemberLevelMapper,
     }
 
     @Override
-    public Boolean isDeliveryCenter(Long memberLevelId,String memberLevelName){
+    public Boolean isSomeOneLevel(Long memberLevelId,String memberLevelName){
         log.info("--------------------------是否某个用户等级判断   开始--------------------------");
         if(memberLevelId == null){
             Asserts.fail("用户等级ID为空");
@@ -48,5 +50,18 @@ public class UmsMemberLevelServiceImpl extends ServiceImpl<UmsMemberLevelMapper,
         log.info("--------------------------判断结果为 用户等级ID为: "+memberLevelId+"的用户,用户等级不为"+memberLevelName);
         log.info("--------------------------是否某个用户等级判断   结束--------------------------");
         return false;
+    }
+
+    @Override
+    public String getUmsMemberLevelName(Long memberLevelId){
+        log.info("--------------------------获取指定用户的角色等级名称    开始--------------------------");
+        if(memberLevelId == null){
+            Asserts.fail("用户未绑定角色等级");
+        }
+        UmsMemberLevel  umsMemberLevel = getById(memberLevelId);
+        log.info("--------------------------用户等级为"+umsMemberLevel);
+        String levelName = umsMemberLevel.getName();
+        log.info("--------------------------获取指定用户的角色等级名称    结束--------------------------");
+        return levelName;
     }
 }

@@ -8,6 +8,7 @@ import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
 import com.tata.jiuye.mapper.UmsMemberLevelMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.*;
+import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberLevelService;
@@ -349,7 +350,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         acctInfo.setEffDate(new Date());
         acctInfo.setInsertTime(new Date());
         acctInfo.setUpdateTime(new Date());
-        acctInfo.setStatus(1);
+        acctInfo.setStatus(StaticConstant.INTEGER_STATUS_TAKE_EFFECT);
+        acctInfo.setAcctType(StaticConstant.ACCT_TYPE_ORDINARYMEMBERACCOUNT);
         umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
         acctInfoMapper.insert(acctInfo);
         UserDetails userDetails=new MemberDetails(umsMember);
@@ -395,7 +397,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         UmsMember umsMember = memberMapper.selectById(memberId);
         //通过用户ID查找用户信息,再用用户信息上的用户等级ID获取用户等级,是否为配送中心
-        Boolean isDeliveryCenter = umsMemberLevelService.isDeliveryCenter(umsMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
+        Boolean isDeliveryCenter = umsMemberLevelService.isSomeOneLevel(umsMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
         // 判断用户等级,若不为配送中心,则查找绑定关系表找到上级,再看其是否配送中心
         if(!isDeliveryCenter){
             //查找上级

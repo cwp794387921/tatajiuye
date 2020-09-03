@@ -9,6 +9,7 @@ import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
+import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.component.CancelOrderSender;
 import com.tata.jiuye.portal.dao.PortalOrderDao;
 import com.tata.jiuye.portal.dao.PortalOrderItemDao;
@@ -71,12 +72,22 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private  CancelOrderSender cancelOrderSender;
     @Resource
     private  OmsDistributionMapper DistributionMapper;
+    @Resource
+    private UmsMemberLevelService umsMemberLevelService;
+    @Resource
+    private PmsProductMapper pmsProductMapper;
+    @Resource
+    private OmsOrderItemService omsOrderItemService;
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
     @Value("${redis.database}")
     private String REDIS_DATABASE;
     @Value("${umsmemberlevelname.deliverycenter}")
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
+    @Value("${umsmemberlevelname.vip}")
+    private String UMS_MEMBER_LEVEL_NAME_VIP;
+    @Value("${umsmemberlevelname.ordinarymember}")
+    private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
 
     @Override
     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
@@ -103,12 +114,32 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
 
     @Override
-    public Map<String, Object> generateOrder(OrderParam orderParam) {
+    public Map<String, Object> generateOrder(OrderParam orderParam,UmsMember currentMember) {
+        log.info("---------------------------下单方法  开始---------------------------");
         List<OmsOrderItem> orderItemList = new ArrayList<>();
-        //获取购物车及优惠信息
-        UmsMember currentMember = memberService.getCurrentMember();
+        //先判断用户等级
+        String memberLevelName = umsMemberLevelService.getUmsMemberLevelName(currentMember.getMemberLevelId());
+        //升级为VIP商品的商品ID
+        Long joinVipProductId = pmsProductMapper.getProductByIfJoinVipProduct();
+        //升级为配置中心的商品ID
+        Long upgradeDistributionCenterProductId = pmsProductMapper.getProductByIfUpgradeDistributionCenterProduct();
+        //UmsMember currentMember = memberService.getCurrentMember();
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
+            Long productId = cartPromotionItem.getProductId();
+            //等级为普通用户的时候,只能购买升级为VIP商品与升级为配置中心商品
+            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName) && !joinVipProductId.equals(productId) && !upgradeDistributionCenterProductId.equals(productId)){
+                Asserts.fail("非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
+            }
+            //等级为VIP,不能购买升级为VIP商品
+            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER.equals(memberLevelName) && joinVipProductId.equals(productId)){
+                Asserts.fail("您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
+            }
+            //等级为配置中心,不能购买升级为VIP商品与升级为配置中心商品
+            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(memberLevelName) && (joinVipProductId.equals(productId) || upgradeDistributionCenterProductId.equals(productId))){
+                Asserts.fail("您已升级为配送中心,无需再次购买升级为VIP会员的商品,或升级为配置中心的商品");
+            }
+            //获取购物车及优惠信息
             //生成下单商品信息
             OmsOrderItem orderItem = new OmsOrderItem();
             orderItem.setProductId(cartPromotionItem.getProductId());
@@ -126,6 +157,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setPromotionName(cartPromotionItem.getPromotionMessage());
             orderItem.setGiftIntegration(cartPromotionItem.getIntegration());
             orderItem.setGiftGrowth(cartPromotionItem.getGrowth());
+            orderItem.setDirectPushAmount(cartPromotionItem.getDirectPushAmount());
+            orderItem.setIndirectPushAmount(cartPromotionItem.getIndirectPushAmount());
+            orderItem.setDeliveryAmount(cartPromotionItem.getDeliveryAmount());
+            orderItem.setIfJoinVipProduct(cartPromotionItem.getIfJoinVipProduct());
+            orderItem.setIfUpgradeDistributionCenterProduct(cartPromotionItem.getIfUpgradeDistributionCenterProduct());
             orderItemList.add(orderItem);
         }
         //判断购物车中商品是否都有库存
@@ -234,7 +270,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setOrderId(order.getId());
             orderItem.setOrderSn(order.getOrderSn());
         }
-        orderItemDao.insertList(orderItemList);
+        omsOrderItemService.saveOrUpdateOmsOrderItemsBatch(orderItemList);
+        //orderItemDao.insertList(orderItemList);
         //如使用优惠券更新优惠券使用状态
         if (orderParam.getCouponId() != null) {
             updateCouponStatus(orderParam.getCouponId(), currentMember.getId(), 1);
@@ -251,6 +288,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         Map<String, Object> result = new HashMap<>();
         result.put("order", order);
         result.put("orderItemList", orderItemList);
+        log.info("---------------------------下单方法  结束---------------------------");
         return result;
     }
 
@@ -427,7 +465,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public JSONObject queryDistribution(){
         UmsMember member = memberService.getCurrentMember();
-        if(memberLevelService.isDeliveryCenter(member.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER)){
+        if(memberLevelService.isSomeOneLevel(member.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER)){
             log.info("==》不是配送中心");
             return null;
         }

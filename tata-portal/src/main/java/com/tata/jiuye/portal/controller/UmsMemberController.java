@@ -232,7 +232,7 @@ public class UmsMemberController {
         return CommonResult.success("短信发送成功");
     }
 
-    @ApiOperation("获取短信验证码")
+    @ApiOperation("测试通过code获取openId与sessionkey")
     @RequestMapping(value = "/testGetOpenId", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult getOpenIdAndSessionKey(@RequestParam @ApiParam("微信的CODE") String code){

@@ -36,6 +36,7 @@ public interface OmsCartItemService {
     /**
      * 批量删除购物车中的商品
      */
+    @Transactional
     int delete(Long memberId,List<Long> ids);
 
     /**

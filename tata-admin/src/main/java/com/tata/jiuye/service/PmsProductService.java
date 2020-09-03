@@ -71,4 +71,13 @@ public interface PmsProductService extends IService<PmsProduct> {
      * 根据商品名称或者货号模糊查询
      */
     List<PmsProduct> list(String keyword);
+
+    /**
+     * 批量设置是否为加入VIP商品
+     * @param ids
+     * @param ifJoinVipProduct
+     * @return
+     */
+    @Transactional
+    int updateIfJoinVipProduct(List<Long> ids, Integer ifJoinVipProduct);
 }

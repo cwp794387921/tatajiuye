@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.tata.jiuye.model.AcctInfo;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 public interface AcctInfoService extends IService<AcctInfo> {
 
 
@@ -20,4 +23,13 @@ public interface AcctInfoService extends IService<AcctInfo> {
      * @return
      */
     AcctInfo getAcctInfoByMemberId(Long memberId);
+
+    /**
+     * 金额变动更新表
+     * @param acctMemberId              变动金额的账户所属用户ID
+     * @param changeAmount              变动金额
+     * @param type                       变动状态(收入 -> income,支出 -> expenditure)
+     */
+    @Transactional
+    Map<String,Object> updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type);
 }

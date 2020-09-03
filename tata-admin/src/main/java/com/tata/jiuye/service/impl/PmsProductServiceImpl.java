@@ -311,4 +311,13 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         }
     }
 
+
+    @Override
+    public int updateIfJoinVipProduct(List<Long> ids, Integer ifJoinVipProduct) {
+        PmsProduct record = new PmsProduct();
+        record.setIfJoinVipProduct(ifJoinVipProduct);
+        PmsProductExample example = new PmsProductExample();
+        example.createCriteria().andIdIn(ids);
+        return productMapper.updateByExampleSelective(record, example);
+    }
 }
