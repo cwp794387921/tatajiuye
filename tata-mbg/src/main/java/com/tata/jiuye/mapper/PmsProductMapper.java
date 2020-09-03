@@ -40,11 +40,11 @@ public interface PmsProductMapper extends BaseMapper<PmsProduct> {
      * 查找升级VIP需要购买的商品
      * @return
      */
-    PmsProduct getProductByIfJoinVipProduct();
+    Long getProductByIfJoinVipProduct();
 
     /**
      * 查找升级配送中心需要购买的商品
      * @return
      */
-    PmsProduct getProductByIfUpgradeDistributionCenterProduct();
+    Long getProductByIfUpgradeDistributionCenterProduct();
 }

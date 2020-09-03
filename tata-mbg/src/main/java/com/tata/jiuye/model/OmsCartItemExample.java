@@ -1265,6 +1265,306 @@ public class OmsCartItemExample {
             addCriterion("product_attr not between", value1, value2, "productAttr");
             return (Criteria) this;
         }
+
+        public Criteria andDirectPushAmountIsNull() {
+            addCriterion("direct_push_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountIsNotNull() {
+            addCriterion("direct_push_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountEqualTo(BigDecimal value) {
+            addCriterion("direct_push_amount =", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountNotEqualTo(BigDecimal value) {
+            addCriterion("direct_push_amount <>", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountGreaterThan(BigDecimal value) {
+            addCriterion("direct_push_amount >", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("direct_push_amount >=", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountLessThan(BigDecimal value) {
+            addCriterion("direct_push_amount <", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("direct_push_amount <=", value, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountIn(List<BigDecimal> values) {
+            addCriterion("direct_push_amount in", values, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountNotIn(List<BigDecimal> values) {
+            addCriterion("direct_push_amount not in", values, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("direct_push_amount between", value1, value2, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirectPushAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("direct_push_amount not between", value1, value2, "directPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountIsNull() {
+            addCriterion("indirect_push_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountIsNotNull() {
+            addCriterion("indirect_push_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountEqualTo(BigDecimal value) {
+            addCriterion("indirect_push_amount =", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountNotEqualTo(BigDecimal value) {
+            addCriterion("indirect_push_amount <>", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountGreaterThan(BigDecimal value) {
+            addCriterion("indirect_push_amount >", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("indirect_push_amount >=", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountLessThan(BigDecimal value) {
+            addCriterion("indirect_push_amount <", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("indirect_push_amount <=", value, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountIn(List<BigDecimal> values) {
+            addCriterion("indirect_push_amount in", values, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountNotIn(List<BigDecimal> values) {
+            addCriterion("indirect_push_amount not in", values, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("indirect_push_amount between", value1, value2, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndirectPushAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("indirect_push_amount not between", value1, value2, "indirectPushAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountIsNull() {
+            addCriterion("delivery_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountIsNotNull() {
+            addCriterion("delivery_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountEqualTo(BigDecimal value) {
+            addCriterion("delivery_amount =", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountNotEqualTo(BigDecimal value) {
+            addCriterion("delivery_amount <>", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountGreaterThan(BigDecimal value) {
+            addCriterion("delivery_amount >", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_amount >=", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountLessThan(BigDecimal value) {
+            addCriterion("delivery_amount <", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_amount <=", value, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountIn(List<BigDecimal> values) {
+            addCriterion("delivery_amount in", values, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountNotIn(List<BigDecimal> values) {
+            addCriterion("delivery_amount not in", values, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_amount between", value1, value2, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_amount not between", value1, value2, "deliveryAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductIsNull() {
+            addCriterion("if_join_vip_product is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductIsNotNull() {
+            addCriterion("if_join_vip_product is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductEqualTo(Integer value) {
+            addCriterion("if_join_vip_product =", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductNotEqualTo(Integer value) {
+            addCriterion("if_join_vip_product <>", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductGreaterThan(Integer value) {
+            addCriterion("if_join_vip_product >", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductGreaterThanOrEqualTo(Integer value) {
+            addCriterion("if_join_vip_product >=", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductLessThan(Integer value) {
+            addCriterion("if_join_vip_product <", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductLessThanOrEqualTo(Integer value) {
+            addCriterion("if_join_vip_product <=", value, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductIn(List<Integer> values) {
+            addCriterion("if_join_vip_product in", values, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductNotIn(List<Integer> values) {
+            addCriterion("if_join_vip_product not in", values, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductBetween(Integer value1, Integer value2) {
+            addCriterion("if_join_vip_product between", value1, value2, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfJoinVipProductNotBetween(Integer value1, Integer value2) {
+            addCriterion("if_join_vip_product not between", value1, value2, "ifJoinVipProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductIsNull() {
+            addCriterion("if_upgrade_distribution_center_product is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductIsNotNull() {
+            addCriterion("if_upgrade_distribution_center_product is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product =", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <>", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductGreaterThan(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product >", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductGreaterThanOrEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product >=", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductLessThan(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductLessThanOrEqualTo(Integer value) {
+            addCriterion("if_upgrade_distribution_center_product <=", value, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductIn(List<Integer> values) {
+            addCriterion("if_upgrade_distribution_center_product in", values, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotIn(List<Integer> values) {
+            addCriterion("if_upgrade_distribution_center_product not in", values, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductBetween(Integer value1, Integer value2) {
+            addCriterion("if_upgrade_distribution_center_product between", value1, value2, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
+
+        public Criteria andIfUpgradeDistributionCenterProductNotBetween(Integer value1, Integer value2) {
+            addCriterion("if_upgrade_distribution_center_product not between", value1, value2, "ifUpgradeDistributionCenterProduct");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

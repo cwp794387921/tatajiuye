@@ -994,9 +994,9 @@
   </update>
 
 
-  <select id="getProductByIfJoinVipProduct" parameterType="java.lang.Integer" resultType="com.tata.jiuye.model.PmsProduct">
+  <select id="getProductByIfJoinVipProduct" parameterType="java.lang.Integer" resultType="java.lang.Long">
       SELECT
-          *
+          id
       FROM
           pms_product
       WHERE
@@ -1005,9 +1005,9 @@
   </select>
 
 
-  <select id="getProductByIfUpgradeDistributionCenterProduct" parameterType="java.lang.Integer" resultType="com.tata.jiuye.model.PmsProduct">
+  <select id="getProductByIfUpgradeDistributionCenterProduct" parameterType="java.lang.Integer" resultType="java.lang.Long">
       SELECT
-          *
+          id
       FROM
           pms_product
       WHERE
