@@ -77,4 +77,15 @@ public class StaticConstant {
      */
     public static final String UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER = "配送中心";
     /***********************************************************************************/
+
+    /********************************库存操作类型常量***************************************/
+    /**
+     * 入库
+     */
+    public static final String SKU_CHANGE_TYPE_WAREHOUSING = "warehousing";
+    /**
+     * 出库
+     */
+    public static final String SKU_CHANGE_TYPE_OUT_OF_STOCK = "outOfStock";
+    /***********************************************************************************/
 }
