@@ -18,4 +18,6 @@ public interface InventoryChangeRecordService extends IService<InventoryChangeRe
      */
     @Transactional
     void insertnventoryChangeRecord(Integer changeQuantity,String changeType,Integer quantityAfterChange,Integer quantityBeforeChange);
+
+
 }

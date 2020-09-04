@@ -78,6 +78,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private PmsProductMapper pmsProductMapper;
     @Resource
     private OmsOrderItemService omsOrderItemService;
+    @Resource
+    private PmsSkuStockService pmsSkuStockService;
+
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
     @Value("${redis.database}")
@@ -142,6 +145,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                 }
             }
             //获取锁成功，开始处理业务
+            //判断购物车中商品是否都有库存
+            if (!hasStock(cartPromotionItemList)) {
+                result.put("msg","库存不足，无法下单");
+                Asserts.fail("库存不足，无法下单");
+            }
             for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             Long productId = cartPromotionItem.getProductId();
             //等级为普通用户的时候,只能购买升级为VIP商品与升级为配置中心商品
@@ -180,11 +188,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setIfJoinVipProduct(cartPromotionItem.getIfJoinVipProduct());
             orderItem.setIfUpgradeDistributionCenterProduct(cartPromotionItem.getIfUpgradeDistributionCenterProduct());
             orderItemList.add(orderItem);
-        }
-        //判断购物车中商品是否都有库存
-        if (!hasStock(cartPromotionItemList)) {
-            result.put("msg","库存不足，无法下单");
-            Asserts.fail("库存不足，无法下单");
+            //添加锁定库存
+            pmsSkuStockService.addStock(cartPromotionItem.getProductId(),orderItem.getProductQuantity());
         }
         //判断使用使用了优惠券
         if (orderParam.getCouponId() == null) {
