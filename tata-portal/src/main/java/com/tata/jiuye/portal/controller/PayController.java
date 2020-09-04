@@ -151,20 +151,23 @@ public class PayController {
     @ResponseBody
     public CommonResult testLock(String key){
         String requestId=UUID.randomUUID().toString();
+        Map<String,Object>result=new HashMap<>();
         try{
             if(redisService.lock(key,requestId)){
                 log.info("获取到锁");
                 Thread.sleep(1000*5);
                 log.info("休眠结束，释放锁");
+                result.put("msg","success");
             }else {
-                return CommonResult.failed("获取锁失败");
+                result.put("msg","获取锁失败");
+                Asserts.fail("获取锁失败");
             }
         }catch (Exception e){
             e.printStackTrace();
         }finally {
             redisService.unlock(key,requestId);
         }
-        return CommonResult.success("success");
+        return CommonResult.success(result.get("msg").toString());
     }
 
 

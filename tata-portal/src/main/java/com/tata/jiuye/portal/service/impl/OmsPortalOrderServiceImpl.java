@@ -89,6 +89,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Value("${umsmemberlevelname.ordinarymember}")
     private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
 
+    private  final static String LOCK_NAME="goods_lock_";
+
     @Override
     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
         ConfirmOrderResult result = new ConfirmOrderResult();
@@ -125,7 +127,22 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         Long upgradeDistributionCenterProductId = pmsProductMapper.getProductByIfUpgradeDistributionCenterProduct();
         //UmsMember currentMember = memberService.getCurrentMember();
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
-        for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
+        String requestId=UUID.randomUUID().toString();
+        List<Long>ids=orderParam.getCartIds();
+        Map<String, Object> result = new HashMap<>();
+        try {
+            //尝试获取所有商品的锁
+            for(Long id:ids){
+                if(redisService.lock(LOCK_NAME+id,requestId)){
+                    log.info(requestId+"获取到商品id["+id+"]的锁");
+                }else {
+                    log.info(requestId+"获取商品id["+id+"]的锁失败");
+                    result.put("msg","业务繁忙,请稍候再试");
+                    Asserts.fail("业务繁忙,请稍候再试");
+                }
+            }
+            //获取锁成功，开始处理业务
+            for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             Long productId = cartPromotionItem.getProductId();
             //等级为普通用户的时候,只能购买升级为VIP商品与升级为配置中心商品
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName) && !joinVipProductId.equals(productId) && !upgradeDistributionCenterProductId.equals(productId)){
@@ -166,6 +183,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         //判断购物车中商品是否都有库存
         if (!hasStock(cartPromotionItemList)) {
+            result.put("msg","库存不足，无法下单");
             Asserts.fail("库存不足，无法下单");
         }
         //判断使用使用了优惠券
@@ -178,6 +196,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             //使用优惠券
             SmsCouponHistoryDetail couponHistoryDetail = getUseCoupon(cartPromotionItemList, orderParam.getCouponId());
             if (couponHistoryDetail == null) {
+                result.put("msg","该优惠券不可用");
                 Asserts.fail("该优惠券不可用");
             }
             //对下单商品的优惠券进行处理
@@ -194,6 +213,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             BigDecimal totalAmount = calcTotalAmount(orderItemList);
             BigDecimal integrationAmount = getUseIntegrationAmount(orderParam.getUseIntegration(), totalAmount, currentMember, orderParam.getCouponId() != null);
             if (integrationAmount.compareTo(new BigDecimal(0)) == 0) {
+                result.put("msg","积分不可用");
                 Asserts.fail("积分不可用");
             } else {
                 //可用情况下分摊到可用商品中
@@ -285,9 +305,15 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         deleteCartItemList(cartPromotionItemList, currentMember);
         //发送延迟消息取消订单
         sendDelayMessageCancelOrder(order.getId());
-        Map<String, Object> result = new HashMap<>();
         result.put("order", order);
         result.put("orderItemList", orderItemList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            for(Long id:ids){
+                redisService.unlock(LOCK_NAME+id,requestId);
+            }
+        }
         log.info("---------------------------下单方法  结束---------------------------");
         return result;
     }

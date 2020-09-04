@@ -53,6 +53,9 @@ public class OmsPortalOrderController {
             Asserts.fail("当前用户未登录");
         }
         Map<String, Object> result = portalOrderService.generateOrder(orderParam,currentMember);
+        if(result.get("msg")!=null){
+         return CommonResult.failed(result.get("msg").toString());
+        }
         return CommonResult.success(result, "下单成功");
     }
 
