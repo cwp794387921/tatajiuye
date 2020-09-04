@@ -276,8 +276,8 @@ public class PayController {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static String createSign(String characterEncoding,SortedMap<Object,Object> parameters){
-
+    public static String createSign(String characterEncoding,SortedMap<Object,Object> parameters)throws Exception{
+        WxConfig config = new WxConfig();
         StringBuffer sb = new StringBuffer();
         Set es = parameters.entrySet();//所有参与传参的参数按照accsii排序（升序）
         Iterator it = es.iterator();
@@ -290,7 +290,7 @@ public class PayController {
                 sb.append(k + "=" + v + "&");
             }
         }
-        sb.append("key=" + "xiamenshihuliquceyiwangluo111111");
+        sb.append("key=" + config.getKey());
         String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase();
         return sign;
     }
