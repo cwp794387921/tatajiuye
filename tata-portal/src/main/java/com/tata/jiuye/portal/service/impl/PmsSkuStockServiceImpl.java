@@ -35,9 +35,6 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
     }
 
 
-    /**
-     * 锁定下单商品的所有库存
-     */
     @Override
     public void lockStock(Long productId,Integer lockQuintity) {
         if(productId == null){
@@ -45,6 +42,16 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
         }
         PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
         skuStock.setLockStock(skuStock.getLockStock() + lockQuintity);
+        skuStockMapper.updateByPrimaryKeySelective(skuStock);
+    }
+
+    @Override
+    public void unLockStock(Long productId,Integer unLockQuintity){
+        if(productId == null){
+            Asserts.fail("查找的商品ID不能为空");
+        }
+        PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
+        skuStock.setLockStock(skuStock.getLockStock() - unLockQuintity);
         skuStockMapper.updateByPrimaryKeySelective(skuStock);
     }
 

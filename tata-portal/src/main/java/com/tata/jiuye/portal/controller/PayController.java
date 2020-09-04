@@ -13,6 +13,7 @@ import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
+import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
@@ -63,7 +64,8 @@ public class PayController {
     private WmsMemberMapper wmsMemberMapper;
     @Resource
     private OmsDistributionMapper distributionMapper;
-
+    @Resource
+    private AcctSettleInfoService acctSettleInfoService;
     @Resource
     private RedisService redisService;
 
@@ -220,6 +222,8 @@ public class PayController {
                         umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER);
                     }
                 }
+                //插入分佣流水
+                acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 //生成配送单
                 WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
                 if(isWms!=null){

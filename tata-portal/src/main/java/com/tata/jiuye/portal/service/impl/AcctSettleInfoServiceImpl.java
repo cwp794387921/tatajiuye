@@ -1,8 +1,13 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.DTO.TotalFlowQueryParam;
+import com.tata.jiuye.common.api.CommonPage;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctSettleInfoMapper;
 import com.tata.jiuye.model.*;
+import com.tata.jiuye.portal.DTO.BalanceFlowResult;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.rmi.MarshalException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +41,14 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private OmsOrderItemService omsOrderItemService;
     @Autowired
     private AcctInfoService acctInfoService;
+    @Autowired
+    private AcctSettleInfoMapper acctSettleInfoMapper;
     @Override
     public void saveOrUpdateAcctSettleInfo(AcctSettleInfo acctSettleInfo){
         this.saveOrUpdate(acctSettleInfo);
     }
 
-    //执行分佣(分享)流水
+    @Override
     public void insertCommissionRecordFlow(UmsMember umsMember,String orderSn){
         log.info("----------------------执行分佣流水   开始----------------------");
         //获取邀请链条(消费人->直邀人 -> 间邀人)
@@ -92,5 +104,45 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         acctSettleInfo.setSourceId(sourceId);
         acctSettleInfo.setInsertTime(new Date());
         this.saveOrUpdate(acctSettleInfo);
+    }
+
+    @Override
+    public BigDecimal getTodayIncome(Long memberId){
+        if(memberId == null){
+            Asserts.fail("用户未登录");
+        }
+        LocalDate today = LocalDate.now();
+        LocalDateTime startDateTime = today.atTime(00,00,00);
+        Date startDate = Date.from(startDateTime.atZone(ZoneOffset.ofHours(8)).toInstant());
+        LocalDateTime endDateTime = today.atTime(23, 59, 59);
+        Date endDate = Date.from(endDateTime.atZone(ZoneOffset.ofHours(8)).toInstant());
+        TotalFlowQueryParam param = new TotalFlowQueryParam();
+        param.setMemberId(memberId);
+        param.setFlowType(StaticConstant.FLOW_TYPE_INCOME);
+        param.setStartDate(startDate);
+        param.setEndDate(endDate);
+        return acctSettleInfoMapper.getIncome(param);
+    }
+
+    @Override
+    public BigDecimal getTotalIncome(Long memberId){
+        if(memberId == null){
+            Asserts.fail("用户未登录");
+        }
+        TotalFlowQueryParam param = new TotalFlowQueryParam();
+        param.setMemberId(memberId);
+        param.setFlowType(StaticConstant.FLOW_TYPE_INCOME);
+        return acctSettleInfoMapper.getIncome(param);
+    }
+
+    @Override
+    public CommonPage getBalanceAndFlow(Integer pageNum, Integer pageSize, Long memberId, String year, String month,String flowType){
+        if(memberId == null){
+            Asserts.fail("用户未登录");
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<AcctSettleInfo> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(memberId,year,month,flowType);
+        CommonPage<AcctSettleInfo> commonPage = CommonPage.restPage(acctSettleInfos);
+        return commonPage;
     }
 }

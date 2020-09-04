@@ -25,6 +25,15 @@ public interface PmsSkuStockService extends IService<PmsSkuStock> {
     @Transactional
     void lockStock(Long productId,Integer lockQuintity);
 
+
+    /**
+     * 解锁库存
+     * @param productId
+     * @param unLockQuintity
+     */
+    @Transactional
+    void unLockStock(Long productId,Integer unLockQuintity);
+
     /**
      * 增加库存
      * @param productId
