@@ -90,6 +90,9 @@ public class PmsProduct implements Serializable {
     @ApiModelProperty(value = "画册图片，连产品图片限制为5张，以逗号分割")
     private String albumPics;
 
+    @ApiModelProperty(value = "首页商品活动展示图")
+    private String showImgForIndexPics;
+
     private String detailTitle;
 
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
@@ -409,6 +412,14 @@ public class PmsProduct implements Serializable {
         this.albumPics = albumPics;
     }
 
+    public String getShowImgForIndexPics() {
+        return showImgForIndexPics;
+    }
+
+    public void setShowImgForIndexPics(String showImgForIndexPics) {
+        this.showImgForIndexPics = showImgForIndexPics;
+    }
+
     public String getDetailTitle() {
         return detailTitle;
     }
@@ -630,6 +641,7 @@ public class PmsProduct implements Serializable {
         sb.append(", keywords=").append(keywords);
         sb.append(", note=").append(note);
         sb.append(", albumPics=").append(albumPics);
+        sb.append(", showImgForIndexPics=").append(showImgForIndexPics);
         sb.append(", detailTitle=").append(detailTitle);
         sb.append(", promotionStartTime=").append(promotionStartTime);
         sb.append(", promotionEndTime=").append(promotionEndTime);

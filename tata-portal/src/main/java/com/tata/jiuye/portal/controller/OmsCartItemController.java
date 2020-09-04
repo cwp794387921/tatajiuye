@@ -2,12 +2,14 @@ package com.tata.jiuye.portal.controller;
 
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.OmsCartItem;
+import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.CartProduct;
 import com.tata.jiuye.portal.domain.CartPromotionItem;
 import com.tata.jiuye.portal.service.OmsCartItemService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,11 +32,31 @@ public class OmsCartItemController {
     @Resource
     private  OmsCartItemService cartItemService;
 
-    @ApiOperation("添加商品到购物车")
+    /*@ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult add(@RequestBody OmsCartItem cartItem) {
-        int count = cartItemService.add(cartItem);
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        int count = cartItemService.add(cartItem,currentMember);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }*/
+
+
+    @ApiOperation("添加商品到购物车")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult add(@RequestParam @ApiParam("商品ID")Long productId, @RequestParam @ApiParam("购买数量")Integer quantity, @RequestParam @ApiParam("商品库存ID") Long productSkuId) {
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        int count = cartItemService.add(productId,productSkuId,quantity,currentMember);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -81,7 +103,11 @@ public class OmsCartItemController {
     @RequestMapping(value = "/update/attr", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult updateAttr(@RequestBody OmsCartItem cartItem) {
-        int count = cartItemService.updateAttr(cartItem);
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        int count = cartItemService.updateAttr(cartItem,currentMember);
         if (count > 0) {
             return CommonResult.success(count);
         }

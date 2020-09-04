@@ -33,6 +33,7 @@
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
     <result column="note" jdbcType="VARCHAR" property="note" />
     <result column="album_pics" jdbcType="VARCHAR" property="albumPics" />
+    <result column="show_img_for_index_pics" jdbcType="VARCHAR" property="showImgForIndexPics" />
     <result column="detail_title" jdbcType="VARCHAR" property="detailTitle" />
     <result column="promotion_start_time" jdbcType="TIMESTAMP" property="promotionStartTime" />
     <result column="promotion_end_time" jdbcType="TIMESTAMP" property="promotionEndTime" />
@@ -122,9 +123,9 @@
     name, pic, product_sn, delete_status, publish_status, new_status, recommand_status,
     verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit,
     sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids,
-    keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time,
-    promotion_per_limit, promotion_type, brand_name, product_category_name, direct_push_amount,
-    indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product,
+    keywords, note, album_pics, show_img_for_index_pics, detail_title, promotion_start_time,
+    promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name,
+    direct_push_amount, indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product,
     vip_price, delivery_center_price, regional_warehouse_replenishment, webmaster_warehouse_replenishment,
     regional_product_value, webmaster_product_value, delivery_center_product_value
   </sql>
@@ -193,12 +194,12 @@
       stock, low_stock, unit,
       weight, preview_status, service_ids,
       keywords, note, album_pics,
-      detail_title, promotion_start_time, promotion_end_time,
-      promotion_per_limit, promotion_type, brand_name,
-      product_category_name, direct_push_amount,
-      indirect_push_amount, delivery_amount, if_join_vip_product,
-      if_upgrade_distribution_center_product, vip_price,
-      delivery_center_price, regional_warehouse_replenishment,
+      show_img_for_index_pics, detail_title, promotion_start_time,
+      promotion_end_time, promotion_per_limit,
+      promotion_type, brand_name, product_category_name,
+      direct_push_amount, indirect_push_amount, delivery_amount,
+      if_join_vip_product, if_upgrade_distribution_center_product,
+      vip_price, delivery_center_price, regional_warehouse_replenishment,
       webmaster_warehouse_replenishment, regional_product_value,
       webmaster_product_value, delivery_center_product_value,
       description, detail_desc, detail_html,
@@ -213,12 +214,12 @@
       #{stock,jdbcType=INTEGER}, #{lowStock,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR},
       #{weight,jdbcType=DECIMAL}, #{previewStatus,jdbcType=INTEGER}, #{serviceIds,jdbcType=VARCHAR},
       #{keywords,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{albumPics,jdbcType=VARCHAR},
-      #{detailTitle,jdbcType=VARCHAR}, #{promotionStartTime,jdbcType=TIMESTAMP}, #{promotionEndTime,jdbcType=TIMESTAMP},
-      #{promotionPerLimit,jdbcType=INTEGER}, #{promotionType,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR},
-      #{productCategoryName,jdbcType=VARCHAR}, #{directPushAmount,jdbcType=DECIMAL},
-      #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL}, #{ifJoinVipProduct,jdbcType=INTEGER},
-      #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}, #{vipPrice,jdbcType=DECIMAL},
-      #{deliveryCenterPrice,jdbcType=DECIMAL}, #{regionalWarehouseReplenishment,jdbcType=DECIMAL},
+      #{showImgForIndexPics,jdbcType=VARCHAR}, #{detailTitle,jdbcType=VARCHAR}, #{promotionStartTime,jdbcType=TIMESTAMP},
+      #{promotionEndTime,jdbcType=TIMESTAMP}, #{promotionPerLimit,jdbcType=INTEGER},
+      #{promotionType,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR}, #{productCategoryName,jdbcType=VARCHAR},
+      #{directPushAmount,jdbcType=DECIMAL}, #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL},
+      #{ifJoinVipProduct,jdbcType=INTEGER}, #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      #{vipPrice,jdbcType=DECIMAL}, #{deliveryCenterPrice,jdbcType=DECIMAL}, #{regionalWarehouseReplenishment,jdbcType=DECIMAL},
       #{webmasterWarehouseReplenishment,jdbcType=DECIMAL}, #{regionalProductValue,jdbcType=DECIMAL},
       #{webmasterProductValue,jdbcType=DECIMAL}, #{deliveryCenterProductValue,jdbcType=DECIMAL},
       #{description,jdbcType=LONGVARCHAR}, #{detailDesc,jdbcType=LONGVARCHAR}, #{detailHtml,jdbcType=LONGVARCHAR},
@@ -319,6 +320,9 @@
       </if>
       <if test="albumPics != null">
         album_pics,
+      </if>
+      <if test="showImgForIndexPics != null">
+        show_img_for_index_pics,
       </if>
       <if test="detailTitle != null">
         detail_title,
@@ -480,6 +484,9 @@
       </if>
       <if test="albumPics != null">
         #{albumPics,jdbcType=VARCHAR},
+      </if>
+      <if test="showImgForIndexPics != null">
+        #{showImgForIndexPics,jdbcType=VARCHAR},
       </if>
       <if test="detailTitle != null">
         #{detailTitle,jdbcType=VARCHAR},
@@ -654,6 +661,9 @@
       <if test="record.albumPics != null">
         album_pics = #{record.albumPics,jdbcType=VARCHAR},
       </if>
+      <if test="record.showImgForIndexPics != null">
+        show_img_for_index_pics = #{record.showImgForIndexPics,jdbcType=VARCHAR},
+      </if>
       <if test="record.detailTitle != null">
         detail_title = #{record.detailTitle,jdbcType=VARCHAR},
       </if>
@@ -761,6 +771,7 @@
       keywords = #{record.keywords,jdbcType=VARCHAR},
       note = #{record.note,jdbcType=VARCHAR},
       album_pics = #{record.albumPics,jdbcType=VARCHAR},
+      show_img_for_index_pics = #{record.showImgForIndexPics,jdbcType=VARCHAR},
       detail_title = #{record.detailTitle,jdbcType=VARCHAR},
       promotion_start_time = #{record.promotionStartTime,jdbcType=TIMESTAMP},
       promotion_end_time = #{record.promotionEndTime,jdbcType=TIMESTAMP},
@@ -821,6 +832,7 @@
       keywords = #{record.keywords,jdbcType=VARCHAR},
       note = #{record.note,jdbcType=VARCHAR},
       album_pics = #{record.albumPics,jdbcType=VARCHAR},
+      show_img_for_index_pics = #{record.showImgForIndexPics,jdbcType=VARCHAR},
       detail_title = #{record.detailTitle,jdbcType=VARCHAR},
       promotion_start_time = #{record.promotionStartTime,jdbcType=TIMESTAMP},
       promotion_end_time = #{record.promotionEndTime,jdbcType=TIMESTAMP},
@@ -937,6 +949,9 @@
       <if test="albumPics != null">
         album_pics = #{albumPics,jdbcType=VARCHAR},
       </if>
+      <if test="showImgForIndexPics != null">
+        show_img_for_index_pics = #{showImgForIndexPics,jdbcType=VARCHAR},
+      </if>
       <if test="detailTitle != null">
         detail_title = #{detailTitle,jdbcType=VARCHAR},
       </if>
@@ -1041,6 +1056,7 @@
       keywords = #{keywords,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},
       album_pics = #{albumPics,jdbcType=VARCHAR},
+      show_img_for_index_pics = #{showImgForIndexPics,jdbcType=VARCHAR},
       detail_title = #{detailTitle,jdbcType=VARCHAR},
       promotion_start_time = #{promotionStartTime,jdbcType=TIMESTAMP},
       promotion_end_time = #{promotionEndTime,jdbcType=TIMESTAMP},
@@ -1098,6 +1114,7 @@
       keywords = #{keywords,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},
       album_pics = #{albumPics,jdbcType=VARCHAR},
+      show_img_for_index_pics = #{showImgForIndexPics,jdbcType=VARCHAR},
       detail_title = #{detailTitle,jdbcType=VARCHAR},
       promotion_start_time = #{promotionStartTime,jdbcType=TIMESTAMP},
       promotion_end_time = #{promotionEndTime,jdbcType=TIMESTAMP},

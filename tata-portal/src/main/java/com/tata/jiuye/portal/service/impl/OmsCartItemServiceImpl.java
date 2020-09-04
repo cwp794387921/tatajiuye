@@ -1,9 +1,12 @@
 package com.tata.jiuye.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.OmsCartItemMapper;
+import com.tata.jiuye.mapper.PmsProductMapper;
 import com.tata.jiuye.model.OmsCartItem;
 import com.tata.jiuye.model.OmsCartItemExample;
+import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.dao.PortalProductDao;
 import com.tata.jiuye.portal.domain.CartProduct;
@@ -37,11 +40,35 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     private  OmsCartItemMapper cartItemMapper;
     @Resource
     private  OmsPromotionService promotionService;
+    @Resource
+    private PmsProductMapper pmsProductMapper;
+
 
     @Override
-    public int add(OmsCartItem cartItem) {
+    public int add(Long productId,Long productSkuId,Integer quantity,UmsMember currentMember) {
         int count;
-        UmsMember currentMember = memberService.getCurrentMember();
+        if(productId == null){
+            Asserts.fail("请选择加入购物车的商品");
+        }
+        PmsProduct pmsProduct = pmsProductMapper.selectByPrimaryKey(productId);
+        if(pmsProduct == pmsProduct){
+            Asserts.fail("");
+        }
+        OmsCartItem cartItem = new OmsCartItem();
+        cartItem.setProductId(productId);
+        cartItem.setProductName(pmsProduct.getName());
+        cartItem.setProductPic(pmsProduct.getPic());
+        cartItem.setProductBrand(pmsProduct.getBrandName());
+        cartItem.setProductSn(pmsProduct.getProductSn());
+        cartItem.setPrice(pmsProduct.getPrice());
+        cartItem.setQuantity(quantity);
+        cartItem.setProductSkuId(productSkuId);
+        cartItem.setProductCategoryId(pmsProduct.getProductCategoryId());
+        cartItem.setDirectPushAmount(pmsProduct.getDirectPushAmount());
+        cartItem.setIndirectPushAmount(pmsProduct.getIndirectPushAmount());
+        cartItem.setDeliveryAmount(pmsProduct.getDeliveryAmount());
+        cartItem.setIfJoinVipProduct(pmsProduct.getIfJoinVipProduct());
+        cartItem.setIfUpgradeDistributionCenterProduct(pmsProduct.getIfUpgradeDistributionCenterProduct());
         cartItem.setMemberId(currentMember.getId());
         cartItem.setMemberNickname(currentMember.getNickname());
         cartItem.setDeleteStatus(0);
@@ -119,7 +146,7 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     }
 
     @Override
-    public int updateAttr(OmsCartItem cartItem) {
+    public int updateAttr(OmsCartItem cartItem,UmsMember umsMember) {
         //删除原购物车信息
         OmsCartItem updateCart = new OmsCartItem();
         updateCart.setId(cartItem.getId());
@@ -127,8 +154,27 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         updateCart.setDeleteStatus(1);
         cartItemMapper.updateByPrimaryKeySelective(updateCart);
         cartItem.setId(null);
-        add(cartItem);
+        add(cartItem,umsMember);
         return 1;
+    }
+
+
+    public int add(OmsCartItem cartItem,UmsMember currentMember) {
+        int count;
+        //UmsMember currentMember = memberService.getCurrentMember();
+        cartItem.setMemberId(currentMember.getId());
+        cartItem.setMemberNickname(currentMember.getNickname());
+        cartItem.setDeleteStatus(0);
+        OmsCartItem existCartItem = getCartItem(cartItem);
+        if (existCartItem == null) {
+            cartItem.setCreateDate(new Date());
+            count = cartItemMapper.insert(cartItem);
+        } else {
+            cartItem.setModifyDate(new Date());
+            existCartItem.setQuantity(existCartItem.getQuantity() + cartItem.getQuantity());
+            count = cartItemMapper.updateByPrimaryKey(existCartItem);
+        }
+        return count;
     }
 
     @Override

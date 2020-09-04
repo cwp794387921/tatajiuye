@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 import com.tata.jiuye.model.OmsCartItem;
+import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.CartProduct;
 import com.tata.jiuye.portal.domain.CartPromotionItem;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +17,8 @@ public interface OmsCartItemService {
      * 查询购物车中是否包含该商品，有增加数量，无添加到购物车
      */
     @Transactional
-    int add(OmsCartItem cartItem);
-
+    //int add(OmsCartItem cartItem, UmsMember currentMember);
+    int add(Long productId,Long productSkuId,Integer quantity,UmsMember currentMember);
     /**
      * 根据会员编号获取购物车列表
      */
@@ -48,7 +49,7 @@ public interface OmsCartItemService {
      * 修改购物车中商品的规格
      */
     @Transactional
-    int updateAttr(OmsCartItem cartItem);
+    int updateAttr(OmsCartItem cartItem,UmsMember umsMember);
 
     /**
      * 清空购物车

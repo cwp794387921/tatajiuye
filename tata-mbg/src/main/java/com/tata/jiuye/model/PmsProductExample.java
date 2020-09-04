@@ -2056,6 +2056,76 @@ public class PmsProductExample {
             return (Criteria) this;
         }
 
+        public Criteria andShowImgForIndexPicsIsNull() {
+            addCriterion("show_img_for_index_pics is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsIsNotNull() {
+            addCriterion("show_img_for_index_pics is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsEqualTo(String value) {
+            addCriterion("show_img_for_index_pics =", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsNotEqualTo(String value) {
+            addCriterion("show_img_for_index_pics <>", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsGreaterThan(String value) {
+            addCriterion("show_img_for_index_pics >", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsGreaterThanOrEqualTo(String value) {
+            addCriterion("show_img_for_index_pics >=", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsLessThan(String value) {
+            addCriterion("show_img_for_index_pics <", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsLessThanOrEqualTo(String value) {
+            addCriterion("show_img_for_index_pics <=", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsLike(String value) {
+            addCriterion("show_img_for_index_pics like", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsNotLike(String value) {
+            addCriterion("show_img_for_index_pics not like", value, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsIn(List<String> values) {
+            addCriterion("show_img_for_index_pics in", values, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsNotIn(List<String> values) {
+            addCriterion("show_img_for_index_pics not in", values, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsBetween(String value1, String value2) {
+            addCriterion("show_img_for_index_pics between", value1, value2, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowImgForIndexPicsNotBetween(String value1, String value2) {
+            addCriterion("show_img_for_index_pics not between", value1, value2, "showImgForIndexPics");
+            return (Criteria) this;
+        }
+
         public Criteria andDetailTitleIsNull() {
             addCriterion("detail_title is null");
             return (Criteria) this;
