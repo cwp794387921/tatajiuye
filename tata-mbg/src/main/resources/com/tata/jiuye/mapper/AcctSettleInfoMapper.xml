@@ -303,4 +303,34 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getIncome" parameterType="com.tata.jiuye.DTO.TotalFlowQueryParam" resultType="java.math.BigDecimal">
+    SELECT
+        SUM(asi.`change`) AS amount
+    FROM
+        acct_settle_info asi
+        LEFT JOIN acct_info ai ON ai.id = asi.acct_id
+    WHERE
+        ai.member_id = #{sumParam.memberId}
+      AND asi.flow_type = #{sumParam.flowType}
+    <if test="sumParam.startDate != null and sumParam.endDate != null">
+        AND asi.insert_time BETWEEN #{sumParam.startDate} AND #{sumParam.endDate}
+    </if>
+  </select>
+
+
+  <select id="getIncomeFlow" resultMap="BaseResultMap">
+    SELECT
+        asi.*
+    FROM
+        acct_settle_info asi
+        LEFT JOIN acct_info ai ON ai.id = asi.acct_id
+    WHERE
+        ai.member_id = #{memberId}
+        AND YEAR (asi.insert_time) = #{year}
+        AND MONTH (asi.insert_time)= #{month}
+    <if test="flowType != null">
+        AND asi.flow_type = #{flowType,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

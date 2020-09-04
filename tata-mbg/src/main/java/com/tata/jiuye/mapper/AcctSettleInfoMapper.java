@@ -1,8 +1,11 @@
 package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tata.jiuye.DTO.TotalFlowQueryParam;
 import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.AcctSettleInfoExample;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +31,19 @@ public interface AcctSettleInfoMapper extends BaseMapper<AcctSettleInfo> {
     int updateByPrimaryKeySelective(AcctSettleInfo record);
 
     int updateByPrimaryKey(AcctSettleInfo record);
+
+    /**
+     * 获取指定时间段的指定类型流水总额
+     * @return
+     */
+    BigDecimal getIncome(@Param("sumParam") TotalFlowQueryParam totalFlowQueryParam);
+
+    /**
+     * 获取某时间段内的余额明细
+     * @param memberId          用户ID
+     * @param year               年份
+     * @param month              月份
+     * @return
+     */
+    List<AcctSettleInfo> getIncomeFlow(@Param("memberId")Long memberId,@Param("year") String year,@Param("month") String month,@Param("flowType") String flowType);
 }
