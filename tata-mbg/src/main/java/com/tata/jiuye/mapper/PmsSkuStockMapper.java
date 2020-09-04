@@ -30,4 +30,6 @@ public interface PmsSkuStockMapper extends BaseMapper<PmsSkuStock> {
     int updateByPrimaryKeySelective(PmsSkuStock record);
 
     int updateByPrimaryKey(PmsSkuStock record);
+
+    PmsSkuStock getByProductId (@Param("productId") Long productId);
 }
