@@ -6,7 +6,6 @@ import com.tata.jiuye.mapper.PmsSkuStockMapper;
 import com.tata.jiuye.model.PmsSkuStock;
 import com.tata.jiuye.model.PmsSkuStockExample;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
-import com.tata.jiuye.portal.domain.CartPromotionItem;
 import com.tata.jiuye.portal.service.InventoryChangeRecordService;
 import com.tata.jiuye.portal.service.PmsSkuStockService;
 import lombok.RequiredArgsConstructor;
