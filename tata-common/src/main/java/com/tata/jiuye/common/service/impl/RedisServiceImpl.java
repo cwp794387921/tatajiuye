@@ -1,5 +1,6 @@
 package com.tata.jiuye.common.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.tata.jiuye.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +21,36 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void set(String key, Object value, long time) {
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 获取锁
+     * @return 获取锁成功返回ture，超时返回false
+     * @throws InterruptedException
+     */
+    @Override
+    public synchronized boolean lock(String lockKey,String random) throws InterruptedException {
+            if (this.setNX(lockKey, random)) {
+                redisTemplate.expire(lockKey, 1000*10, TimeUnit.SECONDS);
+            }else {
+                return false;
+            }
+        return true;
+    }
+    /**
+     * 释放获取到的锁
+     */
+    @Override
+    public synchronized void unlock(String lockKey,String random) {
+        if(this.get(lockKey)!=null){
+            if(random.equals(this.get(lockKey).toString())){
+                redisTemplate.delete(lockKey);
+            }
+        }
+    }
+
+    private boolean setNX(final String key, final String value) {
+        return redisTemplate.opsForValue().setIfAbsent(key,value);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.mapper.OmsOrderMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
@@ -62,6 +63,9 @@ public class PayController {
     private WmsMemberMapper wmsMemberMapper;
     @Resource
     private OmsDistributionMapper distributionMapper;
+
+    @Resource
+    private RedisService redisService;
 
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
@@ -140,6 +144,27 @@ public class PayController {
         }
         return CommonResult.success(jsonObject);
     }
+
+    @PostMapping("/testLock")
+    @ResponseBody
+    public CommonResult testLock(String key){
+        String requestId=UUID.randomUUID().toString();
+        try{
+            if(redisService.lock(key,requestId)){
+                log.info("获取到锁");
+                Thread.sleep(1000*5);
+                log.info("休眠结束，释放锁");
+            }else {
+                return CommonResult.failed("获取锁失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            redisService.unlock(key,requestId);
+        }
+        return CommonResult.success("success");
+    }
+
 
     @PostMapping("/wxNotify")
     @ResponseBody
@@ -265,7 +290,7 @@ public class PayController {
                 sb.append(k + "=" + v + "&");
             }
         }
-        sb.append("key=" + "1111");
+        sb.append("key=" + "xiamenshihuliquceyiwangluo111111");
         String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase();
         return sign;
     }

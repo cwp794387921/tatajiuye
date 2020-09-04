@@ -37,7 +37,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.tata.jiuye.mapper"
                              targetProject="tata-mbg\src\main\java"/>
         <!--生成全部表tableName设为%-->
-        <table tableName="acct_settle_info">
+        <table tableName="wms_area">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

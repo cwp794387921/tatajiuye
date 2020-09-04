@@ -10,6 +10,11 @@ import java.util.Set;
  */
 public interface RedisService {
 
+
+    boolean lock(String lockKey,String random)throws InterruptedException;
+
+    void unlock(String lockKey,String random);
+
     /**
      * 保存属性
      */
