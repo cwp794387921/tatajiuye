@@ -80,6 +80,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private OmsOrderItemService omsOrderItemService;
     @Resource
     private PmsSkuStockService pmsSkuStockService;
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
 
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
@@ -511,7 +513,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public JSONObject queryDistribution(){
         UmsMember member = memberService.getCurrentMember();
-        if(memberLevelService.isSomeOneLevel(member.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER)){
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(member.getId());
+        if(wmsMember==null){
             log.info("==》不是配送中心");
             return null;
         }

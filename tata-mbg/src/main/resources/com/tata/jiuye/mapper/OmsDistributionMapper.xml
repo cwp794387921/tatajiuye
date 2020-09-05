@@ -103,7 +103,7 @@
     select
     <include refid="Base_Column_List" />
     from oms_distribution
-    where wms_member_id = #{id,jdbcType=INTEGER}
+    where wms_member_id = #{id,jdbcType=INTEGER} and status='0'
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from oms_distribution
