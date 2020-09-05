@@ -42,16 +42,7 @@ public class OmsPortalOrderController {
     @ApiOperation("根据购物车信息生成确认单信息")
     @RequestMapping(value = "/generateConfirmOrder", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<ConfirmOrderResult> generateConfirmOrder(@RequestParam String cartIdsStr) {
-        if(StringUtils.isEmpty(cartIdsStr)){
-            return CommonResult.failed("购物车商品ID不能为空");
-        }
-        String[] cartIdsS = cartIdsStr.split(",");
-        List<String> cartIdList = Arrays.asList(cartIdsS);
-        List<Long> cartIds = new ArrayList<>();
-        for(String cartId : cartIdList){
-            cartIds.add(Long.valueOf(cartId));
-        }
+    public CommonResult<ConfirmOrderResult> generateConfirmOrder(@RequestBody List<Long> cartIds) {
         ConfirmOrderResult confirmOrderResult = portalOrderService.generateConfirmOrder(cartIds);
         return CommonResult.success(confirmOrderResult);
     }
