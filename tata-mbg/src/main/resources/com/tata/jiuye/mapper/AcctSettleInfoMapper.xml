@@ -306,7 +306,7 @@
 
   <select id="getIncome" parameterType="com.tata.jiuye.DTO.TotalFlowQueryParam" resultType="java.math.BigDecimal">
     SELECT
-        SUM(asi.`change`) AS amount
+        SUM(asi.`change_amount`) AS amount
     FROM
         acct_settle_info asi
         LEFT JOIN acct_info ai ON ai.id = asi.acct_id

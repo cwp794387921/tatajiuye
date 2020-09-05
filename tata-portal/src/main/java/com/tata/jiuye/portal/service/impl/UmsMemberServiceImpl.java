@@ -393,7 +393,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if(memberId == null){
             Asserts.fail("传入的用户ID为空");
         }
-        UmsMember umsMember = memberMapper.selectById(memberId);
+        UmsMember umsMember = memberMapper.selectByPrimaryKey(memberId);
         //通过用户ID查找用户信息,再用用户信息上的用户等级ID获取用户等级,是否为配送中心
         Boolean isDeliveryCenter = umsMemberLevelService.isSomeOneLevel(umsMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
         // 判断用户等级,若不为配送中心,则查找绑定关系表找到上级,再看其是否配送中心
