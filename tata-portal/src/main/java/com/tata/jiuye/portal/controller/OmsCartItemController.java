@@ -82,8 +82,8 @@ public class OmsCartItemController {
     @ApiOperation("修改购物车中某个商品的数量")
     @RequestMapping(value = "/update/quantity", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult updateQuantity(@RequestParam Long id,
-                                       @RequestParam Integer quantity) {
+    public CommonResult updateQuantity(@RequestParam @ApiParam("购物车ID") Long id,
+                                       @RequestParam @ApiParam("修改后的数量")Integer quantity) {
         int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity);
         if (count > 0) {
             return CommonResult.success(count);
