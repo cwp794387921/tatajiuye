@@ -487,6 +487,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
 
     @Override
+    public Map<String,Object> queryOrderCount(){
+        UmsMember member = memberService.getCurrentMember();
+        Map<String,Object>map=orderMapper.queryOrderCount(member.getId());
+        return map;
+    }
+
+    @Override
     public void deleteOrder(Long orderId) {
         UmsMember member = memberService.getCurrentMember();
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);

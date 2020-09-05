@@ -81,5 +81,7 @@ public interface OmsPortalOrderService {
      */
     OmsOrder getOmsOrderByOrderSn(String orderSn);
 
+    Map<String,Object> queryOrderCount();
+
     JSONObject queryDistribution();
 }

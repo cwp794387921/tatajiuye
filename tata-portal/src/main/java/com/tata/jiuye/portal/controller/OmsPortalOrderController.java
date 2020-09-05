@@ -101,6 +101,14 @@ public class OmsPortalOrderController {
         return CommonResult.success(orderPage);
     }
 
+    @ApiOperation("获取用户订单列表数量")
+    @RequestMapping(value = "/queryOrderCount", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult queryOrderCount() {
+        Map<String,Object>map=portalOrderService.queryOrderCount();
+        return CommonResult.success(map);
+    }
+
     @ApiOperation("根据ID获取订单详情")
     @RequestMapping(value = "/detail/{orderId}", method = RequestMethod.GET)
     @ResponseBody

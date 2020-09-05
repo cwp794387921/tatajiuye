@@ -135,6 +135,19 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
+
+    <select id="queryOrderCount" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT
+	count(1) AS ALLCOUNT,
+	count( CASE WHEN o.`status` = '0' THEN o.id END ) AS NOPAY,
+	count( CASE WHEN o.`status` = '1' THEN o.id END ) AS PAY,
+	count( CASE WHEN o.`status` = '2' THEN o.id END ) AS DSH
+    FROM
+	oms_order o
+    WHERE
+    o.member_id  = #{id,jdbcType=BIGINT}
+  </select>
+
   <select id="selectByOrderNum" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     *

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.model.OmsOrderExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface OmsOrderMapper extends BaseMapper<OmsOrder> {
@@ -19,6 +21,8 @@ public interface OmsOrderMapper extends BaseMapper<OmsOrder> {
     int insertSelective(OmsOrder record);
 
     List<OmsOrder> selectByExample(OmsOrderExample example);
+
+    Map<String,Object> queryOrderCount(Long id);
 
     OmsOrder selectByPrimaryKey(Long id);
 
