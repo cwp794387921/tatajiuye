@@ -10,13 +10,15 @@ import java.net.URL;
 
 public class WxConfig implements WXPayConfig {
 
+    public static String PATH="/usr/local/tata-jiuye/tata-portal/apiclient_cert.p12";
+
     private byte[] certData;
 
     public WxConfig() throws Exception {
         /*URL resource = this.getClass().getClassLoader().getResource("apiclient_cert.p12");
         String path = resource.getPath();
         File file = new File(path);*/
-        File file = new File(this.getClass().getClassLoader().getResource("apiclient_cert.p12").getFile());
+        File file = new File(PATH);
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
         certStream.read(this.certData);
@@ -42,7 +44,7 @@ public class WxConfig implements WXPayConfig {
     }
 
     public String getNotifyUrl(){
-        return "http://www.cyjyt.com:8085/pay/wxNotify";
+        return "https://www.cyjyt.com:8085/pay/wxNotify";
     }
 
     public InputStream getCertStream() {
