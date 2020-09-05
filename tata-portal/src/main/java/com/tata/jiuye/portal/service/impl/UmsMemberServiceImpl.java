@@ -401,10 +401,13 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             //查找上级
             UmsMemberInviteRelation umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(memberId);
             if(umsMemberInviteRelation == null){
-                UmsMember currentMember = memberMapper.selectByPrimaryKey(umsMemberInviteRelation.getFatherMemberId());
-                Asserts.fail("用户"+currentMember.getPhone()+"没有上级");
+                return null;
             }
             Long fatherMemberId = umsMemberInviteRelation.getFatherMemberId();
+            //如果最高级是平台账户,且没有配送中心,则直接挂放平台
+            if(fatherMemberId ==0){
+                return 0L;
+            }
             getSuperiorDistributionCenterMemberId(fatherMemberId);
         }
         return umsMember.getId();
