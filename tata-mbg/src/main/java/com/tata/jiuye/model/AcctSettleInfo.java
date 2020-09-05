@@ -20,7 +20,7 @@ public class AcctSettleInfo implements Serializable {
     private BigDecimal beforBal;
 
     @ApiModelProperty(value = "变动金额")
-    private BigDecimal change;
+    private BigDecimal changeAmount;
 
     @ApiModelProperty(value = "变动后金额")
     private BigDecimal afterBal;
@@ -76,12 +76,12 @@ public class AcctSettleInfo implements Serializable {
         this.beforBal = beforBal;
     }
 
-    public BigDecimal getChange() {
-        return change;
+    public BigDecimal getChangeAmount() {
+        return changeAmount;
     }
 
-    public void setChange(BigDecimal change) {
-        this.change = change;
+    public void setChangeAmount(BigDecimal changeAmount) {
+        this.changeAmount = changeAmount;
     }
 
     public BigDecimal getAfterBal() {
@@ -142,7 +142,7 @@ public class AcctSettleInfo implements Serializable {
         sb.append(", orderNo=").append(orderNo);
         sb.append(", acctId=").append(acctId);
         sb.append(", beforBal=").append(beforBal);
-        sb.append(", change=").append(change);
+        sb.append(", changeAmount=").append(changeAmount);
         sb.append(", afterBal=").append(afterBal);
         sb.append(", insertTime=").append(insertTime);
         sb.append(", flowType=").append(flowType);

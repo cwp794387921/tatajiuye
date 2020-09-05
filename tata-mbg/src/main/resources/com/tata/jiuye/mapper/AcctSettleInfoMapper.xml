@@ -6,7 +6,7 @@
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="acct_id" jdbcType="BIGINT" property="acctId" />
     <result column="befor_bal" jdbcType="DECIMAL" property="beforBal" />
-    <result column="change" jdbcType="DECIMAL" property="change" />
+    <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
     <result column="after_bal" jdbcType="DECIMAL" property="afterBal" />
     <result column="insert_time" jdbcType="TIMESTAMP" property="insertTime" />
     <result column="flow_type" jdbcType="VARCHAR" property="flowType" />
@@ -73,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, order_no, acct_id, befor_bal, change, after_bal, insert_time, flow_type, flow_type_detail,
-    source_id, update_time
+    id, order_no, acct_id, befor_bal, change_amount, after_bal, insert_time, flow_type,
+    flow_type_detail, source_id, update_time
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample" resultMap="BaseResultMap">
     select
@@ -111,11 +111,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into acct_settle_info (order_no, acct_id, befor_bal,
-      change, after_bal, insert_time,
+      change_amount, after_bal, insert_time,
       flow_type, flow_type_detail, source_id,
       update_time)
     values (#{orderNo,jdbcType=VARCHAR}, #{acctId,jdbcType=BIGINT}, #{beforBal,jdbcType=DECIMAL},
-      #{change,jdbcType=DECIMAL}, #{afterBal,jdbcType=DECIMAL}, #{insertTime,jdbcType=TIMESTAMP},
+      #{changeAmount,jdbcType=DECIMAL}, #{afterBal,jdbcType=DECIMAL}, #{insertTime,jdbcType=TIMESTAMP},
       #{flowType,jdbcType=VARCHAR}, #{flowTypeDetail,jdbcType=VARCHAR}, #{sourceId,jdbcType=BIGINT},
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -134,8 +134,8 @@
       <if test="beforBal != null">
         befor_bal,
       </if>
-      <if test="change != null">
-        change,
+      <if test="changeAmount != null">
+        change_amount,
       </if>
       <if test="afterBal != null">
         after_bal,
@@ -166,8 +166,8 @@
       <if test="beforBal != null">
         #{beforBal,jdbcType=DECIMAL},
       </if>
-      <if test="change != null">
-        #{change,jdbcType=DECIMAL},
+      <if test="changeAmount != null">
+        #{changeAmount,jdbcType=DECIMAL},
       </if>
       <if test="afterBal != null">
         #{afterBal,jdbcType=DECIMAL},
@@ -210,8 +210,8 @@
       <if test="record.beforBal != null">
         befor_bal = #{record.beforBal,jdbcType=DECIMAL},
       </if>
-      <if test="record.change != null">
-        change = #{record.change,jdbcType=DECIMAL},
+      <if test="record.changeAmount != null">
+        change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       </if>
       <if test="record.afterBal != null">
         after_bal = #{record.afterBal,jdbcType=DECIMAL},
@@ -242,7 +242,7 @@
       order_no = #{record.orderNo,jdbcType=VARCHAR},
       acct_id = #{record.acctId,jdbcType=BIGINT},
       befor_bal = #{record.beforBal,jdbcType=DECIMAL},
-      change = #{record.change,jdbcType=DECIMAL},
+      change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       after_bal = #{record.afterBal,jdbcType=DECIMAL},
       insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
       flow_type = #{record.flowType,jdbcType=VARCHAR},
@@ -265,8 +265,8 @@
       <if test="beforBal != null">
         befor_bal = #{beforBal,jdbcType=DECIMAL},
       </if>
-      <if test="change != null">
-        change = #{change,jdbcType=DECIMAL},
+      <if test="changeAmount != null">
+        change_amount = #{changeAmount,jdbcType=DECIMAL},
       </if>
       <if test="afterBal != null">
         after_bal = #{afterBal,jdbcType=DECIMAL},
@@ -294,7 +294,7 @@
     set order_no = #{orderNo,jdbcType=VARCHAR},
       acct_id = #{acctId,jdbcType=BIGINT},
       befor_bal = #{beforBal,jdbcType=DECIMAL},
-      change = #{change,jdbcType=DECIMAL},
+      change_amount = #{changeAmount,jdbcType=DECIMAL},
       after_bal = #{afterBal,jdbcType=DECIMAL},
       insert_time = #{insertTime,jdbcType=TIMESTAMP},
       flow_type = #{flowType,jdbcType=VARCHAR},

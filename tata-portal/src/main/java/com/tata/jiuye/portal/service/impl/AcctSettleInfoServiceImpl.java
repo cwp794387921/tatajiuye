@@ -98,7 +98,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         acctSettleInfo.setAcctId(acctId);
         acctSettleInfo.setBeforBal(beforBal);
         acctSettleInfo.setAfterBal(afterBal);
-        acctSettleInfo.setChange(changeAmount);
+        acctSettleInfo.setChangeAmount(changeAmount);
         acctSettleInfo.setFlowType(StaticConstant.FLOW_TYPE_INCOME);
         acctSettleInfo.setFlowTypeDetail(StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME);
         acctSettleInfo.setSourceId(sourceId);

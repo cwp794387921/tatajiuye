@@ -356,63 +356,63 @@ public class AcctSettleInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andChangeIsNull() {
-            addCriterion("change is null");
+        public Criteria andChangeAmountIsNull() {
+            addCriterion("change_amount is null");
             return (Criteria) this;
         }
 
-        public Criteria andChangeIsNotNull() {
-            addCriterion("change is not null");
+        public Criteria andChangeAmountIsNotNull() {
+            addCriterion("change_amount is not null");
             return (Criteria) this;
         }
 
-        public Criteria andChangeEqualTo(BigDecimal value) {
-            addCriterion("change =", value, "change");
+        public Criteria andChangeAmountEqualTo(BigDecimal value) {
+            addCriterion("change_amount =", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNotEqualTo(BigDecimal value) {
-            addCriterion("change <>", value, "change");
+        public Criteria andChangeAmountNotEqualTo(BigDecimal value) {
+            addCriterion("change_amount <>", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeGreaterThan(BigDecimal value) {
-            addCriterion("change >", value, "change");
+        public Criteria andChangeAmountGreaterThan(BigDecimal value) {
+            addCriterion("change_amount >", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("change >=", value, "change");
+        public Criteria andChangeAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("change_amount >=", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeLessThan(BigDecimal value) {
-            addCriterion("change <", value, "change");
+        public Criteria andChangeAmountLessThan(BigDecimal value) {
+            addCriterion("change_amount <", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("change <=", value, "change");
+        public Criteria andChangeAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("change_amount <=", value, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeIn(List<BigDecimal> values) {
-            addCriterion("change in", values, "change");
+        public Criteria andChangeAmountIn(List<BigDecimal> values) {
+            addCriterion("change_amount in", values, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNotIn(List<BigDecimal> values) {
-            addCriterion("change not in", values, "change");
+        public Criteria andChangeAmountNotIn(List<BigDecimal> values) {
+            addCriterion("change_amount not in", values, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("change between", value1, value2, "change");
+        public Criteria andChangeAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("change_amount between", value1, value2, "changeAmount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("change not between", value1, value2, "change");
+        public Criteria andChangeAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("change_amount not between", value1, value2, "changeAmount");
             return (Criteria) this;
         }
 
