@@ -83,8 +83,10 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         Long acctId = acctSettleInfo.getAcctId();
         BigDecimal beforBal = acctSettleInfo.getBeforBal();
         BigDecimal afterBal = acctSettleInfo.getAfterBal();
-        //插入传入的Member对应的邀流水表(直邀或间邀)
-        insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId);
+        if(!changeAmount.equals(BigDecimal.ZERO)){
+            //插入传入的Member对应的邀流水表(直邀或间邀)
+            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId);
+        }
     }
 
 
