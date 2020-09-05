@@ -118,6 +118,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         return result;
     }
 
+
     @Override
     public Map<String, Object> generateOrder(OrderParam orderParam,UmsMember currentMember) {
         log.info("---------------------------下单方法  开始---------------------------");
@@ -126,7 +127,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         String memberLevelName = umsMemberLevelService.getUmsMemberLevelName(currentMember.getMemberLevelId());
         //升级为VIP商品的商品ID
         Long joinVipProductId = pmsProductMapper.getProductByIfJoinVipProduct();
-        //升级为配置中心的商品ID
+        //升级为配送中心的商品ID
         Long upgradeDistributionCenterProductId = pmsProductMapper.getProductByIfUpgradeDistributionCenterProduct();
         //UmsMember currentMember = memberService.getCurrentMember();
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
@@ -145,23 +146,25 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                 }
             }
             //获取锁成功，开始处理业务
-            //判断购物车中商品是否都有库存
-            if (!hasStock(cartPromotionItemList)) {
-                result.put("msg","库存不足，无法下单");
-                Asserts.fail("库存不足，无法下单");
-            }
             for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             Long productId = cartPromotionItem.getProductId();
             //等级为普通用户的时候,只能购买升级为VIP商品与升级为配置中心商品
-            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName) && !joinVipProductId.equals(productId) && !upgradeDistributionCenterProductId.equals(productId)){
-                Asserts.fail("非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
+                log.info("joinVipProductId["+joinVipProductId+"]，productId：["+productId+"]");
+            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName)){
+                //普通会员    不是升级vip商品&&不是升级配送中心商品
+                if(!productId.equals(joinVipProductId) && !productId.equals(upgradeDistributionCenterProductId)){
+                    result.put("msg","非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
+                    Asserts.fail("非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
+                }
             }
             //等级为VIP,不能购买升级为VIP商品
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER.equals(memberLevelName) && joinVipProductId.equals(productId)){
+                result.put("msg","您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
                 Asserts.fail("您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
             }
             //等级为配置中心,不能购买升级为VIP商品与升级为配置中心商品
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(memberLevelName) && (joinVipProductId.equals(productId) || upgradeDistributionCenterProductId.equals(productId))){
+                result.put("msg","您已升级为配送中心,无需再次购买升级为VIP会员的商品,或升级为配置中心的商品");
                 Asserts.fail("您已升级为配送中心,无需再次购买升级为VIP会员的商品,或升级为配置中心的商品");
             }
             //获取购物车及优惠信息
@@ -191,6 +194,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             //添加锁定库存
             pmsSkuStockService.addStock(cartPromotionItem.getProductId(),orderItem.getProductQuantity());
         }
+            //判断购物车中商品是否都有库存
+            if (!hasStock(cartPromotionItemList)) {
+                result.put("msg","库存不足，无法下单");
+                Asserts.fail("库存不足，无法下单");
+            }
         //判断使用使用了优惠券
         if (orderParam.getCouponId() == null) {
             //不用优惠券

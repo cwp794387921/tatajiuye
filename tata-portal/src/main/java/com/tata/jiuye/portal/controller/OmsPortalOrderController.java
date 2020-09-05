@@ -68,6 +68,9 @@ public class OmsPortalOrderController {
         if(result.get("msg")!=null){
          return CommonResult.failed(result.get("msg").toString());
         }
+        if(result.get("order")==null){
+            Asserts.fail("下单失败");
+        }
         return CommonResult.success(result, "下单成功");
     }
 
