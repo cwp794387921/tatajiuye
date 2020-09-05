@@ -79,12 +79,12 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     //插入分佣流水
     public void insertCommissionFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId){
-        Map<String,Object> resultMap = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME);
-        AcctInfo acctInfo = (AcctInfo) resultMap.get("acctInfo");
-        BigDecimal beforBal = (BigDecimal) resultMap.get("beforBal");
-        BigDecimal afterBal = (BigDecimal) resultMap.get("afterBal");
+        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME);
+        Long acctId = acctSettleInfo.getAcctId();
+        BigDecimal beforBal = acctSettleInfo.getBeforBal();
+        BigDecimal afterBal = acctSettleInfo.getAfterBal();
         //插入传入的Member对应的邀流水表(直邀或间邀)
-        insertAcctInfoChangeFlow(orderSn,acctInfo.getId(),beforBal,afterBal,changeAmount,sourceId);
+        insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId);
     }
 
 

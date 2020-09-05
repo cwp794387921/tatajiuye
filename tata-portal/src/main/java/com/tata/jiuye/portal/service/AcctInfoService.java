@@ -2,6 +2,7 @@ package com.tata.jiuye.portal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tata.jiuye.model.AcctInfo;
+import com.tata.jiuye.model.AcctSettleInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -31,5 +32,5 @@ public interface AcctInfoService extends IService<AcctInfo> {
      * @param type                       变动状态(收入 -> income,支出 -> expenditure)
      */
     @Transactional
-    Map<String,Object> updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type);
+    AcctSettleInfo updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type);
 }
