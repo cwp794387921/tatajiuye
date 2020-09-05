@@ -315,7 +315,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             memberService.updateIntegration(currentMember.getId(), currentMember.getIntegration() - orderParam.getUseIntegration());
         }
         //删除购物车中的下单商品
-        deleteCartItemList(cartPromotionItemList, currentMember);
+        deleteCartItemList(orderParam.getCartIds(), currentMember);
         //发送延迟消息取消订单
         sendDelayMessageCancelOrder(order.getId());
         result.put("order", order);
@@ -562,15 +562,18 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     /**
      * 删除下单商品的购物车信息
      */
-    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
+    /*private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
         List<Long> ids = new ArrayList<>();
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
 
             ids.add(cartPromotionItem.getId());
         }
         cartItemService.delete(currentMember.getId(), ids);
-    }
+    }*/
 
+    private void deleteCartItemList(List<Long> ids, UmsMember currentMember) {
+        cartItemService.delete(currentMember.getId(), ids);
+    }
     /**
      * 计算该订单赠送的成长值
      */
