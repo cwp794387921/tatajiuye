@@ -51,8 +51,8 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
             Asserts.fail("请选择加入购物车的商品");
         }
         PmsProduct pmsProduct = pmsProductMapper.selectByPrimaryKey(productId);
-        if(pmsProduct == pmsProduct){
-            Asserts.fail("");
+        if(pmsProduct == null){
+            Asserts.fail("找不到商品");
         }
         OmsCartItem cartItem = new OmsCartItem();
         cartItem.setProductId(productId);

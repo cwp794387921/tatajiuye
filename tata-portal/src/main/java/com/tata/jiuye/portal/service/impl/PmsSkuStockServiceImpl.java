@@ -41,6 +41,9 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
             Asserts.fail("查找的商品ID不能为空");
         }
         PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
+        if (skuStock == null){
+            Asserts.fail("找不到对应库存");
+        }
         skuStock.setLockStock(skuStock.getLockStock() + lockQuintity);
         skuStockMapper.updateByPrimaryKeySelective(skuStock);
     }
@@ -51,6 +54,9 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
             Asserts.fail("查找的商品ID不能为空");
         }
         PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
+        if (skuStock == null){
+            Asserts.fail("找不到对应库存");
+        }
         skuStock.setLockStock(skuStock.getLockStock() - unLockQuintity);
         skuStockMapper.updateByPrimaryKeySelective(skuStock);
     }
@@ -62,7 +68,13 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
             Asserts.fail("查找的商品ID不能为空");
         }
         PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
+        if (skuStock == null){
+            Asserts.fail("找不到对应库存");
+        }
         Integer quantityBeforeChange = skuStock.getStock();
+        if (skuStock == null){
+            Asserts.fail("找不到对应库存");
+        }
         Integer quantityAfterChange = quantityBeforeChange + addQuintity;
         skuStock.setStock(quantityAfterChange);
         skuStockMapper.updateByPrimaryKeySelective(skuStock);
@@ -76,6 +88,9 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
             Asserts.fail("查找的商品ID不能为空");
         }
         PmsSkuStock skuStock = skuStockMapper.getByProductId(productId);
+        if (skuStock == null){
+            Asserts.fail("找不到对应库存");
+        }
         Integer quantityBeforeChange = skuStock.getStock();
         Integer quantityAfterChange = quantityBeforeChange - subtractQuintity;
         skuStock.setStock(quantityAfterChange);

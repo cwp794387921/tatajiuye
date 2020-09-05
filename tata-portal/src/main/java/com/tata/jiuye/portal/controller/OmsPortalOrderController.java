@@ -16,9 +16,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +42,16 @@ public class OmsPortalOrderController {
     @ApiOperation("根据购物车信息生成确认单信息")
     @RequestMapping(value = "/generateConfirmOrder", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<ConfirmOrderResult> generateConfirmOrder(@RequestBody List<Long> cartIds) {
+    public CommonResult<ConfirmOrderResult> generateConfirmOrder(@RequestParam String cartIdsStr) {
+        if(StringUtils.isEmpty(cartIdsStr)){
+            return CommonResult.failed("购物车商品ID不能为空");
+        }
+        String[] cartIdsS = cartIdsStr.split(",");
+        List<String> cartIdList = Arrays.asList(cartIdsS);
+        List<Long> cartIds = new ArrayList<>();
+        for(String cartId : cartIdList){
+            cartIds.add(Long.valueOf(cartId));
+        }
         ConfirmOrderResult confirmOrderResult = portalOrderService.generateConfirmOrder(cartIds);
         return CommonResult.success(confirmOrderResult);
     }
