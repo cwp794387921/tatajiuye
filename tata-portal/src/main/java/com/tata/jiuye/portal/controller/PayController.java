@@ -83,6 +83,7 @@ public class PayController {
             return CommonResult.validateFailed("参数错误");
         }
         UmsMember member = umsMemberService.getCurrentMember();
+        member=umsMemberMapper.selectByPrimaryKey(member.getId());
         String openId=member.getOpenId();
         if (openId==null){
             return CommonResult.failed("获取openid失败");

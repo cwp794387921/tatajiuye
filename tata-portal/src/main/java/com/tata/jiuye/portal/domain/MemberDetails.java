@@ -16,6 +16,7 @@ public class MemberDetails implements UserDetails {
     private UmsMember umsMember;
 
     public MemberDetails(UmsMember umsMember) {
+        System.out.println(umsMember.toString());
         this.umsMember = umsMember;
     }
 

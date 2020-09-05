@@ -192,7 +192,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setIfUpgradeDistributionCenterProduct(cartPromotionItem.getIfUpgradeDistributionCenterProduct());
             orderItemList.add(orderItem);
             //添加锁定库存
-            pmsSkuStockService.addStock(cartPromotionItem.getProductId(),orderItem.getProductQuantity());
+            pmsSkuStockService.lockStock(cartPromotionItem.getProductId(),orderItem.getProductQuantity());
         }
             //判断购物车中商品是否都有库存
             if (!hasStock(cartPromotionItemList)) {
@@ -565,6 +565,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
         List<Long> ids = new ArrayList<>();
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
+
             ids.add(cartPromotionItem.getId());
         }
         cartItemService.delete(currentMember.getId(), ids);

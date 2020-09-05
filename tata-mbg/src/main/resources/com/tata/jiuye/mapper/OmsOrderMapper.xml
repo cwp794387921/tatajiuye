@@ -135,7 +135,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByOrderNum" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     *
     from oms_order
