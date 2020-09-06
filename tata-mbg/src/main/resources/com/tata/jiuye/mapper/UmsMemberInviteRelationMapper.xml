@@ -223,7 +223,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-    <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.UmsMemberInviteRelation">
+
+  <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.UmsMemberInviteRelation">
       SELECT
           *
       FROM
@@ -231,5 +232,64 @@
       WHERE
           member_id = #{memberId,jdbcType=BIGINT}
       limit 1
-    </select>
+   </select>
+
+  <resultMap id="directPerformanceBaseResult" type="com.tata.jiuye.DTO.DirectPerformanceResult">
+    <result column="nickname" property="nickname"></result>
+    <result column="order_count" property="orderCount"></result>
+    <result column="total_pay_amount" property="totalPayAmount"></result>
+  </resultMap>
+
+  <select id="getDirectPerformance" parameterType="java.lang.Long" resultMap="directPerformanceBaseResult">
+      SELECT
+          um.nickname,
+          count( oo.order_sn ) AS order_count,
+      CASE
+              WHEN SUM( oo.pay_amount ) IS NULL THEN
+              0 ELSE SUM( oo.pay_amount )
+          END AS total_pay_amount
+      FROM
+          ums_member_invite_relation umir
+          LEFT JOIN ums_member um ON umir.member_id = um.id
+          LEFT JOIN oms_order oo ON oo.member_id = umir.member_id
+      WHERE
+          umir.father_member_id = #{fatherMemberId,jdbcType=BIGINT}
+          AND oo.pay_amount > 0
+          AND oo.`status` NOT IN (0,4,5)
+      GROUP BY
+          um.nickname
+      ORDER BY
+          total_pay_amount DESC
+   </select>
+
+  <resultMap id="indirectPerformanceBaseResult" type="com.tata.jiuye.DTO.IndirectPerformanceResult">
+    <result column="father_nickname" property="fatherNickname"></result>
+    <result column="nickname" property="nickname"></result>
+    <result column="order_count" property="orderCount"></result>
+    <result column="total_pay_amount" property="totalPayAmount"></result>
+  </resultMap>
+
+  <select id="getIndirectPerformance" parameterType="java.lang.Long" resultMap="indirectPerformanceBaseResult">
+      SELECT
+          umf.nickname AS father_nickname,
+          um.nickname,
+          count( oo.order_sn ),
+      CASE
+              WHEN SUM( oo.pay_amount ) IS NULL THEN
+              0 ELSE SUM( oo.pay_amount )
+          END AS total_pay_amount
+      FROM
+          ums_member_invite_relation umir
+          LEFT JOIN ums_member umf ON umir.father_member_id = umf.id
+          LEFT JOIN ums_member um ON umir.member_id = um.id
+          LEFT JOIN oms_order oo ON oo.member_id = umir.member_id
+      WHERE
+          umir.grandpa_member_id = #{grandpaMemberId,jdbcType=BIGINT}
+          AND oo.pay_amount > 0
+          AND oo.`status` NOT IN (0,4,5)
+      GROUP BY
+          um.nickname
+      ORDER BY
+          total_pay_amount DESC
+   </select>
 </mapper>
