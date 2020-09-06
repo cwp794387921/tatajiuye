@@ -1,6 +1,9 @@
 package com.tata.jiuye.portal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tata.jiuye.DTO.DirectPerformanceResult;
+import com.tata.jiuye.DTO.IndirectPerformanceResult;
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 
 
@@ -9,4 +12,22 @@ import com.tata.jiuye.model.UmsMemberInviteRelation;
  * @author laich
  */
 public interface UmsMemberInviteRelationService extends IService<UmsMemberInviteRelation> {
+
+    /**
+     * 获取指定用户直系客户业绩
+     * @param pageNum
+     * @param pageSize
+     * @param memberId
+     * @return
+     */
+    CommonPage<DirectPerformanceResult> getDirectPerformance(Integer pageNum,Integer pageSize,Long memberId);
+
+    /**
+     * 获取指定用户间接邀请的客户业绩
+     * @param pageNum
+     * @param pageSize
+     * @param memberId
+     * @return
+     */
+    CommonPage<IndirectPerformanceResult> getInDirectPerformance(Integer pageNum, Integer pageSize, Long memberId);
 }
