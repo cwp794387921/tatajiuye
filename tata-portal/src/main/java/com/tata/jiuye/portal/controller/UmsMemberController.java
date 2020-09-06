@@ -12,10 +12,12 @@ import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.AcctInfoService;
 import com.tata.jiuye.portal.service.AcctSettleInfoService;
+import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
+import com.tata.jiuye.portal.util.inviteQrCode.InviteQrCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -69,11 +71,7 @@ public class UmsMemberController {
     private  RedisService redisService;
 
     @Resource
-    private AcctSettleInfoService acctSettleInfoService;
-
-    @Resource
-    private AcctInfoService acctInfoService;
-
+    private UmsMemberCacheService umsMemberCacheService;
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -263,5 +261,32 @@ public class UmsMemberController {
             Asserts.fail("openid为空");
         }
         return CommonResult.success(openId);
+    }
+
+
+
+    @ApiOperation("获取分享图片(拼接二维码)")
+    @RequestMapping(value = "/getShareQrCodeBase64",method = RequestMethod.POST)
+    @ResponseBody
+    //public CommonResult getShareQrCodeBase64(@RequestParam(required = false) @ApiParam("海报URL")String imgUrl) throws Exception{
+    public CommonResult getShareQrCodeBase64() throws Exception{
+        UmsMember currentMember = memberService.getCurrentMember();
+        String invitationCode = currentMember.getInviteCode();
+        //String str = "/pages/login/register/index?invitationCode="+invitationCode+"&isShare=1";
+        //log.info("----------------str : "+str);
+        String accesstoken = InviteQrCode.postToken();
+        int size = 280;
+        int x = 50;
+        int y = 160;
+        String imgUrl = "http://cscyimages.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200906/微信图片_20200903221821.jpg";
+        String resultUrl =  InviteQrCode.mergeImageAndQRToFileUrl(imgUrl,invitationCode,size,x,y,accesstoken);
+        return CommonResult.success(resultUrl);
+    }
+
+    @ApiOperation("删除用户缓存")
+    @RequestMapping(value = "/delCash",method = RequestMethod.POST)
+    @ResponseBody
+    public void delCash(@RequestParam @ApiParam("要删除缓存的用户ID") Long memberId){
+        umsMemberCacheService.delMember(memberId);
     }
 }

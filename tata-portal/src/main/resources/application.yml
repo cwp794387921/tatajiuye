@@ -81,3 +81,17 @@ auth:
     appId: 'wxdaa9fb4025511958'
     secret: '56bcec96c36b270da318979e4c41f8fc'
     grantType: 'authorization_code'
+
+file:
+  mac:
+    path: ~/file/
+    avatar: ~/avatar/
+  linux:
+    path: /home/eladmin/file/
+    avatar: /home/eladmin/avatar/
+  windows:
+    path: C:\eladmin\file\
+    avatar: C:\eladmin\avatar\
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5

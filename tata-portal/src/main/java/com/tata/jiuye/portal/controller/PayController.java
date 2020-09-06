@@ -84,7 +84,7 @@ public class PayController {
         }
         UmsMember member = umsMemberService.getCurrentMember();
         member=umsMemberMapper.selectByPrimaryKey(member.getId());
-        String openId=member.getOpenId();
+        String openId=member.getOpenid();
         if (openId==null){
             return CommonResult.failed("获取openid失败");
         }

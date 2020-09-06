@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.AcctInfoMapper;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
 import com.tata.jiuye.mapper.UmsMemberLevelMapper;
@@ -36,6 +37,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +71,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
     @Resource
     private UmsMemberLevelService umsMemberLevelService;
+    @Resource
+    private RedisService redisService;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -307,6 +312,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if (!CollectionUtils.isEmpty(memberLevelList)) {
             umsMember.setMemberLevelId(memberLevelList.get(0).getId());
         }
+        String selfInviteCode = generateInviteCode();
+        umsMember.setInviteCode(selfInviteCode);
         //插入会员信息
         memberMapper.insert(umsMember);
         //绑定关系
@@ -435,5 +442,28 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             log.info("--------------已存在,则返回session_key给前端让前端申请授权");
         }
         return jsonObjectStr;
+    }
+
+
+    /**
+     * 生成邀请码6位以上自增id
+     */
+    private String generateInviteCode() {
+        StringBuilder sb = new StringBuilder();
+        //获取秒数
+        Long second = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        //获取毫秒数
+        Long milliSecond = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        String date = milliSecond.toString();
+        String key =  date;
+        Long increment = redisService.incr(key, 1);
+        sb.append(date);
+        String incrementStr = increment.toString();
+        if (incrementStr.length() <= 6) {
+            sb.append(String.format("%06d", increment));
+        } else {
+            sb.append(incrementStr);
+        }
+        return sb.toString();
     }
 }
