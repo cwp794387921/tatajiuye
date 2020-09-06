@@ -8,8 +8,8 @@ public class RegisteredMemberParam {
     @ApiModelProperty("用户手机号")
     private String phone;
 
-    @ApiModelProperty("邀请用户手机号")
-    private String invitorPhone;
+    @ApiModelProperty("邀请码")
+    private String inviteCode;
 
     @ApiModelProperty("用户信息")
     private String userInfoJson;

@@ -299,7 +299,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setIcon(object.getString("avatarUrl"));
         umsMember.setCity(object.getString("city"));
         umsMember.setGender(object.getInteger("gender"));
-        umsMember.setOpenId(openId);
+        umsMember.setOpenid(openId);
         //获取默认会员等级并设置
         UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
         levelExample.createCriteria().andDefaultStatusEqualTo(1);
@@ -312,10 +312,10 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         //绑定关系
         Long grandpaMemberId;
         Long parentMemberId;
-        String invitorPhone = registeredMemberParam.getInvitorPhone();
-        if(!StringUtils.isEmpty(invitorPhone)){
-            log.info("邀请人手机号:"+invitorPhone);
-            UmsMember fatherUmsMember = memberMapper.getUmsMemberByPhone(invitorPhone);
+        String inviteCode = registeredMemberParam.getInviteCode();
+        if(!StringUtils.isEmpty(inviteCode)){
+            log.info("邀请人的邀请码:"+inviteCode);
+            UmsMember fatherUmsMember = memberMapper.getUmsMemberByInviteCode(inviteCode);
             if(fatherUmsMember == null){
                 log.info("邀请人信息不存在");
                 return null;
@@ -329,7 +329,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }else{
             log.info("未携带邀请码注册");
             log.info("上级绑定到平台");
-            invitorPhone="00000000000";
             grandpaMemberId=0L;
             parentMemberId=0L;
         }

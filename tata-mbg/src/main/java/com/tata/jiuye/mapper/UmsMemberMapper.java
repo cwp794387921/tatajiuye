@@ -50,4 +50,11 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
      * @return
      */
     UmsMember getUmsMemberByOpenId(@Param("openId")String openId);
+
+    /**
+     * 通过邀请码获取用户信息
+     * @param inviteCode
+     * @return
+     */
+    UmsMember getUmsMemberByInviteCode(@Param("inviteCode") String inviteCode);
 }
