@@ -381,5 +381,6 @@
           pms_product_category
       WHERE
           `name` = #{categoryName,jdbcType=VARCHAR}
+      AND level = 1
   </select>
 </mapper>

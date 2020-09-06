@@ -47,4 +47,16 @@ public interface PmsProductMapper extends BaseMapper<PmsProduct> {
      * @return
      */
     Long getProductByIfUpgradeDistributionCenterProduct();
+
+    /**
+     * 获取升级VIP的商品分类ID集合
+     * @return
+     */
+    List<Long> getProductByIfJoinVipCategoryId();
+
+    /**
+     * 获取升级为配置中心的商品分类ID集合
+     * @return
+     */
+    List<Long> getProductByIfUpgradeDistributionCenterCategoryId();
 }

@@ -24,10 +24,17 @@ public class HomeContentResult {
     private List<SmsHomeAdvertise> advertiseList;
 
     /**
-     * 升级为VIP的商品ID
+     * 升级为VIP的商品分类ID集合
      */
-    @ApiModelProperty("升级为VIP的商品ID")
-    private Long upgradeToVipProductId;
+    @ApiModelProperty("升级为VIP的商品分类ID集合")
+    private List<Long> upgradeToVipProductCategoryIds;
+
+    /**
+     * 升级为配置中心的商品分类ID集合
+     */
+    @ApiModelProperty("升级为配置中心的商品分类ID集合")
+    private List<Long> upgradeDistributionCenterCategoryIds;
+
     /**
      * 会员复购ID
      */

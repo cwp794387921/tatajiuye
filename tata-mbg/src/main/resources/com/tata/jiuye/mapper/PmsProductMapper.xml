@@ -1158,4 +1158,26 @@
           if_upgrade_distribution_center_product = 1
           limit 1
   </select>
+
+  <select id="getProductByIfJoinVipCategoryId" resultType="java.lang.Long">
+    SELECT DISTINCT
+        pp.product_category_id
+    FROM
+        pms_product pp
+    WHERE
+        pp.if_join_vip_product = 1
+    GROUP BY
+        pp.product_category_id
+  </select>
+
+    <select id="getProductByIfUpgradeDistributionCenterCategoryId" resultType="java.lang.Long">
+    SELECT DISTINCT
+        pp.product_category_id
+    FROM
+        pms_product pp
+    WHERE
+        pp.if_upgrade_distribution_center_product = 1
+    GROUP BY
+        pp.product_category_id
+  </select>
 </mapper>

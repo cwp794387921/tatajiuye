@@ -320,4 +320,14 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         example.createCriteria().andIdIn(ids);
         return productMapper.updateByExampleSelective(record, example);
     }
+
+
+    @Override
+    public int updateIfUpgradeDistributionCenterProduct(List<Long> ids, Integer ifUpgradeDistributionCenterProduct) {
+        PmsProduct record = new PmsProduct();
+        record.setIfUpgradeDistributionCenterProduct(ifUpgradeDistributionCenterProduct);
+        PmsProductExample example = new PmsProductExample();
+        example.createCriteria().andIdIn(ids);
+        return productMapper.updateByExampleSelective(record, example);
+    }
 }

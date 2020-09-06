@@ -51,9 +51,12 @@ public class HomeServiceImpl implements HomeService {
         HomeContentResult result = new HomeContentResult();
         //获取首页广告
         result.setAdvertiseList(getHomeAdvertiseList());
-        //获取特殊商品"加入VIP"的商品ID
-        Long upgradeToVipProductId = getProductByIfJoinVipProduct();
-        result.setUpgradeToVipProductId(upgradeToVipProductId);
+        //获取特殊商品"加入VIP"的商品分类ID
+        List<Long> upgradeToVipProductCategoryIds = getProductByIfJoinVipProductCategoryIds();
+        result.setUpgradeToVipProductCategoryIds(upgradeToVipProductCategoryIds);
+        //获取特殊商品升级为配置中心的商品分类ID集合
+        List<Long> upgradeDistributionCenterCategoryIds = getProductByIfUpgradeDistributionCenterProductCategoryIds();
+        result.setUpgradeDistributionCenterCategoryIds(upgradeDistributionCenterCategoryIds);
         //获取分类为"会员复购"的分类ID
         Long productCategoryId = getPmsProductCategoryIdByMemberRepurchase();
         result.setProductCategoryId(productCategoryId);
@@ -254,15 +257,28 @@ public class HomeServiceImpl implements HomeService {
      * 获取加入VIP的商品ID
      * @return
      */
-    private Long getProductByIfJoinVipProduct(){
-        log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
+    private List<Long> getProductByIfJoinVipProductCategoryIds(){
+        log.info("------------------------------获取加入VIP的商品分类ID集合方法 开始------------------------------");
         //获取所有升级为VIP商品
-        Long ifJoinVipProductId = productMapper.getProductByIfJoinVipProduct();
-        log.info("------------------------------加入VIP的商品ID 为 : "+ifJoinVipProductId);
-        log.info("------------------------------获取加入VIP的商品ID方法 开始------------------------------");
-        return ifJoinVipProductId;
+        List<Long> ifJoinVipCategoryIds = productMapper.getProductByIfJoinVipCategoryId();
+        log.info("------------------------------加入VIP的商品分类ID集合 为 : "+ifJoinVipCategoryIds);
+        log.info("------------------------------获取加入VIP的商品分类ID集合方法 开始------------------------------");
+        return ifJoinVipCategoryIds;
     }
 
+
+    /**
+     * 获取加入VIP的商品ID
+     * @return
+     */
+    private List<Long> getProductByIfUpgradeDistributionCenterProductCategoryIds(){
+        log.info("------------------------------获取升级为配置中心的商品分类ID方法 开始------------------------------");
+        //获取所有升级为VIP商品
+        List<Long> ifUpgradeDistributionCenterCategoryIds = productMapper.getProductByIfUpgradeDistributionCenterCategoryId();
+        log.info("------------------------------升级为配置中心的商品分类ID集合 为 : "+ifUpgradeDistributionCenterCategoryIds);
+        log.info("------------------------------获取升级为配置中心的商品分类ID方法 开始------------------------------");
+        return ifUpgradeDistributionCenterCategoryIds;
+    }
     /**
      * 获取加入VIP的商品ID
      * @return

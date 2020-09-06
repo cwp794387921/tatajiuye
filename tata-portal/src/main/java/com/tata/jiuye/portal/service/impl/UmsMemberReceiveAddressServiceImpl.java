@@ -7,6 +7,7 @@ import com.tata.jiuye.model.UmsMemberReceiveAddressExample;
 import com.tata.jiuye.portal.service.UmsMemberReceiveAddressService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * 用户地址管理Service实现类
  * Created by macro on 2018/8/28.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddressService {
@@ -25,6 +27,7 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
 
     @Override
     public int add(UmsMemberReceiveAddress address) {
+        log.info("地址为 "+address);
         UmsMember currentMember = memberService.getCurrentMember();
         address.setMemberId(currentMember.getId());
         return addressMapper.insert(address);
@@ -40,6 +43,8 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
 
     @Override
     public int update(Long id, UmsMemberReceiveAddress address) {
+        log.info("地址表ID为  "+id);
+        log.info("地址为 "+address);
         address.setId(null);
         UmsMember currentMember = memberService.getCurrentMember();
         UmsMemberReceiveAddressExample example = new UmsMemberReceiveAddressExample();

@@ -80,4 +80,8 @@ public interface PmsProductService extends IService<PmsProduct> {
      */
     @Transactional
     int updateIfJoinVipProduct(List<Long> ids, Integer ifJoinVipProduct);
+
+
+    @Transactional
+    int updateIfUpgradeDistributionCenterProduct(List<Long> ids, Integer ifUpgradeDistributionCenterProduct);
 }
