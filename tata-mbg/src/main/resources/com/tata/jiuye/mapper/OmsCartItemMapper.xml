@@ -25,6 +25,8 @@
     <result column="delivery_amount" jdbcType="DECIMAL" property="deliveryAmount" />
     <result column="if_join_vip_product" jdbcType="INTEGER" property="ifJoinVipProduct" />
     <result column="if_upgrade_distribution_center_product" jdbcType="INTEGER" property="ifUpgradeDistributionCenterProduct" />
+    <result column="vip_price" jdbcType="DECIMAL" property="vipPrice" />
+    <result column="delivery_center_price" jdbcType="DECIMAL" property="deliveryCenterPrice" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -88,7 +90,8 @@
     id, product_id, product_sku_id, member_id, quantity, price, product_pic, product_name, 
     product_sub_title, product_sku_code, member_nickname, create_date, modify_date, delete_status, 
     product_category_id, product_brand, product_sn, product_attr, direct_push_amount, 
-    indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product
+    indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product, 
+    vip_price, delivery_center_price
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsCartItemExample" resultMap="BaseResultMap">
     select
@@ -131,7 +134,8 @@
       delete_status, product_category_id, product_brand, 
       product_sn, product_attr, direct_push_amount, 
       indirect_push_amount, delivery_amount, if_join_vip_product, 
-      if_upgrade_distribution_center_product)
+      if_upgrade_distribution_center_product, vip_price, 
+      delivery_center_price)
     values (#{productId,jdbcType=BIGINT}, #{productSkuId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, 
       #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{productPic,jdbcType=VARCHAR}, 
       #{productName,jdbcType=VARCHAR}, #{productSubTitle,jdbcType=VARCHAR}, #{productSkuCode,jdbcType=VARCHAR}, 
@@ -139,7 +143,8 @@
       #{deleteStatus,jdbcType=INTEGER}, #{productCategoryId,jdbcType=BIGINT}, #{productBrand,jdbcType=VARCHAR}, 
       #{productSn,jdbcType=VARCHAR}, #{productAttr,jdbcType=VARCHAR}, #{directPushAmount,jdbcType=DECIMAL}, 
       #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL}, #{ifJoinVipProduct,jdbcType=INTEGER}, 
-      #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER})
+      #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}, #{vipPrice,jdbcType=DECIMAL}, 
+      #{deliveryCenterPrice,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsCartItem">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -213,6 +218,12 @@
       <if test="ifUpgradeDistributionCenterProduct != null">
         if_upgrade_distribution_center_product,
       </if>
+      <if test="vipPrice != null">
+        vip_price,
+      </if>
+      <if test="deliveryCenterPrice != null">
+        delivery_center_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="productId != null">
@@ -280,6 +291,12 @@
       </if>
       <if test="ifUpgradeDistributionCenterProduct != null">
         #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      </if>
+      <if test="vipPrice != null">
+        #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryCenterPrice != null">
+        #{deliveryCenterPrice,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -361,6 +378,12 @@
       <if test="record.ifUpgradeDistributionCenterProduct != null">
         if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
       </if>
+      <if test="record.vipPrice != null">
+        vip_price = #{record.vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.deliveryCenterPrice != null">
+        delivery_center_price = #{record.deliveryCenterPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -390,7 +413,9 @@
       indirect_push_amount = #{record.indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{record.deliveryAmount,jdbcType=DECIMAL},
       if_join_vip_product = #{record.ifJoinVipProduct,jdbcType=INTEGER},
-      if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}
+      if_upgrade_distribution_center_product = #{record.ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      vip_price = #{record.vipPrice,jdbcType=DECIMAL},
+      delivery_center_price = #{record.deliveryCenterPrice,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -464,6 +489,12 @@
       <if test="ifUpgradeDistributionCenterProduct != null">
         if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
       </if>
+      <if test="vipPrice != null">
+        vip_price = #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryCenterPrice != null">
+        delivery_center_price = #{deliveryCenterPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -490,7 +521,9 @@
       indirect_push_amount = #{indirectPushAmount,jdbcType=DECIMAL},
       delivery_amount = #{deliveryAmount,jdbcType=DECIMAL},
       if_join_vip_product = #{ifJoinVipProduct,jdbcType=INTEGER},
-      if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}
+      if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},
+      vip_price = #{vipPrice,jdbcType=DECIMAL},
+      delivery_center_price = #{deliveryCenterPrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

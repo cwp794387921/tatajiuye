@@ -191,7 +191,7 @@ public class InviteQrCode {
             paramJson.put("page", "pages/index/main");
             paramJson.put("width", size);
             paramJson.put("auto_color", true);
-            paramJson.put("is_hyaline",true);
+            paramJson.put("is_hyaline",false);
             printWriter.write(paramJson.toString());
             // flush输出流的缓冲
             printWriter.flush();

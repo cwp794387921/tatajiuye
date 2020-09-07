@@ -69,6 +69,12 @@ public class OmsCartItem implements Serializable {
     @ApiModelProperty(value = "是否为升级配送中心商品:0 -> 不是, 1->是")
     private Integer ifUpgradeDistributionCenterProduct;
 
+    @ApiModelProperty(value = "VIP价")
+    private BigDecimal vipPrice;
+
+    @ApiModelProperty(value = "配送中心价")
+    private BigDecimal deliveryCenterPrice;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -255,6 +261,22 @@ public class OmsCartItem implements Serializable {
         this.ifUpgradeDistributionCenterProduct = ifUpgradeDistributionCenterProduct;
     }
 
+    public BigDecimal getVipPrice() {
+        return vipPrice;
+    }
+
+    public void setVipPrice(BigDecimal vipPrice) {
+        this.vipPrice = vipPrice;
+    }
+
+    public BigDecimal getDeliveryCenterPrice() {
+        return deliveryCenterPrice;
+    }
+
+    public void setDeliveryCenterPrice(BigDecimal deliveryCenterPrice) {
+        this.deliveryCenterPrice = deliveryCenterPrice;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -284,6 +306,8 @@ public class OmsCartItem implements Serializable {
         sb.append(", deliveryAmount=").append(deliveryAmount);
         sb.append(", ifJoinVipProduct=").append(ifJoinVipProduct);
         sb.append(", ifUpgradeDistributionCenterProduct=").append(ifUpgradeDistributionCenterProduct);
+        sb.append(", vipPrice=").append(vipPrice);
+        sb.append(", deliveryCenterPrice=").append(deliveryCenterPrice);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -1565,6 +1565,126 @@ public class OmsCartItemExample {
             addCriterion("if_upgrade_distribution_center_product not between", value1, value2, "ifUpgradeDistributionCenterProduct");
             return (Criteria) this;
         }
+
+        public Criteria andVipPriceIsNull() {
+            addCriterion("vip_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceIsNotNull() {
+            addCriterion("vip_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceEqualTo(BigDecimal value) {
+            addCriterion("vip_price =", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotEqualTo(BigDecimal value) {
+            addCriterion("vip_price <>", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceGreaterThan(BigDecimal value) {
+            addCriterion("vip_price >", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("vip_price >=", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceLessThan(BigDecimal value) {
+            addCriterion("vip_price <", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("vip_price <=", value, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceIn(List<BigDecimal> values) {
+            addCriterion("vip_price in", values, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotIn(List<BigDecimal> values) {
+            addCriterion("vip_price not in", values, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("vip_price between", value1, value2, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("vip_price not between", value1, value2, "vipPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIsNull() {
+            addCriterion("delivery_center_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIsNotNull() {
+            addCriterion("delivery_center_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price =", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price <>", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceGreaterThan(BigDecimal value) {
+            addCriterion("delivery_center_price >", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price >=", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceLessThan(BigDecimal value) {
+            addCriterion("delivery_center_price <", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_price <=", value, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_price in", values, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_price not in", values, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_price between", value1, value2, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_price not between", value1, value2, "deliveryCenterPrice");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

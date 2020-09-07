@@ -180,7 +180,17 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setProductAttr(cartPromotionItem.getProductAttr());
             orderItem.setProductBrand(cartPromotionItem.getProductBrand());
             orderItem.setProductSn(cartPromotionItem.getProductSn());
-            orderItem.setProductPrice(cartPromotionItem.getPrice());
+            switch (memberLevelName){
+                case StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER:
+                    orderItem.setProductPrice(cartPromotionItem.getVipPrice());
+                    break;
+                case StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER:
+                    orderItem.setProductPrice(cartPromotionItem.getDeliveryCenterPrice());
+                    break;
+                    default:
+                    orderItem.setProductPrice(cartPromotionItem.getPrice());
+                    break;
+            }
             orderItem.setProductQuantity(cartPromotionItem.getQuantity());
             orderItem.setProductSkuId(cartPromotionItem.getProductSkuId());
             orderItem.setProductSkuCode(cartPromotionItem.getProductSkuCode());
