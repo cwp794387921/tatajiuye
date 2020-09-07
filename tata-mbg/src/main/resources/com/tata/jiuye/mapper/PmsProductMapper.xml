@@ -1145,6 +1145,7 @@
           pms_product
       WHERE
           `if_join_vip_product` = 1
+          AND publish_status = 1
           limit 1
   </select>
 
@@ -1156,6 +1157,7 @@
           pms_product
       WHERE
           if_upgrade_distribution_center_product = 1
+          AND publish_status = 1
           limit 1
   </select>
 
@@ -1166,6 +1168,7 @@
         pms_product pp
     WHERE
         pp.if_join_vip_product = 1
+        AND publish_status = 1
     GROUP BY
         pp.product_category_id
   </select>
@@ -1177,6 +1180,7 @@
         pms_product pp
     WHERE
         pp.if_upgrade_distribution_center_product = 1
+        AND publish_status = 1
     GROUP BY
         pp.product_category_id
   </select>
