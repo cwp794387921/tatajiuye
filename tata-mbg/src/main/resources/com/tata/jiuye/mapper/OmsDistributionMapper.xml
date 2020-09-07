@@ -113,6 +113,9 @@
       <if test="status !=null and status !=''">
        and status = #{status}
       </if>
+        <if test="status ==null or status ==''">
+            and status != 5
+        </if>
       <if test="type !=null and type !=''">
         and type = #{type}
       </if>

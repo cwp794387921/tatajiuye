@@ -533,7 +533,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         JSONObject result=new JSONObject();
         OmsDistribution distribution=new OmsDistribution();
-        distribution.setWmsMemberId(member.getId());
+        distribution.setWmsMemberId(wmsMember.getId());
         //distribution.setStatus(0);//待配送
         //distribution.setType(1);//配送单
         List<OmsDistribution> list= DistributionMapper.queryList(distribution);
