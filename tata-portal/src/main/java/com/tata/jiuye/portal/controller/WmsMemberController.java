@@ -48,7 +48,7 @@ public class WmsMemberController {
         return CommonResult.success(result);
     }
 
-    @ApiOperation("查询配送单列表")
+    @ApiOperation("查询配送单列表（type=1时为配送单,status=0待接单 1待配送 ; type=2时为补货单,status=0待收货 1待审核 ; type=3时为借货单，status=0待取货，1待出货）")
     @RequestMapping(value = "/queryDistribution", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult queryDistribution() {
