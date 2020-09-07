@@ -48,7 +48,29 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "配送用户id")
     private Long wmsMemberId;
 
+    @ApiModelProperty(value = "类型 1配送单 2补货单  3借货单")
+    private Integer type;
+
+    @ApiModelProperty(value = "配送收益")
+    private BigDecimal profit;
+
     private static final long serialVersionUID = 1L;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public BigDecimal getProfit() {
+        return profit;
+    }
+
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

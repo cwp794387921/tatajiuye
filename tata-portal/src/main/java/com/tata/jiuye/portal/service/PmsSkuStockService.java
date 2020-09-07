@@ -17,6 +17,8 @@ public interface PmsSkuStockService extends IService<PmsSkuStock> {
      */
     List<PmsSkuStock> getList(Long pid, String keyword);
 
+
+
     /**
      * 锁定库存
      * @param productId             待锁定库存的商品ID

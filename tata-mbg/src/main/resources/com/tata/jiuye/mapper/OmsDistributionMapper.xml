@@ -16,6 +16,8 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="wms_member_id" jdbcType="INTEGER" property="wmsMemberId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="profit" jdbcType="DECIMAL" property="profit" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
-    name, head_img, address, create_time, wms_member_id
+    name, head_img, address, create_time, wms_member_id,type,profit
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
     select
@@ -99,11 +101,22 @@
     from oms_distribution
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="queryList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="queryList" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from oms_distribution
-    where wms_member_id = #{id,jdbcType=INTEGER} and status='0'
+    <where>
+      <if test="memberId !=null and memberId !=''">
+       and wms_member_id = #{memberId}
+      </if>
+      <if test="status !=null and status !=''">
+       and status = #{status}
+      </if>
+      <if test="type !=null and type !=''">
+        and type = #{type}
+      </if>
+    </where>
+
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from oms_distribution
@@ -123,12 +136,12 @@
       goods_title, goods_subtitle, price, 
       number, sub_price, name, 
       head_img, address, create_time, 
-      wms_member_id)
+      wms_member_id,type,profit)
     values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
       #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{wmsMemberId,jdbcType=INTEGER})
+      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsDistribution">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -175,6 +188,12 @@
       <if test="wmsMemberId != null">
         wms_member_id,
       </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="profit != null">
+        profit,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderSn != null">
@@ -215,6 +234,12 @@
       </if>
       <if test="wmsMemberId != null">
         #{wmsMemberId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="profit != null">
+        profit = #{profit,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -269,6 +294,12 @@
       <if test="record.wmsMemberId != null">
         wms_member_id = #{record.wmsMemberId,jdbcType=INTEGER},
       </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.profit != null">
+        profit = #{record.profit,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -289,7 +320,9 @@
       head_img = #{record.headImg,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      wms_member_id = #{record.wmsMemberId,jdbcType=INTEGER}
+      wms_member_id = #{record.wmsMemberId,jdbcType=INTEGER},
+    type = #{record.type,jdbcType=INTEGER},
+    profit = #{profit,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -336,6 +369,12 @@
       <if test="wmsMemberId != null">
         wms_member_id = #{wmsMemberId,jdbcType=INTEGER},
       </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="profit != null">
+        profit = #{profit,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -353,7 +392,10 @@
       head_img = #{headImg,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      wms_member_id = #{wmsMemberId,jdbcType=INTEGER}
+      wms_member_id = #{wmsMemberId,jdbcType=INTEGER},
+       type = #{type,jdbcType=INTEGER},
+        profit = #{profit,jdbcType=DECIMAL}
+
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

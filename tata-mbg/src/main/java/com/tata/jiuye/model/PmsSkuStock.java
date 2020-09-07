@@ -34,8 +34,18 @@ public class PmsSkuStock implements Serializable {
 
     @ApiModelProperty(value = "商品销售属性，json格式")
     private String spData;
+    @ApiModelProperty(value = "关联配送用户id")
+    private Integer wmsMemberId;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getWmsMemberId() {
+        return wmsMemberId;
+    }
+
+    public void setWmsMemberId(Integer wmsMemberId) {
+        this.wmsMemberId = wmsMemberId;
+    }
 
     public Long getId() {
         return id;

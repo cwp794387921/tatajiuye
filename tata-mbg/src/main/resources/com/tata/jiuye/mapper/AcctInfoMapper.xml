@@ -96,6 +96,20 @@
     from acct_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acct_info
+    where member_id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByWmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acct_info
+    where branch_id = #{id,jdbcType=BIGINT}
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from acct_info
     where id = #{id,jdbcType=BIGINT}

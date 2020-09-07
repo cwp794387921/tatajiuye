@@ -18,7 +18,8 @@ public interface OmsDistributionMapper {
 
     List<OmsDistribution> selectByExample(OmsDistributionExample example);
 
-    List<OmsDistribution> queryList(Long id);
+    List<OmsDistribution> queryList(OmsDistribution distribution);
+
 
     OmsDistribution selectByPrimaryKey(Integer id);
 

@@ -22,6 +22,8 @@ public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
     List<AcctInfo> selectByExample(AcctInfoExample example);
 
     AcctInfo selectByPrimaryKey(Long id);
+    AcctInfo selectByUmsId(Long id);
+    AcctInfo selectByWmsId(Long id);
 
     int updateByExampleSelective(@Param("record") AcctInfo record, @Param("example") AcctInfoExample example);
 

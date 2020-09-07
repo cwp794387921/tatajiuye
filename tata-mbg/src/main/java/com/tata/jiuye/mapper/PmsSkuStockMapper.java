@@ -2,6 +2,7 @@ package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.PmsSkuStock;
+import com.tata.jiuye.model.PmsSkuStockDetail;
 import com.tata.jiuye.model.PmsSkuStockExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,8 @@ public interface PmsSkuStockMapper extends BaseMapper<PmsSkuStock> {
     int insertSelective(PmsSkuStock record);
 
     List<PmsSkuStock> selectByExample(PmsSkuStockExample example);
+
+    List<PmsSkuStockDetail> queryStockByMemberId(Long id);
 
     PmsSkuStock selectByPrimaryKey(Long id);
 

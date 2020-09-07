@@ -13,7 +13,27 @@
     <result column="promotion_price" jdbcType="DECIMAL" property="promotionPrice" />
     <result column="lock_stock" jdbcType="INTEGER" property="lockStock" />
     <result column="sp_data" jdbcType="VARCHAR" property="spData" />
+    <result column="wms_member_id" jdbcType="BIGINT" property="wmsMemberId" />
   </resultMap>
+
+  <resultMap id="stockDetailMap" type="com.tata.jiuye.model.PmsSkuStockDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="sku_code" jdbcType="VARCHAR" property="skuCode" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="low_stock" jdbcType="INTEGER" property="lowStock" />
+    <result column="pic" jdbcType="VARCHAR" property="pic" />
+    <result column="sale" jdbcType="INTEGER" property="sale" />
+    <result column="promotion_price" jdbcType="DECIMAL" property="promotionPrice" />
+    <result column="lock_stock" jdbcType="INTEGER" property="lockStock" />
+    <result column="sp_data" jdbcType="VARCHAR" property="spData" />
+    <result column="wms_member_id" jdbcType="BIGINT" property="wmsMemberId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sub_title" jdbcType="VARCHAR" property="subTitle" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -74,7 +94,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, product_id, sku_code, price, stock, low_stock, pic, sale, promotion_price, lock_stock,
-    sp_data
+    sp_data,wms_member_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.PmsSkuStockExample" resultMap="BaseResultMap">
     select
@@ -90,6 +110,21 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="queryStockByMemberId" parameterType="java.lang.Long" resultMap="stockDetailMap">
+          SELECT
+              s.*,
+              p.NAME,
+              p.sub_title,
+              p.description
+          FROM
+              pms_sku_stock s
+              LEFT JOIN pms_product p ON p.id = s.product_id
+          where s.wms_member_id=#{id,jdbcType=BIGINT}
+
+  </select>
+
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -113,11 +148,11 @@
     insert into pms_sku_stock (product_id, sku_code, price,
       stock, low_stock, pic,
       sale, promotion_price, lock_stock,
-      sp_data)
+      sp_data,wms_member_id)
     values (#{productId,jdbcType=BIGINT}, #{skuCode,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{stock,jdbcType=INTEGER}, #{lowStock,jdbcType=INTEGER}, #{pic,jdbcType=VARCHAR},
       #{sale,jdbcType=INTEGER}, #{promotionPrice,jdbcType=DECIMAL}, #{lockStock,jdbcType=INTEGER},
-      #{spData,jdbcType=VARCHAR})
+      #{spData,jdbcType=VARCHAR},#{wmsMemberId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsSkuStock">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -155,6 +190,9 @@
       <if test="spData != null">
         sp_data,
       </if>
+      <if test="wmsMemberId != null">
+        wms_member_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="productId != null">
@@ -186,6 +224,9 @@
       </if>
       <if test="spData != null">
         #{spData,jdbcType=VARCHAR},
+      </if>
+      <if test="wmsMemberId != null">
+        #{wmsMemberId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -231,6 +272,9 @@
       <if test="record.spData != null">
         sp_data = #{record.spData,jdbcType=VARCHAR},
       </if>
+      <if test="record.wmsMemberId != null">
+        wms_member_id = #{record.wmsMemberId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +292,8 @@
       sale = #{record.sale,jdbcType=INTEGER},
       promotion_price = #{record.promotionPrice,jdbcType=DECIMAL},
       lock_stock = #{record.lockStock,jdbcType=INTEGER},
-      sp_data = #{record.spData,jdbcType=VARCHAR}
+      sp_data = #{record.spData,jdbcType=VARCHAR},
+    wms_member_id = #{record.wmsMemberId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +331,9 @@
       <if test="spData != null">
         sp_data = #{spData,jdbcType=VARCHAR},
       </if>
+      <if test="wmsMemberId != null">
+        wms_member_id = #{wmsMemberId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +348,8 @@
       sale = #{sale,jdbcType=INTEGER},
       promotion_price = #{promotionPrice,jdbcType=DECIMAL},
       lock_stock = #{lockStock,jdbcType=INTEGER},
-      sp_data = #{spData,jdbcType=VARCHAR}
+      sp_data = #{spData,jdbcType=VARCHAR},
+       wms_member_id = #{wmsMemberId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
