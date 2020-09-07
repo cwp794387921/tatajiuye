@@ -74,7 +74,18 @@ public class WmsMember implements Serializable {
     @ApiModelProperty(value = "授信额度")
     private BigDecimal creditLine;
 
+    @ApiModelProperty(value = "等级  1配送中心 2区域  3站长")
+    private Integer level;
+
     private static final long serialVersionUID = 1L;
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
 
     public Long getId() {
         return id;
