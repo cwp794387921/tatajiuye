@@ -141,12 +141,6 @@ public class OmsPortalOrderController {
         return CommonResult.success(null);
     }
 
-    @ApiOperation("查询配送单列表")
-    @RequestMapping(value = "/queryDistribution", method = RequestMethod.POST)
-    @ResponseBody
-    public CommonResult queryDistribution() {
-        JSONObject jsonObject=portalOrderService.queryDistribution();
-        return CommonResult.success(jsonObject);
-    }
+
 
 }

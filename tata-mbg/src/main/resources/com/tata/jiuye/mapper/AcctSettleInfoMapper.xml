@@ -319,7 +319,7 @@
   </select>
 
 
-  <select id="getIncomeFlow" resultMap="BaseResultMap">
+    <select id="getIncomeFlow" resultMap="BaseResultMap">
     SELECT
         asi.*
     FROM

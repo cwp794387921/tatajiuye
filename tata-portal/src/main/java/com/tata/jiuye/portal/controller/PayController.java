@@ -225,6 +225,7 @@ public class PayController {
                         OmsDistribution distribution=new OmsDistribution();
                         distribution.setOrderSn(omsOrder.getOrderSn());
                         distribution.setStatus(0);
+                        distribution.setPhone(omsOrder.getReceiverPhone());
                         distribution.setGoodsImg(omsOrderItem.getProductPic());
                         distribution.setGoodsTitle(omsOrderItem.getProductName());
                         distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());

@@ -65,11 +65,11 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         distribution.setStatus(0);
         distribution.setWmsMemberId(wmsMember.getId());
         List<OmsDistribution> BhList=distributionMapper.queryList(distribution);
-        result.put("BH",BhList);
+        result.put("bh",BhList);
         //查找借货单
         distribution.setType(3);
         List<OmsDistribution> JhList=distributionMapper.queryList(distribution);
-        result.put("JH",JhList);
+        result.put("jh",JhList);
         return result;
     }
 }

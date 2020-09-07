@@ -54,7 +54,17 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "配送收益")
     private BigDecimal profit;
 
+    private String phone;
+
     private static final long serialVersionUID = 1L;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public Integer getType() {
         return type;

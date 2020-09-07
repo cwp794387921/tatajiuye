@@ -18,6 +18,7 @@
     <result column="wms_member_id" jdbcType="INTEGER" property="wmsMemberId" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="profit" jdbcType="DECIMAL" property="profit" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -79,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
-    name, head_img, address, create_time, wms_member_id,type,profit
+    name, head_img, address, create_time, wms_member_id,type,profit,phone
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
     select
@@ -136,12 +137,12 @@
       goods_title, goods_subtitle, price, 
       number, sub_price, name, 
       head_img, address, create_time, 
-      wms_member_id,type,profit)
+      wms_member_id,type,profit,phone)
     values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
       #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL})
+      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsDistribution">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -194,6 +195,9 @@
       <if test="profit != null">
         profit,
       </if>
+      <if test="phone != null">
+        phone,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderSn != null">
@@ -240,6 +244,9 @@
       </if>
       <if test="profit != null">
         profit = #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -300,6 +307,9 @@
       <if test="record.profit != null">
         profit = #{record.profit,jdbcType=DECIMAL},
       </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -322,7 +332,8 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       wms_member_id = #{record.wmsMemberId,jdbcType=INTEGER},
     type = #{record.type,jdbcType=INTEGER},
-    profit = #{profit,jdbcType=DECIMAL}
+    profit = #{profit,jdbcType=DECIMAL},
+    phone = #{record.phone,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -375,6 +386,9 @@
       <if test="profit != null">
         profit = #{profit,jdbcType=DECIMAL},
       </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -394,8 +408,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       wms_member_id = #{wmsMemberId,jdbcType=INTEGER},
        type = #{type,jdbcType=INTEGER},
+        phone = #{phone,jdbcType=VARCHAR},
         profit = #{profit,jdbcType=DECIMAL}
-
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

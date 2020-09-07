@@ -9,6 +9,7 @@ import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMerberService;
 import io.swagger.annotations.Api;
@@ -35,6 +36,8 @@ public class WmsMemberController {
 
     @Resource
     private WmsMerberService wmsMerberService;
+    @Resource
+    private OmsPortalOrderService portalOrderService;
 
     @ApiOperation("获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -43,6 +46,14 @@ public class WmsMemberController {
         JSONObject result= wmsMerberService.selectMerberInfo();
         log.debug(result.toString());
         return CommonResult.success(result);
+    }
+
+    @ApiOperation("查询配送单列表")
+    @RequestMapping(value = "/queryDistribution", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult queryDistribution() {
+        JSONObject jsonObject=portalOrderService.queryDistribution();
+        return CommonResult.success(jsonObject);
     }
 
 }
