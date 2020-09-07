@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.DTO.DirectPerformanceResult;
 import com.tata.jiuye.DTO.IndirectPerformanceResult;
+import com.tata.jiuye.DTO.TotalPerformanceResult;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
@@ -49,5 +50,15 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
         List<IndirectPerformanceResult> indirectPerformanceResults = umsMemberInviteRelationMapper.getIndirectPerformance(memberId);
         CommonPage<IndirectPerformanceResult> resultCommonPage = CommonPage.restPage(indirectPerformanceResults);
         return resultCommonPage;
+    }
+
+
+
+    @Override
+    public TotalPerformanceResult getTotalPerformance(Long memberId){
+        if(memberId == null){
+            Asserts.fail("用户ID为空");
+        }
+        return umsMemberInviteRelationMapper.getTotalPerformance(memberId);
     }
 }

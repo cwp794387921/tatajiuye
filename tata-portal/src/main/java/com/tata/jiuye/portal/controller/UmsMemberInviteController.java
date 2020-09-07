@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.controller;
 
 import com.tata.jiuye.DTO.DirectPerformanceResult;
 import com.tata.jiuye.DTO.IndirectPerformanceResult;
+import com.tata.jiuye.DTO.TotalPerformanceResult;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.UmsMember;
@@ -54,6 +55,18 @@ public class UmsMemberInviteController {
             return CommonResult.failed("用户未登录");
         }
         CommonPage<IndirectPerformanceResult> result = umsMemberInviteRelationService.getInDirectPerformance(pageNum,pageSize,umsMember.getId());
+        return CommonResult.success(result);
+    }
+
+    @ApiOperation("获取指定用户的团队总业绩与团队销售总件数")
+    @RequestMapping(value = "/getTotalPerformance", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getTotalPerformance() {
+        UmsMember umsMember = memberService.getCurrentMember();
+        if(umsMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        TotalPerformanceResult result = umsMemberInviteRelationService.getTotalPerformance(umsMember.getId());
         return CommonResult.success(result);
     }
 }

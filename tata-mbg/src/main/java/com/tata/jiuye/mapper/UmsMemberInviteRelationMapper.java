@@ -3,6 +3,7 @@ package com.tata.jiuye.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.DTO.DirectPerformanceResult;
 import com.tata.jiuye.DTO.IndirectPerformanceResult;
+import com.tata.jiuye.DTO.TotalPerformanceResult;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.UmsMemberInviteRelationExample;
 import java.util.List;
@@ -46,4 +47,12 @@ public interface UmsMemberInviteRelationMapper extends BaseMapper<UmsMemberInvit
      * @return
      */
     List<IndirectPerformanceResult> getIndirectPerformance(@Param("grandpaMemberId") Long memberId);
+
+
+    /**
+     * 获取团队销售总额与团队销售总数量
+     * @param memberId
+     * @return
+     */
+    TotalPerformanceResult getTotalPerformance(@Param("memberId") Long memberId);
 }
