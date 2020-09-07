@@ -278,7 +278,7 @@ public class UmsMemberController {
         int size = 280;
         int x = 50;
         int y = 160;
-        String imgUrl = "http://cscyimages.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200906/微信图片_20200903221821.jpg";
+        String imgUrl = "http://cscyimages.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200907/47e1e3d629e12a049d0154d23c0e806.jpg";
         String resultUrl =  InviteQrCode.mergeImageAndQRToFileUrl(imgUrl,invitationCode,size,x,y,accesstoken);
         return CommonResult.success(resultUrl);
     }
