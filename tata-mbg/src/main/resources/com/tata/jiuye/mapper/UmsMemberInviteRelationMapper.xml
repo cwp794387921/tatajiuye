@@ -292,4 +292,22 @@
       ORDER BY
           total_pay_amount DESC
    </select>
+
+
+  <select id="getTotalPerformance" resultType="com.tata.jiuye.DTO.TotalPerformanceResult">
+      SELECT
+          count( oo.order_sn ) AS order_count,
+      CASE
+              WHEN SUM( oo.pay_amount ) IS NULL THEN
+              0 ELSE SUM( oo.pay_amount )
+          END AS total_pay_amount
+      FROM
+          ums_member_invite_relation umir
+          LEFT JOIN ums_member um ON umir.member_id = um.id
+          LEFT JOIN oms_order oo ON oo.member_id = umir.member_id
+      WHERE
+          ( umir.father_member_id = #{memberId,jdbcType=BIGINT} OR umir.grandpa_member_id = #{memberId,jdbcType=BIGINT} )
+          AND oo.pay_amount > 0
+          AND oo.`status` NOT IN ( 0, 4, 5 )
+   </select>
 </mapper>
