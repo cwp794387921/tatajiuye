@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.CmsSubject;
@@ -8,14 +9,19 @@ import com.tata.jiuye.model.PmsProductCategory;
 import com.tata.jiuye.model.area;
 import com.tata.jiuye.portal.domain.HomeContentResult;
 import com.tata.jiuye.portal.service.HomeService;
+import com.tata.jiuye.portal.util.aliyunOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +36,9 @@ import java.util.List;
 public class HomeController {
     @Resource
     private  HomeService homeService;
+
+    @Resource
+    private aliyunOssUtil aliyunOssUtil;
 
     @ApiOperation("首页内容页信息展示")
     @RequestMapping(value = "/content", method = RequestMethod.GET)
@@ -108,5 +117,42 @@ public class HomeController {
         List<area> areas=homeService.queryAllareaName(city);
         return CommonResult.success(areas);
     }
+
+    @ApiOperation("上传文件接口")
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult upload(MultipartFile[] files, HttpServletRequest request)throws IOException {
+        JSONObject obj = new JSONObject();
+        List<String> imgPath = new ArrayList<>();
+        if (null != files && files.length > 0) {
+            //循环获取file数组中得文件
+            for (int i = 0; i < files.length; i++) {
+                String fileName = String.valueOf(System.currentTimeMillis());
+                MultipartFile file = files[i];
+                InputStream ins = null;
+                ins = file.getInputStream();
+                File tofile=new File(file.getOriginalFilename());
+                try{
+                    OutputStream os = new FileOutputStream(tofile);
+                    int bytesRead = 0;
+                    byte[] buffer = new byte[8192];
+                    while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+                        os.write(buffer, 0, bytesRead);
+                    }
+                    os.close();
+                    ins.close();
+                }catch (Exception e){
+
+                }
+                //保存文件
+                String  imagePath=aliyunOssUtil.uploadFile(tofile,fileName);
+                imgPath.add(imagePath);
+            }
+
+        }
+        obj.put("imgPath", imgPath);
+        return CommonResult.success(obj);
+    }
+
 
 }
