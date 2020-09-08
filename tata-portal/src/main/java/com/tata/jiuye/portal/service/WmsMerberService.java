@@ -11,4 +11,6 @@ public interface WmsMerberService {
 
     List<WmsMemberAreaDetail> queryAllUser();
 
+    void changeDistribution(Long changeId,Long orderId);
+
 }

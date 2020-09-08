@@ -65,5 +65,13 @@ public class WmsMemberController {
         return CommonResult.success(result);
     }
 
+    @ApiOperation("转配送接口")
+    @RequestMapping(value = "/changeDistribution", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult changeDistribution(Long changeId,Long orderId) {
+        wmsMerberService.changeDistribution(changeId,orderId);
+        return CommonResult.success("操作成功");
+    }
+
 
 }

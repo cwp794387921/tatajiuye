@@ -121,7 +121,7 @@ public class HomeController {
     @ApiOperation("上传文件接口")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult upload(MultipartFile[] files, HttpServletRequest request)throws IOException {
+    public CommonResult upload(MultipartFile[] files)throws IOException {
         JSONObject obj = new JSONObject();
         List<String> imgPath = new ArrayList<>();
         if (null != files && files.length > 0) {

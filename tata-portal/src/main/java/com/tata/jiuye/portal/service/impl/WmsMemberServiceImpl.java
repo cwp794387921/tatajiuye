@@ -3,10 +3,7 @@ package com.tata.jiuye.portal.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
-import com.tata.jiuye.mapper.AcctInfoMapper;
-import com.tata.jiuye.mapper.OmsDistributionMapper;
-import com.tata.jiuye.mapper.PmsSkuStockMapper;
-import com.tata.jiuye.mapper.WmsMemberMapper;
+import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.PmsSkuStockService;
 import com.tata.jiuye.portal.service.UmsMemberService;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 
@@ -37,6 +35,8 @@ public class WmsMemberServiceImpl implements WmsMerberService {
     private OmsDistributionMapper distributionMapper;
     @Resource
     private PmsSkuStockMapper pmsSkuStockMapper;
+    @Resource
+    private ChangeDistributionMapper changeDistributionMapper;
 
 
     @Override
@@ -86,5 +86,36 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         List<WmsMemberAreaDetail> memberAreaDetails=wmsMemberMapper.queryAllWmsUser(wmsMember.getId());
         return memberAreaDetails;
     }
+
+    @Override
+    public void changeDistribution(Long changeId,Long orderId){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        WmsMember changeWmsMember=wmsMemberMapper.selectByPrimaryKey(changeId);
+        if(changeWmsMember==null){
+            Asserts.fail("所选配送中心不存在");
+        }
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+        //插入转配送记录表
+        ChangeDistribution changeDistribution=new ChangeDistribution();
+        changeDistribution.setCreateTime(new Date());
+        changeDistribution.setChangeMemberId(changeWmsMember.getId());
+        changeDistribution.setOrderSn(omsDistribution.getOrderSn());
+        changeDistribution.setWmsMemberId(wmsMember.getId());
+        changeDistributionMapper.insert(changeDistribution);
+        //更改配送单配送人id
+        omsDistribution.setWmsMemberId(changeId);
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+    }
+
 
 }
