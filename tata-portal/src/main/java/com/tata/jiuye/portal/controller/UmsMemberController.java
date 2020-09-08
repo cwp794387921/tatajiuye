@@ -10,10 +10,7 @@ import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.portal.service.AcctInfoService;
-import com.tata.jiuye.portal.service.AcctSettleInfoService;
-import com.tata.jiuye.portal.service.UmsMemberCacheService;
-import com.tata.jiuye.portal.service.UmsMemberService;
+import com.tata.jiuye.portal.service.*;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
@@ -72,6 +69,10 @@ public class UmsMemberController {
 
     @Resource
     private UmsMemberCacheService umsMemberCacheService;
+
+    @Resource
+    private UmsMemberLevelService umsMemberLevelService;
+
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
@@ -288,5 +289,17 @@ public class UmsMemberController {
     @ResponseBody
     public void delCash(@RequestParam @ApiParam("要删除缓存的用户ID") Long memberId){
         umsMemberCacheService.delMember(memberId);
+    }
+
+    @ApiOperation("获取用户等级名称")
+    @RequestMapping(value = "/getMemberLevelName",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getMemberLevelName(){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        String memberLevelName = umsMemberLevelService.getUmsMemberLevelName(currentMember.getMemberLevelId());
+        return CommonResult.success(memberLevelName);
     }
 }

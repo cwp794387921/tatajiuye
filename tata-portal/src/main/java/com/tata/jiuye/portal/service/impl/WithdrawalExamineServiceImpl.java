@@ -50,8 +50,13 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         }
         //获取用户余额(指定账户类型)
         AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(umsMember.getId(),accountType);
+        BigDecimal lockAmount = acctInfo.getLockAmount();
+        if(lockAmount == null){
+            lockAmount = BigDecimal.ZERO;
+        }
         BigDecimal balance = acctInfo.getBalance();
-        if(balance.compareTo(withdrawAmount) < 0){
+        BigDecimal actBalance = balance.subtract(lockAmount);
+        if(actBalance.compareTo(withdrawAmount) < 0){
             Asserts.fail("提现金额不可大于余额");
         }
         WithdrawalExamine withdrawalExamine = new WithdrawalExamine();
@@ -63,6 +68,11 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         withdrawalExamine.setStatus(WithdrawStatusEnum.PENDING.getValue());
         withdrawalExamine.setAcctType(accountType);
         this.saveOrUpdate(withdrawalExamine);
+
+        //更新账户表锁定金额
+        lockAmount = lockAmount.add(withdrawAmount);
+        acctInfo.setLockAmount(lockAmount);
+        acctInfoService.save(acctInfo);
         log.info("----------------------插入提现申请 结束----------------------");
     }
 

@@ -30,7 +30,7 @@ import java.util.List;
  * @author lewis
  */
 @Controller
-@Api(tags = "HomeController", value = "小程序首页")
+@Api(tags = "HomeController", description = "小程序首页")
 @RequestMapping("/home")
 @RequiredArgsConstructor
 public class HomeController {

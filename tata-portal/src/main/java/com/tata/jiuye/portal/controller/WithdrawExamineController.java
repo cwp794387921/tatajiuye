@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @Controller
-@Api(tags = "WithdrawExamineController", value = "提现相关业务")
+@Api(tags = "WithdrawExamineController", description = "提现相关业务")
 @RequestMapping("/withdrawExamine")
 @RequiredArgsConstructor
 public class WithdrawExamineController {

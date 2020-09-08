@@ -55,6 +55,7 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
         }
         log.info("--------------------对应的变更账户信息为 "+acctInfo);
         BigDecimal balance = acctInfo.getBalance();
+        BigDecimal lockAmount = acctInfo.getLockAmount();
         acctSettleInfo.setBeforBal(balance);
         log.info("--------------------变更前余额为 "+balance);
         if(StaticConstant.FLOW_TYPE_INCOME.equals(type)){
@@ -64,6 +65,8 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
         else if(StaticConstant.FLOW_TYPE_EXPENDITURE.equals(type)){
             log.info("--------------------变更类型为 支出--------------------");
             balance = balance.subtract(changeAmount);
+            lockAmount = lockAmount.subtract(changeAmount);
+            acctInfo.setLockAmount(lockAmount);
         }
         acctInfo.setBalance(balance);
         log.info("--------------------变更后余额为 "+balance);

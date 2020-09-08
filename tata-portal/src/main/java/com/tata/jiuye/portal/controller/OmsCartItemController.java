@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.controller;
 
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.model.OmsCartItem;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.CartProduct;
@@ -117,8 +118,12 @@ public class OmsCartItemController {
     @ApiOperation("删除购物车中的某个商品")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult delete(@RequestParam("ids") List<Long> ids) {
-        int count = cartItemService.delete(memberService.getCurrentMember().getId(), ids);
+    public CommonResult delete(@RequestBody List<Long> ids) {
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        int count = cartItemService.delete(currentMember.getId(), ids);
         if (count > 0) {
             return CommonResult.success(count);
         }

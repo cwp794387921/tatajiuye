@@ -200,6 +200,11 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------参数 提现金额 "+withdrawAmount);
         //1.获取账户信息
         AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(memberId,accountType);
+        BigDecimal lockAmount = acctInfo.getLockAmount();
+        if(lockAmount == null){
+            lockAmount = BigDecimal.ZERO;
+        }
+        BigDecimal actBalance = acctInfo.getBalance().subtract(lockAmount);
         log.info("----------------------参数 账户信息 "+acctInfo);
         AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(memberId,withdrawAmount,StaticConstant.FLOW_TYPE_EXPENDITURE,accountType);
         if(acctInfo == null){
