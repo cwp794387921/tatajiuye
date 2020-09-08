@@ -333,10 +333,11 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-    <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.AcctInfo">
+    <select id="getByMemberIdAndAcctType" resultType="com.tata.jiuye.model.AcctInfo">
         select *
         from acct_info
         where member_id = #{memberId,jdbcType=BIGINT}
+        AND acct_type = #{acctType,jdbcType=VARCHAR}
         limit 1
     </select>
 </mapper>

@@ -41,6 +41,9 @@ public class WithdrawalExamine implements Serializable {
     @ApiModelProperty(value = "交易流水ID（变动流水）")
     private Long acctSettleInfoId;
 
+    @ApiModelProperty(value = "账户类型 0普通会员账户 1配送中心账户")
+    private String acctType;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -131,6 +134,14 @@ public class WithdrawalExamine implements Serializable {
         this.acctSettleInfoId = acctSettleInfoId;
     }
 
+    public String getAcctType() {
+        return acctType;
+    }
+
+    public void setAcctType(String acctType) {
+        this.acctType = acctType;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -148,6 +159,7 @@ public class WithdrawalExamine implements Serializable {
         sb.append(", status=").append(status);
         sb.append(", remake=").append(remake);
         sb.append(", acctSettleInfoId=").append(acctSettleInfoId);
+        sb.append(", acctType=").append(acctType);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

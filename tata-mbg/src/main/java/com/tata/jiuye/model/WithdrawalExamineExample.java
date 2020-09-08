@@ -795,6 +795,76 @@ public class WithdrawalExamineExample {
             addCriterion("acct_settle_info_id not between", value1, value2, "acctSettleInfoId");
             return (Criteria) this;
         }
+
+        public Criteria andAcctTypeIsNull() {
+            addCriterion("acct_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeIsNotNull() {
+            addCriterion("acct_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeEqualTo(String value) {
+            addCriterion("acct_type =", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeNotEqualTo(String value) {
+            addCriterion("acct_type <>", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeGreaterThan(String value) {
+            addCriterion("acct_type >", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("acct_type >=", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeLessThan(String value) {
+            addCriterion("acct_type <", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeLessThanOrEqualTo(String value) {
+            addCriterion("acct_type <=", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeLike(String value) {
+            addCriterion("acct_type like", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeNotLike(String value) {
+            addCriterion("acct_type not like", value, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeIn(List<String> values) {
+            addCriterion("acct_type in", values, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeNotIn(List<String> values) {
+            addCriterion("acct_type not in", values, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeBetween(String value1, String value2) {
+            addCriterion("acct_type between", value1, value2, "acctType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcctTypeNotBetween(String value1, String value2) {
+            addCriterion("acct_type not between", value1, value2, "acctType");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

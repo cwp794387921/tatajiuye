@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -34,24 +32,24 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
     }
 
     @Override
-    public AcctInfo getAcctInfoByMemberId(Long memberId){
+    public AcctInfo getAcctInfoByMemberId(Long memberId,String acctType){
         log.info("--------------------通过用户ID获取账户信息  开始--------------------");
         if(memberId == null){
             Asserts.fail("用户ID为空");
         }
         log.info("--------------------通过用户ID获取账户信息  结束--------------------");
-       return acctInfoMapper.getByMemberId(memberId);
+       return acctInfoMapper.getByMemberIdAndAcctType(memberId,acctType);
     }
 
 
     @Override
-    public AcctSettleInfo updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type){
+    public AcctSettleInfo updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount,String type,String acctType){
         log.info("--------------------账户金额变动更新  开始--------------------");
         AcctSettleInfo acctSettleInfo = new AcctSettleInfo();
         log.info("--------------------变更账号的用户ID为 "+acctMemberId);
         log.info("--------------------变更金额为 "+changeAmount);
-        //获取直邀/间邀账户并增加余额
-        AcctInfo acctInfo = this.getAcctInfoByMemberId(acctMemberId);
+        //获取直邀/间邀账户 并增加余额
+        AcctInfo acctInfo = this.getAcctInfoByMemberId(acctMemberId,acctType);
         if(acctInfo == null){
             Asserts.fail("获取不到对应的账户信息");
         }

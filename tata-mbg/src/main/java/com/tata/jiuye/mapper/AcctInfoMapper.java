@@ -35,8 +35,9 @@ public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
 
     /**
      * 通过用户ID获取账户
-     * @param memberId
+     * @param memberId          用户ID
+     * @param acctType          账户类型
      * @return
      */
-    AcctInfo getByMemberId(@Param("memberId") Long memberId);
+    AcctInfo getByMemberIdAndAcctType(@Param("memberId") Long memberId,@Param("acctType") String acctType);
 }

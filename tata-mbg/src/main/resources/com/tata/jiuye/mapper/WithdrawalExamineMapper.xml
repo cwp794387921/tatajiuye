@@ -13,6 +13,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="remake" jdbcType="VARCHAR" property="remake" />
     <result column="acct_settle_info_id" jdbcType="BIGINT" property="acctSettleInfoId" />
+    <result column="acct_type" jdbcType="VARCHAR" property="acctType" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, applicant_member_id, applicant_member_name, approver_member_id, approver_member_name,
-    create_time, update_time, withdrawal_amount, status, remake, acct_settle_info_id
+    create_time, update_time, withdrawal_amount, status, remake, acct_settle_info_id,
+    acct_type
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample" resultMap="BaseResultMap">
     select
@@ -113,11 +115,13 @@
     insert into withdrawal_examine (applicant_member_id, applicant_member_name,
       approver_member_id, approver_member_name, create_time,
       update_time, withdrawal_amount, status,
-      remake, acct_settle_info_id)
+      remake, acct_settle_info_id, acct_type
+      )
     values (#{applicantMemberId,jdbcType=BIGINT}, #{applicantMemberName,jdbcType=VARCHAR},
       #{approverMemberId,jdbcType=BIGINT}, #{approverMemberName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{withdrawalAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER},
-      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT})
+      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT}, #{acctType,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.WithdrawalExamine">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -155,6 +159,9 @@
       <if test="acctSettleInfoId != null">
         acct_settle_info_id,
       </if>
+      <if test="acctType != null">
+        acct_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="applicantMemberId != null">
@@ -186,6 +193,9 @@
       </if>
       <if test="acctSettleInfoId != null">
         #{acctSettleInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="acctType != null">
+        #{acctType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -231,6 +241,9 @@
       <if test="record.acctSettleInfoId != null">
         acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT},
       </if>
+      <if test="record.acctType != null">
+        acct_type = #{record.acctType,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +261,8 @@
       withdrawal_amount = #{record.withdrawalAmount,jdbcType=DECIMAL},
       status = #{record.status,jdbcType=INTEGER},
       remake = #{record.remake,jdbcType=VARCHAR},
-      acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT}
+      acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT},
+      acct_type = #{record.acctType,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +300,9 @@
       <if test="acctSettleInfoId != null">
         acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT},
       </if>
+      <if test="acctType != null">
+        acct_type = #{acctType,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +317,8 @@
       withdrawal_amount = #{withdrawalAmount,jdbcType=DECIMAL},
       status = #{status,jdbcType=INTEGER},
       remake = #{remake,jdbcType=VARCHAR},
-      acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT}
+      acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT},
+      acct_type = #{acctType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

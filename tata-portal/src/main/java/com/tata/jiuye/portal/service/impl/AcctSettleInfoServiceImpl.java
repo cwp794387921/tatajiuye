@@ -91,7 +91,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
      */
     public void insertCommissionFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId){
         log.info("----------------------插入分佣流水   开始----------------------");
-        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME);
+        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY);
         Long acctId = acctSettleInfo.getAcctId();
         log.info("----------------------账户ID 为 "+acctId);
         BigDecimal beforBal = acctSettleInfo.getBeforBal();
@@ -194,14 +194,14 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     }
 
     @Override
-    public void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount){
+    public void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType){
         log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   开始----------------------");
         log.info("----------------------参数 用户ID "+memberId);
         log.info("----------------------参数 提现金额 "+withdrawAmount);
         //1.获取账户信息
-        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(memberId);
+        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(memberId,accountType);
         log.info("----------------------参数 账户信息 "+acctInfo);
-        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(memberId,withdrawAmount,StaticConstant.FLOW_TYPE_EXPENDITURE);
+        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(memberId,withdrawAmount,StaticConstant.FLOW_TYPE_EXPENDITURE,accountType);
         if(acctInfo == null){
             Asserts.fail("该用户ID无法找到对应的账户信息");
         }
