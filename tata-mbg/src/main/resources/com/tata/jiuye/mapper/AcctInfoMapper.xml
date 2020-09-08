@@ -13,6 +13,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="remake" jdbcType="VARCHAR" property="remake" />
     <result column="acct_type" jdbcType="VARCHAR" property="acctType" />
+    <result column="lock_amount" jdbcType="DECIMAL" property="lockAmount" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, balance, member_id, branch_id, eff_date, expir_date, status, insert_time, update_time,
-    remake, acct_type
+    remake, acct_type, lock_amount
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctInfoExample" resultMap="BaseResultMap">
     select
@@ -127,11 +128,11 @@
     insert into acct_info (balance, member_id, branch_id,
       eff_date, expir_date, status,
       insert_time, update_time, remake,
-      acct_type)
+      acct_type, lock_amount)
     values (#{balance,jdbcType=DECIMAL}, #{memberId,jdbcType=BIGINT}, #{branchId,jdbcType=BIGINT},
       #{effDate,jdbcType=TIMESTAMP}, #{expirDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
       #{insertTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remake,jdbcType=VARCHAR},
-      #{acctType,jdbcType=VARCHAR})
+      #{acctType,jdbcType=VARCHAR}, #{lockAmount,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctInfo">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -169,6 +170,9 @@
       <if test="acctType != null">
         acct_type,
       </if>
+      <if test="lockAmount != null">
+        lock_amount,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="balance != null">
@@ -200,6 +204,9 @@
       </if>
       <if test="acctType != null">
         #{acctType,jdbcType=VARCHAR},
+      </if>
+      <if test="lockAmount != null">
+        #{lockAmount,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -245,6 +252,9 @@
       <if test="record.acctType != null">
         acct_type = #{record.acctType,jdbcType=VARCHAR},
       </if>
+      <if test="record.lockAmount != null">
+        lock_amount = #{record.lockAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +272,8 @@
       insert_time = #{record.insertTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       remake = #{record.remake,jdbcType=VARCHAR},
-      acct_type = #{record.acctType,jdbcType=VARCHAR}
+      acct_type = #{record.acctType,jdbcType=VARCHAR},
+      lock_amount = #{record.lockAmount,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -300,6 +311,9 @@
       <if test="acctType != null">
         acct_type = #{acctType,jdbcType=VARCHAR},
       </if>
+      <if test="lockAmount != null">
+        lock_amount = #{lockAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -314,7 +328,8 @@
       insert_time = #{insertTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       remake = #{remake,jdbcType=VARCHAR},
-      acct_type = #{acctType,jdbcType=VARCHAR}
+      acct_type = #{acctType,jdbcType=VARCHAR},
+      lock_amount = #{lockAmount,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

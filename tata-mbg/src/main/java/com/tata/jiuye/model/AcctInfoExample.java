@@ -785,6 +785,66 @@ public class AcctInfoExample {
             addCriterion("acct_type not between", value1, value2, "acctType");
             return (Criteria) this;
         }
+
+        public Criteria andLockAmountIsNull() {
+            addCriterion("lock_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountIsNotNull() {
+            addCriterion("lock_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountEqualTo(BigDecimal value) {
+            addCriterion("lock_amount =", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountNotEqualTo(BigDecimal value) {
+            addCriterion("lock_amount <>", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountGreaterThan(BigDecimal value) {
+            addCriterion("lock_amount >", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("lock_amount >=", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountLessThan(BigDecimal value) {
+            addCriterion("lock_amount <", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("lock_amount <=", value, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountIn(List<BigDecimal> values) {
+            addCriterion("lock_amount in", values, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountNotIn(List<BigDecimal> values) {
+            addCriterion("lock_amount not in", values, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lock_amount between", value1, value2, "lockAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("lock_amount not between", value1, value2, "lockAmount");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
