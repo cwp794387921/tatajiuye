@@ -56,7 +56,17 @@ public class OmsDistribution implements Serializable {
 
     private String phone;
 
+    private Long umsMemberId;
+
     private static final long serialVersionUID = 1L;
+
+    public Long getUmsMemberId() {
+        return umsMemberId;
+    }
+
+    public void setUmsMemberId(Long umsMemberId) {
+        this.umsMemberId = umsMemberId;
+    }
 
     public String getPhone() {
         return phone;

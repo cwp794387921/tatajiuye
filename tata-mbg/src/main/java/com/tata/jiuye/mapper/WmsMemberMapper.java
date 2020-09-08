@@ -1,6 +1,7 @@
 package com.tata.jiuye.mapper;
 
 import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.model.WmsMemberAreaDetail;
 import com.tata.jiuye.model.WmsMemberExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +22,8 @@ public interface WmsMemberMapper {
     WmsMember selectByPrimaryKey(Long id);
 
     WmsMember selectByUmsId(Long id);
+
+    List<WmsMemberAreaDetail> queryAllWmsUser(Long id);
 
     int updateByExampleSelective(@Param("record") WmsMember record, @Param("example") WmsMemberExample example);
 

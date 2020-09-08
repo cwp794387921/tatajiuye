@@ -72,4 +72,19 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         result.put("jh",JhList);
         return result;
     }
+
+    @Override
+    public List<WmsMemberAreaDetail> queryAllUser(){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        List<WmsMemberAreaDetail> memberAreaDetails=wmsMemberMapper.queryAllWmsUser(wmsMember.getId());
+        return memberAreaDetails;
+    }
+
 }

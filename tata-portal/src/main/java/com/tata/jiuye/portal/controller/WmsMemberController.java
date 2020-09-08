@@ -9,6 +9,7 @@ import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.model.WmsMemberAreaDetail;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMerberService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @Api(tags = "WmsMemberController", description = "配送中心用户管理")
@@ -32,7 +34,6 @@ import java.security.Principal;
 public class WmsMemberController {
 
     private static final Logger log = LoggerFactory.getLogger(WmsMemberController.class);
-
 
     @Resource
     private WmsMerberService wmsMerberService;
@@ -55,5 +56,14 @@ public class WmsMemberController {
         JSONObject jsonObject=portalOrderService.queryDistribution();
         return CommonResult.success(jsonObject);
     }
+
+    @ApiOperation("获取配送用户列表")
+    @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult queryUserList() {
+        List<WmsMemberAreaDetail> result= wmsMerberService.queryAllUser();
+        return CommonResult.success(result);
+    }
+
 
 }

@@ -221,9 +221,10 @@ public class PayController {
                         Asserts.fail("==>找不到上级配送中心");
                     }
                     String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
+                    int i=1;
                     for(OmsOrderItem omsOrderItem : orderItemList){
                         OmsDistribution distribution=new OmsDistribution();
-                        distribution.setOrderSn(omsOrder.getOrderSn());
+                        distribution.setOrderSn(omsOrder.getOrderSn()+"-"+i);
                         distribution.setStatus(0);
                         distribution.setPhone(omsOrder.getReceiverPhone());
                         distribution.setGoodsImg(omsOrderItem.getProductPic());
@@ -238,7 +239,9 @@ public class PayController {
                         distribution.setWmsMemberId(wmsMember.getUmsMemberId());
                         distribution.setType(1);
                         distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                        distribution.setUmsMemberId(umsMember.getId());
                         distributionMapper.insert(distribution);
+                        i++;
                     }
                 }
                 //业务处理结束

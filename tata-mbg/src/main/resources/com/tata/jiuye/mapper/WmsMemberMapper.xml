@@ -96,6 +96,39 @@
     from wms_member
     where ums_member_id = #{id,jdbcType=BIGINT}
   </select>
+
+  <resultMap type="com.tata.jiuye.model.WmsMemberAreaDetail" id="AllWmsMap">
+  <result column="province" property="province"/>
+  <collection property="areas" ofType="com.tata.jiuye.model.WmsMemberAreaDetail">
+    <result property="city" column="city" />
+    <result property="area" column="area" />
+    <result property="address" column="address" />
+    <result property="id" column="id" />
+    <result property="nickname" column="nickname" />
+    <result property="phone" column="phone" />
+  </collection>
+</resultMap>
+
+  <select id="queryAllWmsUser" resultMap="AllWmsMap" >
+      SELECT DISTINCT
+          a.province,
+          a.city,
+          a.area,
+          a.address,
+          m.id,
+          m.nickname,
+          m.phone
+      FROM
+          wms_member m
+          LEFT JOIN wms_area a ON a.wms_member_id = m.id
+      WHERE
+          a.`status` = 1 and m.id != #{id}
+      ORDER BY
+          a.province
+  </select>
+
+
+
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WmsMemberExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
