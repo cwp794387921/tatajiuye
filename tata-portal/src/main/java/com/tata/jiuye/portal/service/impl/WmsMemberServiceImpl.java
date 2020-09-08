@@ -161,7 +161,7 @@ public class WmsMemberServiceImpl implements WmsMerberService {
             Asserts.fail("配送单不存在");
         }
         omsDistribution.setStatus(5);//已完成
-        distributionMapper.updateByPrimaryKey(omsDistribution);
+        distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
         //清除锁定库存
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());
@@ -172,6 +172,7 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         }
         pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()-omsDistribution.getNumber());//减少锁定库存
         pmsSkuStock.setStock(pmsSkuStock.getStock()-omsDistribution.getNumber());//减少实际库存
+        pmsSkuStockMapper.updateByPrimaryKey(pmsSkuStock);//更新库存
         //添加账户流水
         AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
         if (acctInfo==null){
@@ -189,7 +190,8 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
         acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
         acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
-        acctSettleInfoMapper.insert(acctSettleInfo);
+        acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
+        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
     }
 
 
