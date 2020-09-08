@@ -99,4 +99,15 @@ public class StaticConstant {
      */
     public static final String APPROVAL_OPERATION_REFUSE = "REFUSE";
     /***************************************************************************************/
+
+    /********************************账户类型常量***************************************/
+    /**
+     * 普通账户
+     */
+    public static final String ACCOUNT_TYPE_ORDINARY = "ORDINARY";
+    /**
+     * 配送中心账户
+     */
+    public static final String ACCOUNT_TYPE_DELIVERYCENTER = "DELIVERYCENTER";
+    /***************************************************************************************/
 }

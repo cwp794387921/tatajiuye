@@ -25,16 +25,17 @@ public interface AcctInfoService extends IService<AcctInfo> {
      * @param memberId
      * @return
      */
-    AcctInfo getAcctInfoByMemberId(Long memberId);
+    AcctInfo getAcctInfoByMemberId(Long memberId,String acctType);
 
     /**
      * 金额变动更新表
      * @param acctMemberId              变动金额的账户所属用户ID
      * @param changeAmount              变动金额
      * @param type                       变动状态(收入 -> income,支出 -> expenditure)
+     * @param acctType                  账户类型
      */
     @Transactional
-    AcctSettleInfo updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type);
+    AcctSettleInfo updateAcctInfoByAmount(Long acctMemberId, BigDecimal changeAmount, String type,String acctType);
 
 
 }

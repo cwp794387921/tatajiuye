@@ -41,7 +41,7 @@ public class AcctInfo implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remake;
 
-    @ApiModelProperty(value = "账户类型(平台账户->platformAccount,普通用户账户->ordinaryMemberAccount)")
+    @ApiModelProperty(value = "账户类型(平台账户->PLATFORMACCOUNT,普通用户账户->ORDINARY,会员中心账户->DELIVERYCENTER)")
     private String acctType;
 
     @ApiModelProperty(value = "冻结金额(提现相关)")

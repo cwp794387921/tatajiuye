@@ -9,7 +9,6 @@ import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.WithdrawalExamineMapper;
 import com.tata.jiuye.model.AcctInfo;
-import com.tata.jiuye.model.UmsAdmin;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.WithdrawalExamine;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -42,12 +41,15 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
     @Autowired
     private AcctSettleInfoService acctSettleInfoService;
     @Override
-    public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount){
+    public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType){
         log.info("----------------------插入提现申请 开始----------------------");
         log.info("----------------------提现申请参数 申请人信息为: "+umsMember);
         log.info("----------------------提现申请参数 提现金额: "+withdrawAmount);
-        //获取用户余额
-        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(umsMember.getId());
+        if(StringUtils.isEmpty(accountType)){
+            Asserts.fail("提现账户类型不能为空");
+        }
+        //获取用户余额(指定账户类型)
+        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(umsMember.getId(),accountType);
         BigDecimal balance = acctInfo.getBalance();
         if(balance.compareTo(withdrawAmount) < 0){
             Asserts.fail("提现金额不可大于余额");
@@ -59,6 +61,7 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         withdrawalExamine.setCreateTime(new Date());
         withdrawalExamine.setWithdrawalAmount(withdrawAmount);
         withdrawalExamine.setStatus(WithdrawStatusEnum.PENDING.getValue());
+        withdrawalExamine.setAcctType(accountType);
         this.saveOrUpdate(withdrawalExamine);
         log.info("----------------------插入提现申请 结束----------------------");
     }
@@ -92,7 +95,7 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         this.saveOrUpdate(withdrawalExamine);
         //如果操作类型为通过,插入提现流水
         if(StaticConstant.APPROVAL_OPERATION_PASS.equals(operateType)){
-            acctSettleInfoService.insertWithdrawExamineAcctSettleInfo(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getWithdrawalAmount());
+            acctSettleInfoService.insertWithdrawExamineAcctSettleInfo(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getWithdrawalAmount(),withdrawalExamine.getAcctType());
         }
         log.info("----------------------执行结果为 : "+withdrawalExamine);
         log.info("----------------------通过/拒绝提现申请 结束----------------------");

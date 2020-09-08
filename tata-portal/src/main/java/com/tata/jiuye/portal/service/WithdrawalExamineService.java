@@ -17,9 +17,10 @@ public interface WithdrawalExamineService extends IService<WithdrawalExamine> {
      * 插入提现申请(小程序端用)
      * @param umsMember                     申请人用户信息
      * @param withdrawAmount                申请提现金额
+     * @param accountType                   申请提现的账户类型
      */
     @Transactional
-    void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount);
+    void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType);
 
 
     /**
