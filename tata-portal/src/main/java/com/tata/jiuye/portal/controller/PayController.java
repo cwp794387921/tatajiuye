@@ -113,7 +113,7 @@ public class PayController {
                 map.put("notify_url",wxConfig.getNotifyUrl());
                 map.put("trade_type","JSAPI");
                 map.put("openid",openId);
-                map.put("body", "升级套餐");
+                map.put("body", "塔塔酒业");
                 for (String key : map.keySet()){
                     System.out.println("key: "+ key + "; value: " + map.get(key));
                     map1.put(key,map.get(key));
@@ -240,6 +240,7 @@ public class PayController {
                         distribution.setType(1);
                         distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
                         distribution.setUmsMemberId(umsMember.getId());
+                        distribution.setProductId(omsOrderItem.getProductId());
                         distributionMapper.insert(distribution);
                         i++;
                     }

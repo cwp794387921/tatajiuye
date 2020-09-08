@@ -16,6 +16,7 @@ import com.tata.jiuye.portal.service.WmsMerberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.omg.CORBA.ORB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -66,10 +67,26 @@ public class WmsMemberController {
     }
 
     @ApiOperation("转配送接口")
-    @RequestMapping(value = "/changeDistribution", method = RequestMethod.GET)
+    @RequestMapping(value = "/changeDistribution", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult changeDistribution(Long changeId,Long orderId) {
         wmsMerberService.changeDistribution(changeId,orderId);
+        return CommonResult.success("操作成功");
+    }
+
+    @ApiOperation("接单接口")
+    @RequestMapping(value = "/acceptOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult acceptOrder(Long orderId) {
+        wmsMerberService.acceptOrder(orderId);
+        return CommonResult.success("操作成功");
+    }
+
+    @ApiOperation("送达接口")
+    @RequestMapping(value = "/arriveOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult arriveOrder(Long orderId) {
+        wmsMerberService.arriveOrder(orderId);
         return CommonResult.success("操作成功");
     }
 

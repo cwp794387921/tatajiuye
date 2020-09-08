@@ -358,4 +358,17 @@
      where product_id = #{productId,jdbcType=BIGINT}
      limit 1
   </select>
+
+  <select id="selectByParams" parameterType="com.tata.jiuye.model.PmsSkuStock" resultType="com.tata.jiuye.model.PmsSkuStock">
+     select * from  pms_sku_stock
+    <where>
+      <if test="productId !=null and productId !=''">
+        and product_id = #{productId}
+      </if>
+      <if test="wmsMemberId !=null and wmsMemberId !=''">
+        and wms_member_id = #{wmsMemberId}
+      </if>
+    </where>
+
+  </select>
 </mapper>

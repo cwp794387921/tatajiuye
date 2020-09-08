@@ -13,4 +13,8 @@ public interface WmsMerberService {
 
     void changeDistribution(Long changeId,Long orderId);
 
+    void acceptOrder(Long orderId);
+
+    void arriveOrder(Long orderId);
+
 }

@@ -20,6 +20,7 @@
     <result column="profit" jdbcType="DECIMAL" property="profit" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="ums_member_id" jdbcType="INTEGER" property="umsMemberId" />
+      <result column="product_id" jdbcType="INTEGER" property="productId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -81,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
-    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id
+    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
     select
@@ -144,12 +145,12 @@
       goods_title, goods_subtitle, price, 
       number, sub_price, name, 
       head_img, address, create_time, 
-      wms_member_id,type,profit,phone,ums_member_id)
+      wms_member_id,type,profit,phone,ums_member_id,product_id)
     values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
       #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER})
+      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsDistribution">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -208,6 +209,9 @@
       <if test="umsMemberId != null">
         ums_member_id,
       </if>
+        <if test="productId != null">
+            product_id,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderSn != null">
@@ -261,6 +265,9 @@
       <if test="umsMemberId != null">
         #{umsMemberId,jdbcType=INTEGER},
       </if>
+        <if test="productId != null">
+            #{productId,jdbcType=INTEGER},
+        </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultType="java.lang.Long">
@@ -326,6 +333,9 @@
       <if test="record.umsMemberId != null">
         ums_member_id = #{record.umsMemberId,jdbcType=INTEGER},
       </if>
+        <if test="record.productId != null">
+            product_id = #{record.productId,jdbcType=INTEGER},
+        </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -350,6 +360,7 @@
     type = #{record.type,jdbcType=INTEGER},
     profit = #{profit,jdbcType=DECIMAL},
     ums_member_id = #{record.umsMemberId,jdbcType=INTEGER},
+      product_id = #{record.productId,jdbcType=INTEGER},
     phone = #{record.phone,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -403,6 +414,9 @@
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
+        <if test="productId != null">
+            product_id = #{productId,jdbcType=INTEGER},
+        </if>
       <if test="profit != null">
         profit = #{profit,jdbcType=DECIMAL},
       </if>
@@ -430,7 +444,8 @@
        ums_member_id = #{umsMemberId,jdbcType=INTEGER},
        type = #{type,jdbcType=INTEGER},
         phone = #{phone,jdbcType=VARCHAR},
-        profit = #{profit,jdbcType=DECIMAL}
+        profit = #{profit,jdbcType=DECIMAL},
+        product_id = #{productId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -58,7 +58,17 @@ public class OmsDistribution implements Serializable {
 
     private Long umsMemberId;
 
+    private Long productId;
+
     private static final long serialVersionUID = 1L;
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
     public Long getUmsMemberId() {
         return umsMemberId;

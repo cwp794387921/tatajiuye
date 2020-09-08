@@ -117,5 +117,51 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         distributionMapper.updateByPrimaryKey(omsDistribution);
     }
 
+    @Override
+    public void  acceptOrder(Long orderId){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+        omsDistribution.setStatus(1);//待配送
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+        PmsSkuStock pmsSkuStock=new PmsSkuStock();
+        pmsSkuStock.setProductId(omsDistribution.getProductId());
+        pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+         pmsSkuStock=pmsSkuStockMapper.selectByParams(pmsSkuStock);
+        if(pmsSkuStock==null){
+            Asserts.fail("库存不存在");
+        }
+        pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()+omsDistribution.getNumber());//添加锁定库存
+        //更新库存信息
+        pmsSkuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
+    }
+
+    @Override
+    public void arriveOrder(Long orderId){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+
+
+    }
+
 
 }
