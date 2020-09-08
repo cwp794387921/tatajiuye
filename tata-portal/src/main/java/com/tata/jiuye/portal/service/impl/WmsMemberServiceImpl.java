@@ -1,11 +1,10 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
-import com.tata.jiuye.portal.service.PmsSkuStockService;
+import com.tata.jiuye.portal.common.constant.FlowTypeEnum;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMerberService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,8 @@ public class WmsMemberServiceImpl implements WmsMerberService {
     private WmsMemberMapper wmsMemberMapper;
     @Resource
     private AcctInfoMapper acctInfoMapper;
+    @Resource
+    private AcctSettleInfoMapper acctSettleInfoMapper;
     @Resource
     private OmsDistributionMapper distributionMapper;
     @Resource
@@ -159,8 +160,36 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
-
-
+        omsDistribution.setStatus(5);//已完成
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+        //清除锁定库存
+        PmsSkuStock pmsSkuStock=new PmsSkuStock();
+        pmsSkuStock.setProductId(omsDistribution.getProductId());
+        pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+        pmsSkuStock=pmsSkuStockMapper.selectByParams(pmsSkuStock);
+        if(pmsSkuStock==null){
+            Asserts.fail("库存不存在");
+        }
+        pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()-omsDistribution.getNumber());//减少锁定库存
+        pmsSkuStock.setStock(pmsSkuStock.getStock()-omsDistribution.getNumber());//减少实际库存
+        //添加账户流水
+        AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+        if (acctInfo==null){
+            Asserts.fail("账户不存在");
+        }
+        AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
+        acctSettleInfo.setAcctId(acctInfo.getId());
+        acctSettleInfo.setOrderNo(omsDistribution.getOrderSn());
+        acctSettleInfo.setBeforBal(acctInfo.getBalance());
+        acctSettleInfo.setChangeAmount(omsDistribution.getProfit());
+        //添加账户收益
+        acctInfo.setBalance(acctInfo.getBalance().add(omsDistribution.getProfit()));
+        acctSettleInfo.setAfterBal(acctInfo.getBalance());
+        acctSettleInfo.setInsertTime(new Date());
+        acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
+        acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
+        acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
+        acctSettleInfoMapper.insert(acctSettleInfo);
     }
 
 

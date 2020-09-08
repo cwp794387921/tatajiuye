@@ -17,7 +17,6 @@ import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.UmsMemberService;
-import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.MD5Util;
 import com.tata.jiuye.portal.util.WxConfig;
 import io.swagger.annotations.Api;
