@@ -43,6 +43,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private AcctInfoService acctInfoService;
     @Autowired
     private AcctSettleInfoMapper acctSettleInfoMapper;
+    @Autowired
+    private WithdrawalExamineService withdrawalExamineService;
     @Override
     public void saveOrUpdateAcctSettleInfo(AcctSettleInfo acctSettleInfo){
         this.saveOrUpdate(acctSettleInfo);
@@ -53,13 +55,17 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------执行分佣流水   开始----------------------");
         //获取邀请链条(消费人->直邀人 -> 间邀人)
         UmsMemberInviteRelation umsMemberInviteRelation = umsMemberService.getInvitationChainByMemberId(umsMember.getId());
+        log.info("----------------------获取邀请链条  umsMemberInviteRelation : "+umsMemberInviteRelation);
         //有上级会员才继续执行分佣流程
         if(umsMemberInviteRelation != null){
             //找到账户信息
             Long parentMemberId = umsMemberInviteRelation.getFatherMemberId();
+            log.info("----------------------直邀人用户ID : "+parentMemberId);
             Long grandpaMemberId = umsMemberInviteRelation.getGrandpaMemberId();
+            log.info("----------------------间邀人用户ID : "+grandpaMemberId);
             //通过订单号获取订单-商品,取到其上的该商品本邀请人可以分多少金额
             List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderSn);
+            log.info("----------------------订单-商品 : "+omsOrderItems);
             for(OmsOrderItem omsOrderItem : omsOrderItems){
                 //商品购买数量
                 Integer productQuantity = omsOrderItem.getProductQuantity();
@@ -76,24 +82,47 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------执行分佣流水   结束----------------------");
     }
 
-
-    //插入分佣流水
+    /**
+     * 插入分佣流水
+     * @param directPushMemberId                用户ID
+     * @param changeAmount                       账户变更金额
+     * @param orderSn                             订单号
+     * @param sourceId                            变更金额来源ID(用户ID)
+     */
     public void insertCommissionFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId){
+        log.info("----------------------插入分佣流水   开始----------------------");
         AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME);
         Long acctId = acctSettleInfo.getAcctId();
+        log.info("----------------------账户ID 为 "+acctId);
         BigDecimal beforBal = acctSettleInfo.getBeforBal();
+        log.info("----------------------账户变更前余额 为 "+beforBal);
         BigDecimal afterBal = acctSettleInfo.getAfterBal();
+        log.info("----------------------账户变更后余额 为 "+afterBal);
+        log.info("----------------------账户变更的金额 为 "+changeAmount);
         if(!changeAmount.equals(BigDecimal.ZERO)){
             //插入传入的Member对应的邀流水表(直邀或间邀)
-            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId);
+            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME);
         }
+        log.info("----------------------插入分佣流水   开始----------------------");
     }
 
 
 
-    //插入一条账户变更记录
+    /**
+     * 插入账户变更流水
+     * @param orderSn                           订单号
+     * @param acctId                            账户ID
+     * @param beforBal                          账户变更前余额
+     * @param afterBal                          账户变更后余额
+     * @param changeAmount                      账户变更的金额
+     * @param sourceId                          变更金额来源的ID(用户ID)
+     * @param flowType                          流水类型
+     * @param flowTypeDetail                    流水类型明细
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
-    public void insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId){
+    public AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail){
+        log.info("----------------------插入一条账户变更记录   开始----------------------");
         //插入传入的Member对应的邀流水表(直邀或间邀)
         AcctSettleInfo acctSettleInfo = new AcctSettleInfo();
         acctSettleInfo.setOrderNo(orderSn);
@@ -101,18 +130,23 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         acctSettleInfo.setBeforBal(beforBal);
         acctSettleInfo.setAfterBal(afterBal);
         acctSettleInfo.setChangeAmount(changeAmount);
-        acctSettleInfo.setFlowType(StaticConstant.FLOW_TYPE_INCOME);
-        acctSettleInfo.setFlowTypeDetail(StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME);
+        acctSettleInfo.setFlowType(flowType);
+        acctSettleInfo.setFlowTypeDetail(flowTypeDetail);
         acctSettleInfo.setSourceId(sourceId);
         acctSettleInfo.setInsertTime(new Date());
         this.saveOrUpdate(acctSettleInfo);
+        log.info("----------------------插入的变更记录内容为 "+acctSettleInfo);
+        log.info("----------------------插入一条账户变更记录   结束----------------------");
+        return acctSettleInfo;
     }
 
     @Override
     public BigDecimal getTodayIncome(Long memberId){
+        log.info("----------------------获取今日收入   开始----------------------");
         if(memberId == null){
             Asserts.fail("用户未登录");
         }
+        log.info("----------------------参数用户ID "+memberId);
         LocalDate today = LocalDate.now();
         LocalDateTime startDateTime = today.atTime(00,00,00);
         Date startDate = Date.from(startDateTime.atZone(ZoneOffset.ofHours(8)).toInstant());
@@ -123,7 +157,10 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         param.setFlowType(StaticConstant.FLOW_TYPE_INCOME);
         param.setStartDate(startDate);
         param.setEndDate(endDate);
-        return acctSettleInfoMapper.getIncome(param);
+        BigDecimal todayIncome = acctSettleInfoMapper.getIncome(param);
+        log.info("----------------------今日收入 "+todayIncome);
+        log.info("----------------------获取今日收入   结束----------------------");
+        return todayIncome;
     }
 
     @Override
@@ -139,12 +176,46 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     @Override
     public CommonPage getBalanceAndFlow(Integer pageNum, Integer pageSize, Long memberId, String year, String month,String flowType){
+        log.info("----------------------获取某个时间段明细   开始----------------------");
         if(memberId == null){
             Asserts.fail("用户未登录");
         }
+        log.info("----------------------参数 页码 "+pageNum);
+        log.info("----------------------参数 每页条数 "+pageSize);
+        log.info("----------------------参数 用户ID "+memberId);
+        log.info("----------------------参数 年份 "+year);
+        log.info("----------------------参数 月份 "+month);
+        log.info("----------------------参数 流水类型 "+flowType);
         PageHelper.startPage(pageNum,pageSize);
         List<AcctSettleInfo> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(memberId,year,month,flowType);
         CommonPage<AcctSettleInfo> commonPage = CommonPage.restPage(acctSettleInfos);
+        log.info("----------------------获取某个时间段明细   开始----------------------");
         return commonPage;
+    }
+
+    @Override
+    public void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount){
+        log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   开始----------------------");
+        log.info("----------------------参数 用户ID "+memberId);
+        log.info("----------------------参数 提现金额 "+withdrawAmount);
+        //1.获取账户信息
+        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(memberId);
+        log.info("----------------------参数 账户信息 "+acctInfo);
+        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(memberId,withdrawAmount,StaticConstant.FLOW_TYPE_EXPENDITURE);
+        if(acctInfo == null){
+            Asserts.fail("该用户ID无法找到对应的账户信息");
+        }
+        Long acctId = acctSettleInfo.getAcctId();
+        log.info("----------------------账户ID 为 "+acctId);
+        BigDecimal beforBal = acctSettleInfo.getBeforBal();
+        log.info("----------------------账户变更前余额 为 "+beforBal);
+        BigDecimal afterBal = acctSettleInfo.getAfterBal();
+        log.info("----------------------账户变更后余额 为 "+afterBal);
+        //1.插入提现申请记录
+        if(!withdrawAmount.equals(BigDecimal.ZERO)){
+            log.info("----------------------执行账户流水插入");
+            insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW);
+        }
+        log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   结束----------------------");
     }
 }

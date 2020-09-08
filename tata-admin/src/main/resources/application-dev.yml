@@ -30,3 +30,6 @@ logging:
 
 logstash:
   host: localhost
+
+
+requestempleurl: https://www.cyjyt.com:8085/

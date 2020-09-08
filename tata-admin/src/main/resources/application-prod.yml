@@ -28,3 +28,5 @@ logging:
 
 logstash:
   host: logstash
+
+requestempleurl: https://www.cyjyt.com:8085/

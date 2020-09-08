@@ -87,5 +87,16 @@ public class StaticConstant {
      * 出库
      */
     public static final String SKU_CHANGE_TYPE_OUT_OF_STOCK = "outOfStock";
-    /***********************************************************************************/
+    /***************************************************************************************/
+
+    /********************************审批操作类型常量***************************************/
+    /**
+     * 通过
+     */
+    public static final String APPROVAL_OPERATION_PASS = "PASS";
+    /**
+     * 拒绝
+     */
+    public static final String APPROVAL_OPERATION_REFUSE = "REFUSE";
+    /***************************************************************************************/
 }

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.WithdrawalExamineMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.WithdrawalExamine">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="applicant_member_id" jdbcType="BIGINT" property="applicantMemberId" />
+    <result column="applicant_member_name" jdbcType="VARCHAR" property="applicantMemberName" />
+    <result column="approver_member_id" jdbcType="BIGINT" property="approverMemberId" />
+    <result column="approver_member_name" jdbcType="VARCHAR" property="approverMemberName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="withdrawal_amount" jdbcType="DECIMAL" property="withdrawalAmount" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remake" jdbcType="VARCHAR" property="remake" />
+    <result column="acct_settle_info_id" jdbcType="BIGINT" property="acctSettleInfoId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, applicant_member_id, applicant_member_name, approver_member_id, approver_member_name,
+    create_time, update_time, withdrawal_amount, status, remake, acct_settle_info_id
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from withdrawal_examine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from withdrawal_examine
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from withdrawal_examine
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample">
+    delete from withdrawal_examine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.WithdrawalExamine">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into withdrawal_examine (applicant_member_id, applicant_member_name,
+      approver_member_id, approver_member_name, create_time,
+      update_time, withdrawal_amount, status,
+      remake, acct_settle_info_id)
+    values (#{applicantMemberId,jdbcType=BIGINT}, #{applicantMemberName,jdbcType=VARCHAR},
+      #{approverMemberId,jdbcType=BIGINT}, #{approverMemberName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{withdrawalAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER},
+      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.WithdrawalExamine">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into withdrawal_examine
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="applicantMemberId != null">
+        applicant_member_id,
+      </if>
+      <if test="applicantMemberName != null">
+        applicant_member_name,
+      </if>
+      <if test="approverMemberId != null">
+        approver_member_id,
+      </if>
+      <if test="approverMemberName != null">
+        approver_member_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="withdrawalAmount != null">
+        withdrawal_amount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remake != null">
+        remake,
+      </if>
+      <if test="acctSettleInfoId != null">
+        acct_settle_info_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="applicantMemberId != null">
+        #{applicantMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="applicantMemberName != null">
+        #{applicantMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="approverMemberId != null">
+        #{approverMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="approverMemberName != null">
+        #{approverMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawalAmount != null">
+        #{withdrawalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remake != null">
+        #{remake,jdbcType=VARCHAR},
+      </if>
+      <if test="acctSettleInfoId != null">
+        #{acctSettleInfoId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample" resultType="java.lang.Long">
+    select count(*) from withdrawal_examine
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update withdrawal_examine
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.applicantMemberId != null">
+        applicant_member_id = #{record.applicantMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="record.applicantMemberName != null">
+        applicant_member_name = #{record.applicantMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approverMemberId != null">
+        approver_member_id = #{record.approverMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="record.approverMemberName != null">
+        approver_member_name = #{record.approverMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.withdrawalAmount != null">
+        withdrawal_amount = #{record.withdrawalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.remake != null">
+        remake = #{record.remake,jdbcType=VARCHAR},
+      </if>
+      <if test="record.acctSettleInfoId != null">
+        acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update withdrawal_examine
+    set id = #{record.id,jdbcType=BIGINT},
+      applicant_member_id = #{record.applicantMemberId,jdbcType=BIGINT},
+      applicant_member_name = #{record.applicantMemberName,jdbcType=VARCHAR},
+      approver_member_id = #{record.approverMemberId,jdbcType=BIGINT},
+      approver_member_name = #{record.approverMemberName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      withdrawal_amount = #{record.withdrawalAmount,jdbcType=DECIMAL},
+      status = #{record.status,jdbcType=INTEGER},
+      remake = #{record.remake,jdbcType=VARCHAR},
+      acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.WithdrawalExamine">
+    update withdrawal_examine
+    <set>
+      <if test="applicantMemberId != null">
+        applicant_member_id = #{applicantMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="applicantMemberName != null">
+        applicant_member_name = #{applicantMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="approverMemberId != null">
+        approver_member_id = #{approverMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="approverMemberName != null">
+        approver_member_name = #{approverMemberName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="withdrawalAmount != null">
+        withdrawal_amount = #{withdrawalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remake != null">
+        remake = #{remake,jdbcType=VARCHAR},
+      </if>
+      <if test="acctSettleInfoId != null">
+        acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.WithdrawalExamine">
+    update withdrawal_examine
+    set applicant_member_id = #{applicantMemberId,jdbcType=BIGINT},
+      applicant_member_name = #{applicantMemberName,jdbcType=VARCHAR},
+      approver_member_id = #{approverMemberId,jdbcType=BIGINT},
+      approver_member_name = #{approverMemberName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      withdrawal_amount = #{withdrawalAmount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      remake = #{remake,jdbcType=VARCHAR},
+      acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <resultMap id="WithdrawalExamineQueryResult" type="com.tata.jiuye.DTO.WithdrawExamineQueryResult" extends="BaseResultMap">
+    <result column="status_name" property="statusName"></result>
+  </resultMap>
+
+  <select id="getMyWithdrawalExamineList" resultMap="WithdrawalExamineQueryResult">
+    SELECT
+        *,
+    CASE STATUS
+            WHEN 0 THEN
+            '待审批'
+            WHEN 1 THEN
+            '审批通过' ELSE '拒绝'
+        END AS status_name
+    FROM
+        withdrawal_examine
+    WHERE applicant_member_id = #{applicantMemberId,jdbcType=BIGINT}
+    ORDER BY create_time
+  </select>
+
+
+  <select id="getAllWithdrawalExamineListByQueryParam" resultType="com.tata.jiuye.DTO.WithdrawExamineQueryParam" resultMap="WithdrawalExamineQueryResult">
+    SELECT
+        *,
+    CASE STATUS
+            WHEN 0 THEN
+            '待审批'
+            WHEN 1 THEN
+            '审批通过' ELSE '拒绝'
+        END AS status_name
+    FROM
+        withdrawal_examine
+    WHERE
+      1 = 1
+    <if test="param.applicantMemberId != null">
+      AND applicant_member_id = #{param.applicantMemberId},
+    </if>
+    <if test="param.applicantMemberName != null">
+      AND applicant_member_name LIKE CONCAT('%',#{param.applicantMemberName},'%'),
+    </if>
+    <if test="param.approverMemberId != null">
+      AND approver_member_id = #{param.approverMemberId},
+    </if>
+    <if test="param.approverMemberName != null">
+      AND approver_member_name LIKE CONCAT('%',#{param.approverMemberName},'%'),
+    </if>
+    <if test="param.withdrawalAmount != null">
+      AND withdrawal_amount = #{param.withdrawalAmount},
+    </if>
+    <if test="param.status != null">
+      AND status = #{param.status},
+    </if>
+    ORDER BY create_time
+  </select>
+</mapper>
