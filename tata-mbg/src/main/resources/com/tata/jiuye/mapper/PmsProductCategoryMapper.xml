@@ -382,5 +382,6 @@
       WHERE
           `name` = #{categoryName,jdbcType=VARCHAR}
       AND level = 1
+      AND show_status = 1
   </select>
 </mapper>
