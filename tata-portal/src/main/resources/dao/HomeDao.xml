@@ -139,6 +139,7 @@
         LEFT JOIN pms_product_category ppc ON ppc.id = pp.product_category_id
         WHERE
             pp.delete_status = 0
+        AND pp.publish_status = 1
         AND
             pp.product_category_id = #{productCategoryId}
         ORDER BY

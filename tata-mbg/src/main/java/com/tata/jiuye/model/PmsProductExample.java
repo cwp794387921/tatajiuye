@@ -3295,6 +3295,66 @@ public class PmsProductExample {
             addCriterion("delivery_center_product_value not between", value1, value2, "deliveryCenterProductValue");
             return (Criteria) this;
         }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentIsNull() {
+            addCriterion("delivery_center_warehouse_replenishment is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentIsNotNull() {
+            addCriterion("delivery_center_warehouse_replenishment is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment =", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentNotEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment <>", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentGreaterThan(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment >", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment >=", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentLessThan(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment <", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("delivery_center_warehouse_replenishment <=", value, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_warehouse_replenishment in", values, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentNotIn(List<BigDecimal> values) {
+            addCriterion("delivery_center_warehouse_replenishment not in", values, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_warehouse_replenishment between", value1, value2, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryCenterWarehouseReplenishmentNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("delivery_center_warehouse_replenishment not between", value1, value2, "deliveryCenterWarehouseReplenishment");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -151,6 +151,9 @@ public class PmsProduct implements Serializable {
     @ApiModelProperty(value = "配送中心货值(进货价)")
     private BigDecimal deliveryCenterProductValue;
 
+    @ApiModelProperty(value = "配送中心仓补(1级)")
+    private BigDecimal deliveryCenterWarehouseReplenishment;
+
     @ApiModelProperty(value = "商品描述")
     private String description;
 
@@ -572,6 +575,14 @@ public class PmsProduct implements Serializable {
         this.deliveryCenterProductValue = deliveryCenterProductValue;
     }
 
+    public BigDecimal getDeliveryCenterWarehouseReplenishment() {
+        return deliveryCenterWarehouseReplenishment;
+    }
+
+    public void setDeliveryCenterWarehouseReplenishment(BigDecimal deliveryCenterWarehouseReplenishment) {
+        this.deliveryCenterWarehouseReplenishment = deliveryCenterWarehouseReplenishment;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -661,6 +672,7 @@ public class PmsProduct implements Serializable {
         sb.append(", regionalProductValue=").append(regionalProductValue);
         sb.append(", webmasterProductValue=").append(webmasterProductValue);
         sb.append(", deliveryCenterProductValue=").append(deliveryCenterProductValue);
+        sb.append(", deliveryCenterWarehouseReplenishment=").append(deliveryCenterWarehouseReplenishment);
         sb.append(", description=").append(description);
         sb.append(", detailDesc=").append(detailDesc);
         sb.append(", detailHtml=").append(detailHtml);
