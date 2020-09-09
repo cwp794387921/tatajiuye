@@ -537,9 +537,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //distribution.setStatus(0);//待配送
         //distribution.setType(1);//配送单
         List<OmsDistribution> list= DistributionMapper.queryList(distribution);
-        if(list!=null){
-            result.put("list",list);
-        }
+        result.put("list",list);
         return result;
     }
 
