@@ -47,7 +47,13 @@ public class BalanceFlowController {
             return CommonResult.failed("当前用户未登录");
         }
         BigDecimal todayIncome = acctSettleInfoService.getTodayIncome(umsMember.getId());
+        if(todayIncome == null){
+            todayIncome = BigDecimal.ZERO;
+        }
         BigDecimal totalIncome = acctSettleInfoService.getTotalIncome(umsMember.getId());
+        if(totalIncome == null){
+            totalIncome = BigDecimal.ZERO;
+        }
         resultMap.put("todayIncome",todayIncome);
         resultMap.put("totalIncome",totalIncome);
         return CommonResult.success(resultMap);
