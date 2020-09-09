@@ -89,9 +89,9 @@ public class StaticConstant {
 
     /********************************账户类型常量***************************************/
     /**
-     * 普通账户
+     * 分佣账户
      */
-    public static final String ACCOUNT_TYPE_ORDINARY = "ORDINARY";
+    public static final String ACCOUNT_TYPE_ORDINARY = "COMMISSION";
     /**
      * 配送中心账户
      */

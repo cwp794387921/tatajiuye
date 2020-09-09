@@ -56,7 +56,7 @@ public class BalanceFlowController {
     @ApiOperation("获取当前用户余额")
     @RequestMapping(value = "/getBalance", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult getBalance(@RequestParam @ApiParam("账户类型:ORDINARY->普通账户,DELIVERYCENTER->配送中心账户")String accountType){
+    public CommonResult getBalance(@RequestParam @ApiParam("账户类型:COMMISSION->分佣账户,DELIVERYCENTER->配送中心账户")String accountType){
         UmsMember umsMember = memberService.getCurrentMember();
         if(umsMember == null){
             return CommonResult.failed("当前用户未登录");

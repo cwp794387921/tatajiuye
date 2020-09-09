@@ -31,7 +31,7 @@ public class WithdrawExamineController {
     @ApiOperation("提现申请(小程序端用)")
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult apply(@RequestParam @ApiParam("提现金额")BigDecimal withdrawAmount,@RequestParam @ApiParam("提现申请账户类型:ORDINARY->普通账户,DELIVERYCENTER->配送中心账户")String accountType) {
+    public CommonResult apply(@RequestParam @ApiParam("提现金额")BigDecimal withdrawAmount,@RequestParam @ApiParam("提现申请账户类型:COMMISSION->分佣账户,DELIVERYCENTER->配送中心账户")String accountType) {
         UmsMember currentMember = memberService.getCurrentMember();
         if(currentMember == null){
             return CommonResult.failed("用户未登录");
