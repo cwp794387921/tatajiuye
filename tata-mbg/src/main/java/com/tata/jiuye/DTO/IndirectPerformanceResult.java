@@ -12,6 +12,12 @@ import java.math.BigDecimal;
 @Data
 public class IndirectPerformanceResult {
 
+    @ApiModelProperty("间接邀请用户头像")
+    private String icon;
+
+    @ApiModelProperty("直系用户头像")
+    private String fatherIcon;
+
     @ApiModelProperty("直系客户昵称")
     private String fatherNickname;
 

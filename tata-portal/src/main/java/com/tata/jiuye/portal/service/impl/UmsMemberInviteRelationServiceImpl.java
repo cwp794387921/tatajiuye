@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
         }
         PageHelper.startPage(pageNum,pageSize);
         List<DirectPerformanceResult> directPerformanceResults = umsMemberInviteRelationMapper.getDirectPerformance(memberId);
+        if(CollectionUtils.isEmpty(directPerformanceResults)){
+            directPerformanceResults = umsMemberInviteRelationMapper.getDirectPerformanceWhenAllOrderNumNull(memberId);
+        }
         CommonPage<DirectPerformanceResult> resultCommonPage = CommonPage.restPage(directPerformanceResults);
         return resultCommonPage;
     }
@@ -48,6 +52,9 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
         }
         PageHelper.startPage(pageNum,pageSize);
         List<IndirectPerformanceResult> indirectPerformanceResults = umsMemberInviteRelationMapper.getIndirectPerformance(memberId);
+        if(CollectionUtils.isEmpty(indirectPerformanceResults)){
+            indirectPerformanceResults = umsMemberInviteRelationMapper.getIndirectPerformanceWhenAllOrderNumNull(memberId);
+        }
         CommonPage<IndirectPerformanceResult> resultCommonPage = CommonPage.restPage(indirectPerformanceResults);
         return resultCommonPage;
     }

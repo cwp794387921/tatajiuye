@@ -242,6 +242,7 @@
 
   <select id="getDirectPerformance" parameterType="java.lang.Long" resultMap="directPerformanceBaseResult">
       SELECT
+          um.icon,
           um.nickname,
           count( oo.order_sn ) AS order_count,
       CASE
@@ -262,6 +263,23 @@
           total_pay_amount DESC
    </select>
 
+
+    <select id="getDirectPerformanceWhenAllOrderNumNull" parameterType="java.lang.Long" resultMap="directPerformanceBaseResult">
+      SELECT
+          um.icon,
+          um.nickname,
+          0 AS order_count,
+          0 AS total_pay_amount
+      FROM
+          ums_member_invite_relation umir
+          LEFT JOIN ums_member um ON umir.member_id = um.id
+
+      WHERE
+          umir.father_member_id = #{fatherMemberId,jdbcType=BIGINT}
+      ORDER BY
+          um.create_time DESC
+    </select>
+
   <resultMap id="indirectPerformanceBaseResult" type="com.tata.jiuye.DTO.IndirectPerformanceResult">
     <result column="father_nickname" property="fatherNickname"></result>
     <result column="nickname" property="nickname"></result>
@@ -271,9 +289,11 @@
 
   <select id="getIndirectPerformance" parameterType="java.lang.Long" resultMap="indirectPerformanceBaseResult">
       SELECT
+          um.icon,
+          umf.icon AS father_icon,
           umf.nickname AS father_nickname,
           um.nickname,
-          count( oo.order_sn ),
+          count( oo.order_sn ) AS order_count,
       CASE
               WHEN SUM( oo.pay_amount ) IS NULL THEN
               0 ELSE SUM( oo.pay_amount )
@@ -293,6 +313,24 @@
           total_pay_amount DESC
    </select>
 
+
+    <select id="getIndirectPerformanceWhenAllOrderNumNull" parameterType="java.lang.Long" resultMap="indirectPerformanceBaseResult">
+      SELECT
+          um.icon,
+          umf.icon AS father_icon,
+          umf.nickname AS father_nickname,
+          um.nickname,
+          0 AS order_count,
+          0 AS total_pay_amount
+      FROM
+          ums_member_invite_relation umir
+          LEFT JOIN ums_member umf ON umir.father_member_id = umf.id
+          LEFT JOIN ums_member um ON umir.member_id = um.id
+      WHERE
+          umir.grandpa_member_id = #{grandpaMemberId,jdbcType=BIGINT}
+      ORDER BY
+          um.create_time DESC
+   </select>
 
   <select id="getTotalPerformance" resultType="com.tata.jiuye.DTO.TotalPerformanceResult">
       SELECT

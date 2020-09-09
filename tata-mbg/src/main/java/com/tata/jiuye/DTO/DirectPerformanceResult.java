@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 @Data
 public class DirectPerformanceResult {
 
+    @ApiModelProperty("用户头像")
+    private String icon;
+
     @ApiModelProperty("客户昵称")
     private String nickname;
 

@@ -41,12 +41,28 @@ public interface UmsMemberInviteRelationMapper extends BaseMapper<UmsMemberInvit
      */
     List<DirectPerformanceResult> getDirectPerformance(@Param("fatherMemberId") Long memberId);
 
+
+    /**
+     * 获取直系客户业绩(当销售总额与总销量为空时)
+     * @param memberId
+     * @return
+     */
+    List<DirectPerformanceResult> getDirectPerformanceWhenAllOrderNumNull(@Param("fatherMemberId") Long memberId);
+
     /**
      * 获取间接邀请客户业绩
      * @param memberId
      * @return
      */
     List<IndirectPerformanceResult> getIndirectPerformance(@Param("grandpaMemberId") Long memberId);
+
+
+    /**
+     * 获取间接邀请客户业绩(当销售总额与总销量为空时)
+     * @param memberId
+     * @return
+     */
+    List<IndirectPerformanceResult> getIndirectPerformanceWhenAllOrderNumNull(@Param("grandpaMemberId") Long memberId);
 
 
     /**

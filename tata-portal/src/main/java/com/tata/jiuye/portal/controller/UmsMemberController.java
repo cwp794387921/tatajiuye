@@ -3,14 +3,14 @@ package com.tata.jiuye.portal.controller;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.DTO.RegisteredMemberParam;
-import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
-import com.tata.jiuye.model.AcctInfo;
-import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.portal.service.*;
+import com.tata.jiuye.portal.common.constant.StaticConstant;
+import com.tata.jiuye.portal.service.UmsMemberCacheService;
+import com.tata.jiuye.portal.service.UmsMemberLevelService;
+import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -272,9 +271,11 @@ public class UmsMemberController {
     //public CommonResult getShareQrCodeBase64(@RequestParam(required = false) @ApiParam("海报URL")String imgUrl) throws Exception{
     public CommonResult getShareQrCodeBase64() throws Exception{
         UmsMember currentMember = memberService.getCurrentMember();
+        String umsMemberLevelName = umsMemberLevelService.getUmsMemberLevelName(currentMember.getMemberLevelId());
+        if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(umsMemberLevelName)){
+            return CommonResult.failed("普通会员,不能邀请其他会员");
+        }
         String invitationCode = currentMember.getInviteCode();
-        //String str = "/pages/login/register/index?invitationCode="+invitationCode+"&isShare=1";
-        //log.info("----------------str : "+str);
         String accesstoken = InviteQrCode.postToken();
         int size = 280;
         int x = 610;
