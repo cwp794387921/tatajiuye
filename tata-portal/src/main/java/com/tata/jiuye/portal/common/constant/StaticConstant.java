@@ -38,19 +38,6 @@ public class StaticConstant {
 
     /***************************************************************************************/
 
-    /********************************账户类型类型常量***************************************/
-    /**
-     * 平台账户
-     */
-    public static final String ACCT_TYPE_PLATFORMACCOUNT = "platformAccount";
-
-    /**
-     * 普通会员账户
-     */
-    public static final String ACCT_TYPE_ORDINARYMEMBERACCOUNT = "ordinaryMemberAccount";
-
-    /***************************************************************************************/
-
     /********************************状态类型常量***************************************/
     /**
      * 生效
@@ -109,5 +96,10 @@ public class StaticConstant {
      * 配送中心账户
      */
     public static final String ACCOUNT_TYPE_DELIVERYCENTER = "DELIVERYCENTER";
+
+    /**
+     * 平台账户
+     */
+    public static final String ACCOUNT_TYPE_PLATFORMACCOUNT = "PLATFORM";
     /***************************************************************************************/
 }
