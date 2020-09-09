@@ -171,6 +171,23 @@
     from pms_product
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="queryList" parameterType="com.tata.jiuye.model.PmsProduct" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from pms_product
+      <where>
+          <if test="publishStatus !=null and publishStatus !=''">
+              and publish_status = #{publishStatus}
+          </if>
+          <if test="ifJoinVipProduct !=null and ifJoinVipProduct !=''">
+              and if_join_vip_product = #{ifJoinVipProduct}
+          </if>
+          <if test="ifUpgradeDistributionCenterProduct !=null and ifUpgradeDistributionCenterProduct !=''">
+              and if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct}
+          </if>
+      </where>
+
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from pms_product
     where id = #{id,jdbcType=BIGINT}

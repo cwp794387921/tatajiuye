@@ -21,7 +21,17 @@ public class WmsArea implements Serializable {
     @ApiModelProperty(value = "状态  0未绑定 1绑定")
     private Integer status;
 
+    private String address;
+
     private static final long serialVersionUID = 1L;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public Integer getId() {
         return id;

@@ -7,6 +7,7 @@
     <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, wms_member_id, province, city, area, status
+    id, wms_member_id, province, city, area, status,address
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WmsAreaExample" resultMap="BaseResultMap">
     select
@@ -90,6 +91,19 @@
     from wms_area
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByParams" parameterType="com.tata.jiuye.model.WmsArea" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from wms_area
+    <where>
+      <if test="wmsMemberId !=null and wmsMemberId !=''">
+        wms_member_id = #{wmsMemberId}
+      </if>
+      <if test="status !=null and status !=''">
+        status = #{status}
+      </if>
+    </where>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from wms_area
     where id = #{id,jdbcType=INTEGER}
@@ -105,9 +119,9 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into wms_area (wms_member_id, province, city, 
-      area, status)
+      area, status,address)
     values (#{wmsMemberId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{area,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+      #{area,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.WmsArea">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -130,6 +144,9 @@
       <if test="status != null">
         status,
       </if>
+      <if test="address != null">
+        address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="wmsMemberId != null">
@@ -146,6 +163,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -176,6 +196,9 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.address != null">
+        city = #{record.address,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -188,7 +211,8 @@
       province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER}
+      status = #{record.status,jdbcType=INTEGER},
+    address = #{record.address,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -211,6 +235,9 @@
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -220,7 +247,8 @@
       province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+       address = #{address,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

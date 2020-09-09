@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,10 @@ public class WmsMemberServiceImpl implements WmsMerberService {
     private PmsSkuStockMapper pmsSkuStockMapper;
     @Resource
     private ChangeDistributionMapper changeDistributionMapper;
-
+    @Resource
+    private PmsProductMapper pmsProductMapper;
+    @Resource
+    private ReplenishableExamineMapper examineMapper;
 
     @Override
     public JSONObject selectMerberInfo(){
@@ -192,6 +196,48 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
         acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
         acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
+    }
+
+
+    @Override
+    public  List<PmsProduct>  queryReplenishableList(){
+        PmsProduct pmsProduct=new PmsProduct();
+        pmsProduct.setIfUpgradeDistributionCenterProduct(0);
+        pmsProduct.setIfJoinVipProduct(0);
+        pmsProduct.setPublishStatus(1);
+        List<PmsProduct>list=pmsProductMapper.queryList(pmsProduct);
+        return list;
+    }
+
+    @Override
+    public void replenishable(List<ProductParams>  params){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        BigDecimal subPrice=new BigDecimal(0);
+        for (ProductParams param: params){
+            Long id=param.getId();//商品id
+            int num=param.getNumber();
+            BigDecimal price=param.getPrice();
+            subPrice=subPrice.add(new BigDecimal(num).multiply(price));
+            if(subPrice.compareTo(wmsMember.getCreditLine())==1){
+                Asserts.fail("补货总价超过授信额度");
+            }
+            //生成补货申请表
+            ReplenishableExamine examine=new ReplenishableExamine();
+            examine.setApplyId(wmsMember.getId());
+            examine.setApplyName(wmsMember.getNickname());
+            examine.setCreateTime(new Date());
+            examine.setStatus(0);
+            examine.setProductId(id);
+            examine.setNumber(num);
+            examineMapper.insert(examine);
+        }
     }
 
 

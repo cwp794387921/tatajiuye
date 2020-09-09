@@ -37,6 +37,13 @@ public interface PmsProductMapper extends BaseMapper<PmsProduct> {
     int updateByPrimaryKey(PmsProduct record);
 
     /**
+     * 根据条件查找商品列表
+     * @param pmsProduct
+     * @return
+     */
+    List<PmsProduct> queryList(PmsProduct pmsProduct);
+
+    /**
      * 查找升级VIP需要购买的商品
      * @return
      */

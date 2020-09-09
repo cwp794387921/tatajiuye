@@ -16,9 +16,13 @@ public interface WmsAreaMapper {
 
     int insertSelective(WmsArea record);
 
+
+
     List<WmsArea> selectByExample(WmsAreaExample example);
 
     WmsArea selectByPrimaryKey(Integer id);
+
+    WmsArea selectByParams(WmsArea wmsArea);
 
     int updateByExampleSelective(@Param("record") WmsArea record, @Param("example") WmsAreaExample example);
 
