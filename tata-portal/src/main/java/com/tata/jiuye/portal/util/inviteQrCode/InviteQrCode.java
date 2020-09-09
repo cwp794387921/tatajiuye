@@ -9,6 +9,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.tata.jiuye.portal.util.file.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -24,7 +25,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Slf4j
 @Component
 public class InviteQrCode {
 
@@ -198,6 +199,7 @@ public class InviteQrCode {
             //开始获取数据
             //输出
             BufferedImage bufferedImage = ImageIO.read(httpURLConnection.getInputStream());
+            log.info("--------------------图片资源"+bufferedImage.toString());
             return bufferedImage;
         }
         catch (Exception e)
