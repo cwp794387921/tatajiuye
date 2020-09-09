@@ -355,7 +355,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         acctInfo.setInsertTime(new Date());
         acctInfo.setUpdateTime(new Date());
         acctInfo.setStatus(StaticConstant.INTEGER_STATUS_TAKE_EFFECT);
-        acctInfo.setAcctType(StaticConstant.ACCT_TYPE_ORDINARYMEMBERACCOUNT);
+        acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_ORDINARY);
         umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
         acctInfoMapper.insert(acctInfo);
         UserDetails userDetails=new MemberDetails(umsMember);
