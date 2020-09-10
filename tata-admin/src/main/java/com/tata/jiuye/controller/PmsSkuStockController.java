@@ -5,7 +5,10 @@ import com.tata.jiuye.model.PmsSkuStock;
 import com.tata.jiuye.service.PmsSkuStockService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +26,16 @@ import java.util.List;
 public class PmsSkuStockController {
 
     private final PmsSkuStockService skuStockService;
-
+    @Autowired
+    private PmsSkuStockService pmsSkuStockService;
     @ApiOperation("根据商品编号及编号模糊搜索sku库存")
-    @RequestMapping(value = "/{pid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getList", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<PmsSkuStock>> getList(@PathVariable Long pid, @RequestParam(value = "keyword",required = false) String keyword) {
+    public CommonResult<List<PmsSkuStock>> getList(@RequestParam(required = false)@ApiParam("商品ID") Long pid, @RequestParam(required = false) String keyword) {
         List<PmsSkuStock> skuStockList = skuStockService.getList(pid, keyword);
         return CommonResult.success(skuStockList);
     }
+
     @ApiOperation("批量更新库存信息")
     @RequestMapping(value ="/update/{pid}",method = RequestMethod.POST)
     @ResponseBody
@@ -42,4 +47,14 @@ public class PmsSkuStockController {
             return CommonResult.failed();
         }
     }
+
+    @ApiOperation("修改库存数量")
+    @RequestMapping(value ="/changeSkuStockNum",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeSkuStockNum(@RequestParam @ApiParam("库存ID")Long pmsSkuStockId,@RequestParam @ApiParam("库存变更数量")Integer changeNum,
+                                          @RequestParam @ApiParam("库存变更类型(OUTOFSTOCK->出库,WAREHOUSING->入库)")String operationType){
+        pmsSkuStockService.changeSkuStockNum(pmsSkuStockId,changeNum,operationType);
+        return CommonResult.success("修改库存成功");
+    }
+
 }

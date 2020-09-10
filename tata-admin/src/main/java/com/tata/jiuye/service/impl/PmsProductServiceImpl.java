@@ -127,7 +127,7 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         productFullReductionMapper.deleteByExample(fullReductionExample);
         relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), id);
         //修改sku库存信息
-        handleUpdateSkuStockList(id, productParam);
+        //handleUpdateSkuStockList(id, productParam);
         //修改商品参数,添加自定义商品规格
         PmsProductAttributeValueExample productAttributeValueExample = new PmsProductAttributeValueExample();
         productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
