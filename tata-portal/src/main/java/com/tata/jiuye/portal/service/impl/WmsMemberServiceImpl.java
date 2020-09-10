@@ -142,7 +142,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         distributionMapper.updateByPrimaryKey(omsDistribution);
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());
-        pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+        pmsSkuStock.setWmsMemberId(wmsMember.getId());
          pmsSkuStock=pmsSkuStockMapper.selectByParams(pmsSkuStock);
         if(pmsSkuStock==null){
             Asserts.fail("库存不存在");
@@ -171,7 +171,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //清除锁定库存
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());
-        pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+        pmsSkuStock.setWmsMemberId(wmsMember.getId());
         pmsSkuStock=pmsSkuStockMapper.selectByParams(pmsSkuStock);
         if(pmsSkuStock==null){
             Asserts.fail("库存不存在");

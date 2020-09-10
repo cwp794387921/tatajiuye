@@ -1,13 +1,11 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
-import com.tata.jiuye.mapper.AcctInfoMapper;
-import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
-import com.tata.jiuye.mapper.UmsMemberLevelMapper;
-import com.tata.jiuye.mapper.UmsMemberMapper;
+import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.domain.MemberDetails;
@@ -74,6 +72,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private UmsMemberLevelService umsMemberLevelService;
     @Resource
     private WmsMemberService wmsMemberService;
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
     @Resource
     private RedisService redisService;
     @Value("${redis.key.authCode}")
@@ -403,12 +403,16 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
     @Override
     public Long getSuperiorDistributionCenterMemberId(Long memberId){
+        log.info("--------------------------获取所属配送中心用户ID   开始--------------------------");
         if(memberId == null){
             Asserts.fail("传入的用户ID为空");
         }
+        log.info("memberID "+memberId);
         UmsMember umsMember = memberMapper.selectByPrimaryKey(memberId);
+        log.info("用户信息 "+ umsMember);
         //通过用户ID查找用户信息,再用用户信息上的用户等级ID获取用户等级,是否为配送中心
         Boolean isDeliveryCenter = umsMemberLevelService.isSomeOneLevel(umsMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
+        log.info("上级是否配送中心 "+ isDeliveryCenter);
         // 判断用户等级,若不为配送中心,则查找绑定关系表找到上级,再看其是否配送中心
         if(!isDeliveryCenter){
             //查找上级
@@ -419,11 +423,16 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             Long fatherMemberId = umsMemberInviteRelation.getFatherMemberId();
             //如果最高级是平台账户,且没有配送中心,则直接挂放平台
             if(fatherMemberId ==0){
+                log.info("------------------最高级是平台直接返回");
                 return 0L;
             }
+            log.info("------------------递归查上级");
             getSuperiorDistributionCenterMemberId(fatherMemberId);
         }
-        return umsMember.getId();
+        Long deliveryCenterMemberId = umsMember.getId();
+        log.info("--------------------------配送中心用户ID "+deliveryCenterMemberId);
+        log.info("--------------------------获取所属配送中心用户ID   结束--------------------------");
+        return deliveryCenterMemberId;
     }
 
     //第一步,小程序端通过wxCode请求后台,后台利用wxCode获取openId和session_key

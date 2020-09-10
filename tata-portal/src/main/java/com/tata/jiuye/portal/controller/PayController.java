@@ -212,6 +212,7 @@ public class PayController {
                     log.info("==》自身是配送中心，不生成配送单");
                 }else{
                     Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
+                    log.info("找到的配送中心ID 为"+id);
                     WmsMember wmsMember=null;
                     if(id!=null){
                         wmsMember=wmsMemberMapper.selectByUmsId(id);

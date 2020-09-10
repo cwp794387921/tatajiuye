@@ -137,14 +137,14 @@ public class WmsMemberController {
              }
             //添加库存
             PmsSkuStock pmsSkuStock=new PmsSkuStock();
-            pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+            pmsSkuStock.setWmsMemberId(wmsMember.getId());
             pmsSkuStock.setProductId(pmsProduct.getId());
             pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
             if(pmsSkuStock==null){
                 pmsSkuStock=new PmsSkuStock();
                 //查找总仓库存
                 PmsSkuStock centerSkuStock=new PmsSkuStock();
-                centerSkuStock.setWmsMemberId(0);
+                centerSkuStock.setWmsMemberId(0L);
                 centerSkuStock.setProductId(pmsProduct.getId());
                 centerSkuStock=skuStockMapper.selectByParams(centerSkuStock);
                 //复制库存信息
@@ -153,7 +153,7 @@ public class WmsMemberController {
                 pmsSkuStock.setLockStock(0);
                 pmsSkuStock.setSale(0);
                 pmsSkuStock.setLowStock(10);
-                pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
+                pmsSkuStock.setWmsMemberId(wmsMember.getId());
                 skuStockMapper.insert(pmsSkuStock);
             }else {
                 pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
