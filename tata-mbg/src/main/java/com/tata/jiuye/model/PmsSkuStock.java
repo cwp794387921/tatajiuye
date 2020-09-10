@@ -34,18 +34,11 @@ public class PmsSkuStock implements Serializable {
 
     @ApiModelProperty(value = "商品销售属性，json格式")
     private String spData;
+
     @ApiModelProperty(value = "关联配送用户id")
-    private Integer wmsMemberId;
+    private Long wmsMemberId;
 
     private static final long serialVersionUID = 1L;
-
-    public Integer getWmsMemberId() {
-        return wmsMemberId;
-    }
-
-    public void setWmsMemberId(Integer wmsMemberId) {
-        this.wmsMemberId = wmsMemberId;
-    }
 
     public Long getId() {
         return id;
@@ -135,6 +128,14 @@ public class PmsSkuStock implements Serializable {
         this.spData = spData;
     }
 
+    public Long getWmsMemberId() {
+        return wmsMemberId;
+    }
+
+    public void setWmsMemberId(Long wmsMemberId) {
+        this.wmsMemberId = wmsMemberId;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -152,6 +153,7 @@ public class PmsSkuStock implements Serializable {
         sb.append(", promotionPrice=").append(promotionPrice);
         sb.append(", lockStock=").append(lockStock);
         sb.append(", spData=").append(spData);
+        sb.append(", wmsMemberId=").append(wmsMemberId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

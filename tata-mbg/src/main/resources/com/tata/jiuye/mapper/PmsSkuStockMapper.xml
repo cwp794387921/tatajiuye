@@ -94,7 +94,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, product_id, sku_code, price, stock, low_stock, pic, sale, promotion_price, lock_stock,
-    sp_data,wms_member_id
+    sp_data, wms_member_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.PmsSkuStockExample" resultMap="BaseResultMap">
     select
@@ -148,11 +148,11 @@
     insert into pms_sku_stock (product_id, sku_code, price,
       stock, low_stock, pic,
       sale, promotion_price, lock_stock,
-      sp_data,wms_member_id)
+      sp_data, wms_member_id)
     values (#{productId,jdbcType=BIGINT}, #{skuCode,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{stock,jdbcType=INTEGER}, #{lowStock,jdbcType=INTEGER}, #{pic,jdbcType=VARCHAR},
       #{sale,jdbcType=INTEGER}, #{promotionPrice,jdbcType=DECIMAL}, #{lockStock,jdbcType=INTEGER},
-      #{spData,jdbcType=VARCHAR},#{wmsMemberId,jdbcType=BIGINT})
+      #{spData,jdbcType=VARCHAR}, #{wmsMemberId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsSkuStock">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -273,7 +273,7 @@
         sp_data = #{record.spData,jdbcType=VARCHAR},
       </if>
       <if test="record.wmsMemberId != null">
-        wms_member_id = #{record.wmsMemberId,jdbcType=VARCHAR},
+        wms_member_id = #{record.wmsMemberId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -293,7 +293,7 @@
       promotion_price = #{record.promotionPrice,jdbcType=DECIMAL},
       lock_stock = #{record.lockStock,jdbcType=INTEGER},
       sp_data = #{record.spData,jdbcType=VARCHAR},
-    wms_member_id = #{record.wmsMemberId,jdbcType=VARCHAR}
+      wms_member_id = #{record.wmsMemberId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -332,7 +332,7 @@
         sp_data = #{spData,jdbcType=VARCHAR},
       </if>
       <if test="wmsMemberId != null">
-        wms_member_id = #{wmsMemberId,jdbcType=VARCHAR},
+        wms_member_id = #{wmsMemberId,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -349,7 +349,7 @@
       promotion_price = #{promotionPrice,jdbcType=DECIMAL},
       lock_stock = #{lockStock,jdbcType=INTEGER},
       sp_data = #{spData,jdbcType=VARCHAR},
-       wms_member_id = #{wmsMemberId,jdbcType=VARCHAR}
+      wms_member_id = #{wmsMemberId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

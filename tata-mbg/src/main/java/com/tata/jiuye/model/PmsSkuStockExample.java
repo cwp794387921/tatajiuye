@@ -794,6 +794,66 @@ public class PmsSkuStockExample {
             addCriterion("sp_data not between", value1, value2, "spData");
             return (Criteria) this;
         }
+
+        public Criteria andWmsMemberIdIsNull() {
+            addCriterion("wms_member_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdIsNotNull() {
+            addCriterion("wms_member_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdEqualTo(Long value) {
+            addCriterion("wms_member_id =", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdNotEqualTo(Long value) {
+            addCriterion("wms_member_id <>", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdGreaterThan(Long value) {
+            addCriterion("wms_member_id >", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("wms_member_id >=", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdLessThan(Long value) {
+            addCriterion("wms_member_id <", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdLessThanOrEqualTo(Long value) {
+            addCriterion("wms_member_id <=", value, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdIn(List<Long> values) {
+            addCriterion("wms_member_id in", values, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdNotIn(List<Long> values) {
+            addCriterion("wms_member_id not in", values, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdBetween(Long value1, Long value2) {
+            addCriterion("wms_member_id between", value1, value2, "wmsMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWmsMemberIdNotBetween(Long value1, Long value2) {
+            addCriterion("wms_member_id not between", value1, value2, "wmsMemberId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

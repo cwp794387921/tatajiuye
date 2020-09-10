@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.PmsSkuStockChangeFlowMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.PmsSkuStockChangeFlow">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pms_sku_stock_id" jdbcType="BIGINT" property="pmsSkuStockId" />
+    <result column="change_num" jdbcType="INTEGER" property="changeNum" />
+    <result column="quantity_before_change" jdbcType="INTEGER" property="quantityBeforeChange" />
+    <result column="quantity_after_change" jdbcType="INTEGER" property="quantityAfterChange" />
+    <result column="replenishment_order_no" jdbcType="VARCHAR" property="replenishmentOrderNo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="change_type" jdbcType="VARCHAR" property="changeType" />
+    <result column="change_wms_member_id" jdbcType="BIGINT" property="changeWmsMemberId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, pms_sku_stock_id, change_num, quantity_before_change, quantity_after_change, 
+    replenishment_order_no, create_time, change_type, change_wms_member_id
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlowExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pms_sku_stock_change_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from pms_sku_stock_change_flow
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from pms_sku_stock_change_flow
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlowExample">
+    delete from pms_sku_stock_change_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlow">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pms_sku_stock_change_flow (pms_sku_stock_id, change_num, quantity_before_change, 
+      quantity_after_change, replenishment_order_no, 
+      create_time, change_type, change_wms_member_id
+      )
+    values (#{pmsSkuStockId,jdbcType=BIGINT}, #{changeNum,jdbcType=INTEGER}, #{quantityBeforeChange,jdbcType=INTEGER}, 
+      #{quantityAfterChange,jdbcType=INTEGER}, #{replenishmentOrderNo,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{changeType,jdbcType=VARCHAR}, #{changeWmsMemberId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlow">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pms_sku_stock_change_flow
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pmsSkuStockId != null">
+        pms_sku_stock_id,
+      </if>
+      <if test="changeNum != null">
+        change_num,
+      </if>
+      <if test="quantityBeforeChange != null">
+        quantity_before_change,
+      </if>
+      <if test="quantityAfterChange != null">
+        quantity_after_change,
+      </if>
+      <if test="replenishmentOrderNo != null">
+        replenishment_order_no,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="changeType != null">
+        change_type,
+      </if>
+      <if test="changeWmsMemberId != null">
+        change_wms_member_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pmsSkuStockId != null">
+        #{pmsSkuStockId,jdbcType=BIGINT},
+      </if>
+      <if test="changeNum != null">
+        #{changeNum,jdbcType=INTEGER},
+      </if>
+      <if test="quantityBeforeChange != null">
+        #{quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="quantityAfterChange != null">
+        #{quantityAfterChange,jdbcType=INTEGER},
+      </if>
+      <if test="replenishmentOrderNo != null">
+        #{replenishmentOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null">
+        #{changeType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeWmsMemberId != null">
+        #{changeWmsMemberId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlowExample" resultType="java.lang.Long">
+    select count(*) from pms_sku_stock_change_flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update pms_sku_stock_change_flow
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.pmsSkuStockId != null">
+        pms_sku_stock_id = #{record.pmsSkuStockId,jdbcType=BIGINT},
+      </if>
+      <if test="record.changeNum != null">
+        change_num = #{record.changeNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.quantityBeforeChange != null">
+        quantity_before_change = #{record.quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="record.quantityAfterChange != null">
+        quantity_after_change = #{record.quantityAfterChange,jdbcType=INTEGER},
+      </if>
+      <if test="record.replenishmentOrderNo != null">
+        replenishment_order_no = #{record.replenishmentOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.changeType != null">
+        change_type = #{record.changeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changeWmsMemberId != null">
+        change_wms_member_id = #{record.changeWmsMemberId,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update pms_sku_stock_change_flow
+    set id = #{record.id,jdbcType=BIGINT},
+      pms_sku_stock_id = #{record.pmsSkuStockId,jdbcType=BIGINT},
+      change_num = #{record.changeNum,jdbcType=INTEGER},
+      quantity_before_change = #{record.quantityBeforeChange,jdbcType=INTEGER},
+      quantity_after_change = #{record.quantityAfterChange,jdbcType=INTEGER},
+      replenishment_order_no = #{record.replenishmentOrderNo,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      change_type = #{record.changeType,jdbcType=VARCHAR},
+      change_wms_member_id = #{record.changeWmsMemberId,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlow">
+    update pms_sku_stock_change_flow
+    <set>
+      <if test="pmsSkuStockId != null">
+        pms_sku_stock_id = #{pmsSkuStockId,jdbcType=BIGINT},
+      </if>
+      <if test="changeNum != null">
+        change_num = #{changeNum,jdbcType=INTEGER},
+      </if>
+      <if test="quantityBeforeChange != null">
+        quantity_before_change = #{quantityBeforeChange,jdbcType=INTEGER},
+      </if>
+      <if test="quantityAfterChange != null">
+        quantity_after_change = #{quantityAfterChange,jdbcType=INTEGER},
+      </if>
+      <if test="replenishmentOrderNo != null">
+        replenishment_order_no = #{replenishmentOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeType != null">
+        change_type = #{changeType,jdbcType=VARCHAR},
+      </if>
+      <if test="changeWmsMemberId != null">
+        change_wms_member_id = #{changeWmsMemberId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.PmsSkuStockChangeFlow">
+    update pms_sku_stock_change_flow
+    set pms_sku_stock_id = #{pmsSkuStockId,jdbcType=BIGINT},
+      change_num = #{changeNum,jdbcType=INTEGER},
+      quantity_before_change = #{quantityBeforeChange,jdbcType=INTEGER},
+      quantity_after_change = #{quantityAfterChange,jdbcType=INTEGER},
+      replenishment_order_no = #{replenishmentOrderNo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      change_type = #{changeType,jdbcType=VARCHAR},
+      change_wms_member_id = #{changeWmsMemberId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

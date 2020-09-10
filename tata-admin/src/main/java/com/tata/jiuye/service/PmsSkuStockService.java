@@ -20,4 +20,12 @@ public interface PmsSkuStockService extends IService<PmsSkuStock> {
      * 批量更新商品库存信息
      */
     int update(Long pid, List<PmsSkuStock> skuStockList);
+
+    /**
+     * 变更库存数量
+     * @param pmsSkuStockId                     库存ID
+     * @param changeNum                         变更数量
+     * @param operationType                     变更类型(WAREHOUSING->入库,OUTOFSTOCK->出库)
+     */
+    void changeSkuStockNum(Long pmsSkuStockId,Integer changeNum,String operationType);
 }
