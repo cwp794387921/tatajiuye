@@ -18,7 +18,7 @@ public interface WmsAreaMapper extends BaseMapper<WmsArea> {
 
     int insertSelective(WmsArea record);
 
-
+    List<WmsArea> queryList(WmsArea area);
 
     List<WmsArea> selectByExample(WmsAreaExample example);
 

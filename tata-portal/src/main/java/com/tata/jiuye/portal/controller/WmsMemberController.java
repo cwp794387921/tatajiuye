@@ -58,6 +58,14 @@ public class WmsMemberController {
         return CommonResult.success(result);
     }
 
+    @ApiOperation("获取可选地区列表")
+    @RequestMapping(value = "/queryAreaList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult queryAreaList() {
+        List<WmsArea> result= wmsMemberService.queryAllArea();
+        return CommonResult.success(result);
+    }
+
     @ApiOperation("转配送接口")
     @RequestMapping(value = "/changeDistribution", method = RequestMethod.POST)
     @ResponseBody

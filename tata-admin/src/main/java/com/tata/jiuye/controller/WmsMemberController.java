@@ -70,7 +70,7 @@ public class WmsMemberController {
         }
         WmsArea area=new WmsArea();
         area.setStatus(1);
-        area.setWmsMemberId(wmsMember.getId().intValue());
+        area.setWmsMemberId(wmsMember.getId());
          area= areaMapper.selectByParams(area);
         PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(examine.getProductId());
         if(pmsProduct==null){

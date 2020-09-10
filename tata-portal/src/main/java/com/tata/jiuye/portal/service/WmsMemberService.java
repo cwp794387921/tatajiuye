@@ -12,6 +12,8 @@ public interface WmsMemberService {
 
     List<WmsMemberAreaDetail> queryAllUser();
 
+    List<WmsArea> queryAllArea();
+
     void changeDistribution(Long changeId,Long orderId);
 
     void acceptOrder(Long orderId);

@@ -45,6 +45,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private PmsProductMapper pmsProductMapper;
     @Resource
     private ReplenishableExamineMapper examineMapper;
+    @Resource
+    private WmsAreaMapper areaMapper;
 
     @Override
     public JSONObject selectMerberInfo(){
@@ -92,6 +94,13 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         }
         List<WmsMemberAreaDetail> memberAreaDetails=wmsMemberMapper.queryAllWmsUser(wmsMember.getId());
         return memberAreaDetails;
+    }
+
+    @Override
+    public List<WmsArea> queryAllArea(){
+        WmsArea area=new WmsArea();
+        List<WmsArea> areas=  areaMapper.queryList(area);
+        return areas;
     }
 
     @Override
