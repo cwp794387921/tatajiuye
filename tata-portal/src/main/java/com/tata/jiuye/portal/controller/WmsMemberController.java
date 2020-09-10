@@ -91,7 +91,7 @@ public class WmsMemberController {
     }
 
     @ApiOperation("获取可补货列表")
-    @RequestMapping(value = "/replenishableList ", method = RequestMethod.GET)
+    @RequestMapping(value = "/replenishableList", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult replenishableList() {
         List<PmsProduct> list= wmsMemberService.queryReplenishableList();
