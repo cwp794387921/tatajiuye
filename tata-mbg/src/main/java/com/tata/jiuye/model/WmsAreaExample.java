@@ -114,52 +114,52 @@ public class WmsAreaExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Integer value) {
+        public Criteria andIdEqualTo(Long value) {
             addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Integer value) {
+        public Criteria andIdNotEqualTo(Long value) {
             addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Integer value) {
+        public Criteria andIdGreaterThan(Long value) {
             addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
             addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Integer value) {
+        public Criteria andIdLessThan(Long value) {
             addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Integer value) {
+        public Criteria andIdLessThanOrEqualTo(Long value) {
             addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Integer> values) {
+        public Criteria andIdIn(List<Long> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Integer> values) {
+        public Criteria andIdNotIn(List<Long> values) {
             addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Integer value1, Integer value2) {
+        public Criteria andIdBetween(Long value1, Long value2) {
             addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andIdNotBetween(Long value1, Long value2) {
             addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
@@ -174,52 +174,52 @@ public class WmsAreaExample {
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdEqualTo(Integer value) {
+        public Criteria andWmsMemberIdEqualTo(Long value) {
             addCriterion("wms_member_id =", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdNotEqualTo(Integer value) {
+        public Criteria andWmsMemberIdNotEqualTo(Long value) {
             addCriterion("wms_member_id <>", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdGreaterThan(Integer value) {
+        public Criteria andWmsMemberIdGreaterThan(Long value) {
             addCriterion("wms_member_id >", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andWmsMemberIdGreaterThanOrEqualTo(Long value) {
             addCriterion("wms_member_id >=", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdLessThan(Integer value) {
+        public Criteria andWmsMemberIdLessThan(Long value) {
             addCriterion("wms_member_id <", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdLessThanOrEqualTo(Integer value) {
+        public Criteria andWmsMemberIdLessThanOrEqualTo(Long value) {
             addCriterion("wms_member_id <=", value, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdIn(List<Integer> values) {
+        public Criteria andWmsMemberIdIn(List<Long> values) {
             addCriterion("wms_member_id in", values, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdNotIn(List<Integer> values) {
+        public Criteria andWmsMemberIdNotIn(List<Long> values) {
             addCriterion("wms_member_id not in", values, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdBetween(Integer value1, Integer value2) {
+        public Criteria andWmsMemberIdBetween(Long value1, Long value2) {
             addCriterion("wms_member_id between", value1, value2, "wmsMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andWmsMemberIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andWmsMemberIdNotBetween(Long value1, Long value2) {
             addCriterion("wms_member_id not between", value1, value2, "wmsMemberId");
             return (Criteria) this;
         }
@@ -491,6 +491,76 @@ public class WmsAreaExample {
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIsNull() {
+            addCriterion("address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIsNotNull() {
+            addCriterion("address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressEqualTo(String value) {
+            addCriterion("address =", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotEqualTo(String value) {
+            addCriterion("address <>", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThan(String value) {
+            addCriterion("address >", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("address >=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThan(String value) {
+            addCriterion("address <", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThanOrEqualTo(String value) {
+            addCriterion("address <=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLike(String value) {
+            addCriterion("address like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotLike(String value) {
+            addCriterion("address not like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIn(List<String> values) {
+            addCriterion("address in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotIn(List<String> values) {
+            addCriterion("address not in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressBetween(String value1, String value2) {
+            addCriterion("address between", value1, value2, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotBetween(String value1, String value2) {
+            addCriterion("address not between", value1, value2, "address");
             return (Criteria) this;
         }
     }

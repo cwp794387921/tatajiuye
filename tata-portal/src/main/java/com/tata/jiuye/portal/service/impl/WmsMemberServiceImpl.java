@@ -271,12 +271,13 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
-    public void insertWmsMember(UmsMember umsMember){
+    public WmsMember insertWmsMember(UmsMember umsMember){
         WmsMember wmsMember = new WmsMember();
         BeanUtils.copyProperties(umsMember,wmsMember);
         wmsMember.setUmsMemberId(umsMember.getId());
         wmsMember.setId(null);
         wmsMemberMapper.insert(wmsMember);
+        return wmsMember;
     }
 
 }

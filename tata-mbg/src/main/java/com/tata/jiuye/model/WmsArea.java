@@ -4,10 +4,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class WmsArea implements Serializable {
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty(value = "关联配送中心id")
-    private Integer wmsMemberId;
+    private Long wmsMemberId;
 
     @ApiModelProperty(value = "省")
     private String province;
@@ -21,31 +21,24 @@ public class WmsArea implements Serializable {
     @ApiModelProperty(value = "状态  0未绑定 1绑定")
     private Integer status;
 
+    @ApiModelProperty(value = "详细地址")
     private String address;
 
     private static final long serialVersionUID = 1L;
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getWmsMemberId() {
+    public Long getWmsMemberId() {
         return wmsMemberId;
     }
 
-    public void setWmsMemberId(Integer wmsMemberId) {
+    public void setWmsMemberId(Long wmsMemberId) {
         this.wmsMemberId = wmsMemberId;
     }
 
@@ -81,6 +74,14 @@ public class WmsArea implements Serializable {
         this.status = status;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -93,6 +94,7 @@ public class WmsArea implements Serializable {
         sb.append(", city=").append(city);
         sb.append(", area=").append(area);
         sb.append(", status=").append(status);
+        sb.append(", address=").append(address);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

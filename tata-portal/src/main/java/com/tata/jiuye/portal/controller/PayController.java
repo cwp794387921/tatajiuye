@@ -198,10 +198,10 @@ public class PayController {
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(omsOrderItem.getIfJoinVipProduct() == 1){
-                        umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER);
+                        umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER,orderSn);
                     }
                     if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
-                        umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER);
+                        umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER,orderSn);
                     }
                 }
                 //插入分佣流水

@@ -1,10 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tata.jiuye.model.PmsProduct;
-import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.model.WmsMemberAreaDetail;
-import com.tata.jiuye.model.ProductParams;
+import com.tata.jiuye.model.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,5 +25,5 @@ public interface WmsMemberService {
     List<PmsProduct>  queryReplenishableList();
 
     @Transactional
-    void insertWmsMember(UmsMember umsMember);
+    WmsMember insertWmsMember(UmsMember umsMember);
 }

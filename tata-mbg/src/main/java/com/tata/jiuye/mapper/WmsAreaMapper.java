@@ -1,16 +1,18 @@
 package com.tata.jiuye.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.model.WmsArea;
 import com.tata.jiuye.model.WmsAreaExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface WmsAreaMapper {
+import java.util.List;
+
+public interface WmsAreaMapper extends BaseMapper<WmsArea> {
     long countByExample(WmsAreaExample example);
 
     int deleteByExample(WmsAreaExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(WmsArea record);
 

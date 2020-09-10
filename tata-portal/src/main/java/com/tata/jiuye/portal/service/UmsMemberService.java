@@ -85,7 +85,7 @@ public interface UmsMemberService {
      * @param umsMemberLevelName               升级的会员等级名称
      */
     @Transactional
-    void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName);
+    void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName,String orderNo);
 
     /**
      * 通过被邀请人用户ID获取邀请链条

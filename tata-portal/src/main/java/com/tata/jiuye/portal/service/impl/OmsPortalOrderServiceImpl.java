@@ -158,8 +158,15 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             //获取锁成功，开始处理业务
             for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             Long productId = cartPromotionItem.getProductId();
+            //购买数量
+            Integer quantity = cartPromotionItem.getQuantity();
             //等级为普通用户的时候,只能购买升级为VIP商品与升级为配置中心商品
                 log.info("joinVipProductId["+joinVipProductId+"]，productId：["+productId+"]");
+            //若购买商品为 加入VIP 或 升级为配送中心,则数量不能大于1
+            if((joinVipProductId.equals(productId) || upgradeDistributionCenterProductId.equals(productId)) && quantity > 1){
+                result.put("msg","购买 加入VIP 或 升级为配送中心 的商品,购买数量不能大于1");
+                Asserts.fail("购买 加入VIP 或 升级为配送中心 的商品,购买数量不能大于1");
+            }
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName)){
                 //普通会员    不是升级vip商品&&不是升级配送中心商品
                 if(!productId.equals(joinVipProductId) && !productId.equals(upgradeDistributionCenterProductId)){

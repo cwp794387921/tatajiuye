@@ -9,10 +9,7 @@ import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.domain.MemberDetails;
-import com.tata.jiuye.portal.service.UmsMemberCacheService;
-import com.tata.jiuye.portal.service.UmsMemberLevelService;
-import com.tata.jiuye.portal.service.UmsMemberService;
-import com.tata.jiuye.portal.service.WmsMemberService;
+import com.tata.jiuye.portal.service.*;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.GlobalConstants;
 import com.tata.jiuye.portal.util.HttpRequest;
@@ -73,9 +70,11 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Resource
     private WmsMemberService wmsMemberService;
     @Resource
-    private WmsMemberMapper wmsMemberMapper;
+    private WmsAreaService wmsAreaService;
     @Resource
     private RedisService redisService;
+    @Resource
+    private OmsPortalOrderService omsPortalOrderService;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -368,7 +367,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
 
     @Override
-    public void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName){
+    public void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName,String orderNo){
+        log.info("------------------------提升用户等级  开始------------------------");
+        if(StringUtils.isEmpty(orderNo)){
+            Asserts.fail("订单号为空");
+        }
+        OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
         //判断购买的订单商品是否为升级VIP需购买的商品,是则升级会员等级为VIP(且要VIP才能继续购买别的商品)
         UmsMemberLevelExample umsMemberLevelExample = new UmsMemberLevelExample();
         UmsMemberLevelExample.Criteria criteria = umsMemberLevelExample.createCriteria();
@@ -383,8 +387,10 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         memberCacheService.setMember(member);
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
-            wmsMemberService.insertWmsMember(member);
+            WmsMember wmsMember = wmsMemberService.insertWmsMember(member);
+            wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
         }
+        log.info("------------------------提升用户等级  结束------------------------");
     }
 
     @Override
