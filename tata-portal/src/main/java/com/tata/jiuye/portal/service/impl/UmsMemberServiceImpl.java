@@ -427,12 +427,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 return 0L;
             }
             log.info("------------------递归查上级");
-            getSuperiorDistributionCenterMemberId(fatherMemberId);
+            return getSuperiorDistributionCenterMemberId(fatherMemberId);
         }
-        Long deliveryCenterMemberId = umsMember.getId();
-        log.info("--------------------------配送中心用户ID "+deliveryCenterMemberId);
-        log.info("--------------------------获取所属配送中心用户ID   结束--------------------------");
-        return deliveryCenterMemberId;
+        else{
+            Long deliveryCenterMemberId = umsMember.getId();
+            log.info("--------------------------配送中心用户ID "+deliveryCenterMemberId);
+            log.info("--------------------------获取所属配送中心用户ID   结束--------------------------");
+            return deliveryCenterMemberId;
+        }
     }
 
     //第一步,小程序端通过wxCode请求后台,后台利用wxCode获取openId和session_key

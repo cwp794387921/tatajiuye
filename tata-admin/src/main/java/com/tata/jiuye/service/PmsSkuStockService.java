@@ -26,6 +26,7 @@ public interface PmsSkuStockService extends IService<PmsSkuStock> {
      * @param pmsSkuStockId                     库存ID
      * @param changeNum                         变更数量
      * @param operationType                     变更类型(WAREHOUSING->入库,OUTOFSTOCK->出库)
+     * @param replenishmentOrderNo              补货单号
      */
-    void changeSkuStockNum(Long pmsSkuStockId,Integer changeNum,String operationType);
+    void changeSkuStockNum(Long pmsSkuStockId,Integer changeNum,String operationType,String replenishmentOrderNo);
 }
