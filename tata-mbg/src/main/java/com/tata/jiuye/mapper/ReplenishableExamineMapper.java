@@ -24,4 +24,6 @@ public interface ReplenishableExamineMapper {
     int updateByExampleSelective(@Param("record") ReplenishableExamine record, @Param("example") ReplenishableExamineExample example);
 
     int updateByExample(@Param("record") ReplenishableExamine record, @Param("example") ReplenishableExamineExample example);
+
+    int updateByPrimaryKey(ReplenishableExamine record);
 }

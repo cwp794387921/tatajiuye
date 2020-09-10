@@ -1,4 +1,4 @@
-package com.tata.jiuye.portal.common.constant;
+package com.tata.jiuye.common.enums;
 
 public enum FlowTypeEnum {
 

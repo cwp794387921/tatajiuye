@@ -21,6 +21,7 @@
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="ums_member_id" jdbcType="INTEGER" property="umsMemberId" />
       <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="replenishable_id" jdbcType="INTEGER" property="replenishableId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -82,7 +83,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
-    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id
+    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
     select
@@ -103,6 +104,31 @@
     <include refid="Base_Column_List" />
     from oms_distribution
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParams" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oms_distribution
+    <where>
+      <if test="wmsMemberId !=null and wmsMemberId !=''">
+        and wms_member_id = #{wmsMemberId}
+      </if>
+      <if test="umsMemberId !=null and umsMemberId !=''">
+        and ums_member_id = #{umsMemberId}
+      </if>
+      <if test="status !=null and status !=''">
+        and status = #{status}
+      </if>
+      <if test="status ==null or status ==''">
+        and status != 5
+      </if>
+      <if test="type !=null and type !=''">
+        and type = #{type}
+      </if>
+      <if test="replenishableId !=null and replenishableId !=''">
+        and replenishable_id = #{replenishableId}
+      </if>
+    </where>
   </select>
   <select id="queryList" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
     select
@@ -145,12 +171,13 @@
       goods_title, goods_subtitle, price, 
       number, sub_price, name, 
       head_img, address, create_time, 
-      wms_member_id,type,profit,phone,ums_member_id,product_id)
+      wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id)
     values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
       #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL}, #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER})
+      #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL},
+    #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{replenishableId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsDistribution">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -212,6 +239,9 @@
         <if test="productId != null">
             product_id,
         </if>
+      <if test="replenishableId != null">
+        replenishable_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderSn != null">
@@ -268,6 +298,9 @@
         <if test="productId != null">
             #{productId,jdbcType=INTEGER},
         </if>
+      <if test="replenishableId != null">
+        #{replenishableId,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultType="java.lang.Long">
@@ -336,6 +369,9 @@
         <if test="record.productId != null">
             product_id = #{record.productId,jdbcType=INTEGER},
         </if>
+      <if test="record.replenishableId != null">
+        replenishable_id = #{record.replenishableId,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -360,6 +396,7 @@
     type = #{record.type,jdbcType=INTEGER},
     profit = #{profit,jdbcType=DECIMAL},
     ums_member_id = #{record.umsMemberId,jdbcType=INTEGER},
+    replenishable_id = #{record.replenishableId,jdbcType=INTEGER},
       product_id = #{record.productId,jdbcType=INTEGER},
     phone = #{record.phone,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -417,6 +454,9 @@
         <if test="productId != null">
             product_id = #{productId,jdbcType=INTEGER},
         </if>
+      <if test="replenishableId != null">
+        replenishable_id = #{replenishableId,jdbcType=INTEGER},
+      </if>
       <if test="profit != null">
         profit = #{profit,jdbcType=DECIMAL},
       </if>
@@ -445,6 +485,7 @@
        type = #{type,jdbcType=INTEGER},
         phone = #{phone,jdbcType=VARCHAR},
         profit = #{profit,jdbcType=DECIMAL},
+        replenishable_id = #{replenishableId,jdbcType=INTEGER},
         product_id = #{productId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

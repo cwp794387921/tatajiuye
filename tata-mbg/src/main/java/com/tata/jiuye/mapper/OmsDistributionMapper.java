@@ -23,6 +23,8 @@ public interface OmsDistributionMapper {
 
     OmsDistribution selectByPrimaryKey(Integer id);
 
+    OmsDistribution selectByParams(OmsDistribution distribution);
+
     int updateByExampleSelective(@Param("record") OmsDistribution record, @Param("example") OmsDistributionExample example);
 
     int updateByExample(@Param("record") OmsDistribution record, @Param("example") OmsDistributionExample example);

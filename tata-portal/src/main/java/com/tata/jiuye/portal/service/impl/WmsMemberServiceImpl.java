@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
-import com.tata.jiuye.portal.common.constant.FlowTypeEnum;
+import com.tata.jiuye.common.enums.FlowTypeEnum;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMemberService;
 import lombok.RequiredArgsConstructor;

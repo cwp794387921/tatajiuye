@@ -2,6 +2,8 @@ package com.tata.jiuye.controller;
 
 
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.common.utils.OrderUtil;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.service.UmsAdminService;
@@ -9,11 +11,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.swagger2.mappers.LicenseMapper;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -25,6 +30,7 @@ import java.util.List;
 @RequestMapping("/wms")
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class WmsMemberController {
 
     @Resource
@@ -41,6 +47,10 @@ public class WmsMemberController {
     private OmsDistributionMapper distributionMapper;
     @Resource
     private PmsSkuStockMapper skuStockMapper;
+    @Resource
+    private AcctInfoMapper acctInfoMapper;
+    @Resource
+    private AcctSettleInfoMapper acctSettleInfoMapper;
 
     @ApiOperation("补货审核接口")
     @RequestMapping(value = "/replenishable", method = RequestMethod.POST)
@@ -72,7 +82,7 @@ public class WmsMemberController {
             //4补货申请驳回
             //5收货审核驳回
             log.info("补货申请id["+id+"]审核，状态["+status+"]");
-            examine.setStatus(1);//待收货
+            examine.setStatus(status.intValue());//待收货
             examine.setApplyId(umsAdmin.getId());
             examine.setApplyName(umsAdmin.getNickName());
             examine.setUpdateTime(new Date());
@@ -89,12 +99,13 @@ public class WmsMemberController {
                 break;
             case 3:
                 profit=pmsProduct.getWebmasterWarehouseReplenishment();
-
+                break;
         }
         if(status==1){
             //待收货
             //新增补货单
             OmsDistribution distribution=new OmsDistribution();
+            distribution.setOrderSn(OrderUtil.getBhOrderNo());
             distribution.setStatus(0);//待收货
             distribution.setGoodsTitle(pmsProduct.getName());
             distribution.setGoodsSubtitle(pmsProduct.getSubTitle());
@@ -112,10 +123,18 @@ public class WmsMemberController {
             distribution.setProfit(profit);
             distribution.setPhone(wmsMember.getPhone());
             distribution.setProductId(pmsProduct.getId());
+            distribution.setReplenishableId(examine.getId());
             distributionMapper.insert(distribution);
         }
         if(status==3){
             //收货审核通过
+            //查找补货单
+            OmsDistribution distribution=new OmsDistribution();
+            distribution.setReplenishableId(examine.getId());
+             distribution=distributionMapper.selectByParams(distribution);
+             if (distribution==null){
+                 return CommonResult.validateFailed("补货单不存在");
+             }
             //添加库存
             PmsSkuStock pmsSkuStock=new PmsSkuStock();
             pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
@@ -123,29 +142,44 @@ public class WmsMemberController {
             pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
             if(pmsSkuStock==null){
                 pmsSkuStock=new PmsSkuStock();
-                pmsSkuStock.setProductId(pmsProduct.getId());
-                pmsSkuStock.setSkuCode("123456");
-                pmsSkuStock.setPrice(pmsProduct.getPrice());
+                //查找总仓库存
+                PmsSkuStock centerSkuStock=new PmsSkuStock();
+                centerSkuStock.setWmsMemberId(0);
+                centerSkuStock.setProductId(pmsProduct.getId());
+                centerSkuStock=skuStockMapper.selectByParams(centerSkuStock);
+                //复制库存信息
+                BeanUtils.copyProperties(centerSkuStock,pmsSkuStock);
                 pmsSkuStock.setStock(examine.getNumber());
                 pmsSkuStock.setLockStock(0);
-                pmsSkuStock.setPic(pmsProduct.getPic());
                 pmsSkuStock.setSale(0);
-                pmsSkuStock.setPromotionPrice(pmsProduct.getPrice());
                 pmsSkuStock.setLowStock(10);
                 pmsSkuStock.setWmsMemberId(wmsMember.getId().intValue());
-                pmsSkuStock.setSpData(null);
                 skuStockMapper.insert(pmsSkuStock);
             }else {
                 pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
                 skuStockMapper.updateByPrimaryKey(pmsSkuStock);
             }
+            //查找账户信息
+            AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+            if(acctInfo==null){
+                return CommonResult.validateFailed("配送账户不存在");
+            }
             //添加收益
-
+            AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
+            acctSettleInfo.setOrderNo(distribution.getOrderSn());
+            acctSettleInfo.setAcctId(acctInfo.getId());
+            acctSettleInfo.setBeforBal(acctInfo.getBalance());
+            acctSettleInfo.setChangeAmount(distribution.getProfit());
+            acctSettleInfo.setAfterBal(acctInfo.getBalance().add(distribution.getProfit()));
+            acctSettleInfo.setInsertTime(new Date());
+            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
+            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.STORAGE_ALLOWANCE.value);
+            acctSettleInfoMapper.insert(acctSettleInfo);
             //补货单状态完成
-
+            distribution.setStatus(5);//更新补货单状态
+            distributionMapper.updateByPrimaryKey(distribution);
         }
-
-
+        examineMapper.updateByPrimaryKey(examine);
         return CommonResult.success("操作成功");
     }
 

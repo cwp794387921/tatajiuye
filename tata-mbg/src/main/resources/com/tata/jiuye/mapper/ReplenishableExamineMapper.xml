@@ -250,4 +250,18 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.ReplenishableExamine">
+    update replenishable_examine
+      apply_id = #{record.applyId,jdbcType=BIGINT},
+      apply_name = #{record.applyName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      approval_id = #{record.approvalId,jdbcType=BIGINT},
+      approval_name = #{record.approvalName,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      trans_sn = #{record.transSn,jdbcType=BIGINT},
+      product_id = #{record.productId,jdbcType=BIGINT},
+      number = #{record.number,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
