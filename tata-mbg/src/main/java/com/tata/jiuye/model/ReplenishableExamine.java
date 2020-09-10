@@ -37,6 +37,8 @@ public class ReplenishableExamine implements Serializable {
     @ApiModelProperty(value = "补货数量")
     private Integer number;
 
+    private String imgs;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -101,6 +103,14 @@ public class ReplenishableExamine implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(String imgs) {
+        this.imgs = imgs;
     }
 
     public Long getTransSn() {

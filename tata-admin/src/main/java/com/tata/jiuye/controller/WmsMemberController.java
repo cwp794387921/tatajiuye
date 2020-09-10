@@ -76,11 +76,11 @@ public class WmsMemberController {
         if(pmsProduct==null){
             return CommonResult.failed("商品不存在");
         }
-        if("1,3,4,5".contains(status.toString())){
-            //1审核通过待收货
+        if("1,3,4".contains(status.toString())){
+            //1补货审核通过 待确认收货
             //3收货审核通过
             //4补货申请驳回
-            //5收货审核驳回
+            //5确认收货驳回
             log.info("补货申请id["+id+"]审核，状态["+status+"]");
             examine.setStatus(status.intValue());//待收货
             examine.setApplyId(umsAdmin.getId());
@@ -177,6 +177,22 @@ public class WmsMemberController {
             acctSettleInfoMapper.insert(acctSettleInfo);
             //补货单状态完成
             distribution.setStatus(5);//更新补货单状态
+            distributionMapper.updateByPrimaryKey(distribution);
+        }
+        if(status==5){
+            //收货确认驳回
+            examine.setApplyId(umsAdmin.getId());
+            examine.setApplyName(umsAdmin.getNickName());
+            examine.setUpdateTime(new Date());
+            examine.setImgs(null);
+            //更改补货单状态
+            OmsDistribution distribution=new OmsDistribution();
+            distribution.setReplenishableId(examine.getId());
+            distribution=distributionMapper.selectByParams(distribution);
+            if (distribution==null){
+                return CommonResult.validateFailed("补货单不存在");
+            }
+            distribution.setStatus(0);
             distributionMapper.updateByPrimaryKey(distribution);
         }
         examineMapper.updateByPrimaryKey(examine);

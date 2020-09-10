@@ -102,6 +102,17 @@ public class WmsMemberController {
     }
 
 
+    @ApiOperation("收货审核接口")
+    @RequestMapping(value = "/replenishableCheck", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult replenishableCheck(Long id,List<String> imgs) {
+        if(id==null||imgs==null||imgs.isEmpty()){
+            return CommonResult.validateFailed("参数缺失");
+        }
+        wmsMemberService.replenishableCheck(id,imgs);
+        return CommonResult.success("操作成功");
+    }
+
 
 
 

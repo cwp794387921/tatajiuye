@@ -110,6 +110,9 @@
     <include refid="Base_Column_List" />
     from oms_distribution
     <where>
+      <if test="id !=null and id !=''">
+        and id = #{id}
+      </if>
       <if test="wmsMemberId !=null and wmsMemberId !=''">
         and wms_member_id = #{wmsMemberId}
       </if>

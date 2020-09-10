@@ -13,6 +13,7 @@
     <result column="trans_sn" jdbcType="BIGINT" property="transSn" />
     <result column="product_id" jdbcType="BIGINT" property="productId" />
     <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="imgs" jdbcType="VARCHAR" property="imgs" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, apply_id, apply_name, create_time, approval_id, approval_name, status, update_time, 
-    trans_sn, product_id, number
+    trans_sn, product_id, number,imgs
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -110,11 +111,11 @@
     insert into replenishable_examine (apply_id, apply_name, create_time, 
       approval_id, approval_name, status, 
       update_time, trans_sn, product_id, 
-      number)
+      number,imgs)
     values (#{applyId,jdbcType=BIGINT}, #{applyName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{approvalId,jdbcType=BIGINT}, #{approvalName,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{transSn,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, 
-      #{number,jdbcType=INTEGER})
+      #{number,jdbcType=INTEGER}, #{imgs,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.ReplenishableExamine">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -245,7 +246,8 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       trans_sn = #{record.transSn,jdbcType=BIGINT},
       product_id = #{record.productId,jdbcType=BIGINT},
-      number = #{record.number,jdbcType=INTEGER}
+      number = #{record.number,jdbcType=INTEGER},
+    imgs = #{record.imgs,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -261,6 +263,7 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       trans_sn = #{record.transSn,jdbcType=BIGINT},
       product_id = #{record.productId,jdbcType=BIGINT},
+       imgs = #{record.imgs,jdbcType=VARCHAR},
       number = #{record.number,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

@@ -23,6 +23,8 @@ public interface WmsMemberService {
 
     void replenishable(List<ProductParams>  params);
 
+    void replenishableCheck(Long id,List<String> imgs);
+
     List<PmsProduct>  queryReplenishableList();
 
     @Transactional

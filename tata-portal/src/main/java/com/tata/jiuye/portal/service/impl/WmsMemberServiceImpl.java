@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
@@ -211,6 +212,34 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
+    public void  replenishableCheck(Long id,List<String> imgs){
+        OmsDistribution distribution=distributionMapper.selectByPrimaryKey(id.intValue());
+        if(distribution==null){
+            Asserts.fail("补货单记录不存在");
+        }
+        if(distribution.getStatus()!=0){
+            Asserts.fail("补货单状态不正确");
+        }
+        ReplenishableExamine examine=examineMapper.selectByPrimaryKey(distribution.getReplenishableId());
+        if(examine==null){
+            Asserts.fail("补货申请记录不存在");
+        }
+        String imgStr="";
+        for (String img :imgs){
+            if(StrUtil.isEmpty(imgStr)){
+                imgStr+=img;
+            }else {
+                imgStr+=","+img;
+            }
+        }
+        examine.setImgs(imgStr);
+        examine.setStatus(2);
+        examineMapper.updateByPrimaryKey(examine);
+
+
+    }
+
+    @Override
     public void replenishable(List<ProductParams>  params){
         UmsMember currentMember = memberService.getCurrentMember();
         if(currentMember == null){
@@ -249,4 +278,5 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         wmsMember.setId(null);
         wmsMemberMapper.insert(wmsMember);
     }
+
 }
