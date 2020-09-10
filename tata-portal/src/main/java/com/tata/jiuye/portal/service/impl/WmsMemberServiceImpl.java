@@ -6,9 +6,10 @@ import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.FlowTypeEnum;
 import com.tata.jiuye.portal.service.UmsMemberService;
-import com.tata.jiuye.portal.service.WmsMerberService;
+import com.tata.jiuye.portal.service.WmsMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
-public class WmsMemberServiceImpl implements WmsMerberService {
+public class WmsMemberServiceImpl implements WmsMemberService {
 
     @Resource
     private UmsMemberService memberService;
@@ -240,5 +241,12 @@ public class WmsMemberServiceImpl implements WmsMerberService {
         }
     }
 
-
+    @Override
+    public void insertWmsMember(UmsMember umsMember){
+        WmsMember wmsMember = new WmsMember();
+        BeanUtils.copyProperties(umsMember,wmsMember);
+        wmsMember.setUmsMemberId(umsMember.getId());
+        wmsMember.setId(null);
+        wmsMemberMapper.insert(wmsMember);
+    }
 }

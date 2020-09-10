@@ -134,7 +134,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //升级为配送中心的商品ID
         Long upgradeDistributionCenterProductId = pmsProductMapper.getProductByIfUpgradeDistributionCenterProduct();
         //UmsMember currentMember = memberService.getCurrentMember();
+        if(CollectionUtils.isEmpty(orderParam.getCartIds())){
+            Asserts.fail("选中的购物车商品为空,请选择购物车商品");
+        }
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
+        if(CollectionUtils.isEmpty(cartPromotionItemList)){
+            Asserts.fail("查询不到该购物车ID对应的商品信息,请联系管理员");
+        }
         String requestId=UUID.randomUUID().toString();
         List<Long>ids=orderParam.getCartIds();
         Map<String, Object> result = new HashMap<>();

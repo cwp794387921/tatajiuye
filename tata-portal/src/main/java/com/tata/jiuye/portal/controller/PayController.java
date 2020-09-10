@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -150,6 +151,7 @@ public class PayController {
 
     @PostMapping("/wxNotify")
     @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
     public void wxNotify(HttpServletRequest request, HttpServletResponse response){
         System.out.println("==>进入微信支付回调");
         try {

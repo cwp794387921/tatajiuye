@@ -14,6 +14,7 @@ import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberLevelService;
 import com.tata.jiuye.portal.service.UmsMemberService;
+import com.tata.jiuye.portal.service.WmsMemberService;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.GlobalConstants;
 import com.tata.jiuye.portal.util.HttpRequest;
@@ -71,6 +72,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
     @Resource
     private UmsMemberLevelService umsMemberLevelService;
+    @Resource
+    private WmsMemberService wmsMemberService;
     @Resource
     private RedisService redisService;
     @Value("${redis.key.authCode}")
@@ -378,6 +381,10 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         member.setMemberLevelId(umsMemberLevel.getId());
         memberMapper.updateByPrimaryKeySelective(member);
         memberCacheService.setMember(member);
+        //如果升级配送中心,增加插入配送中心账号
+        if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
+            wmsMemberService.insertWmsMember(member);
+        }
     }
 
     @Override

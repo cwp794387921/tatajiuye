@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
-import com.tata.jiuye.portal.service.WmsMerberService;
+import com.tata.jiuye.portal.service.WmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class WmsMemberController {
     private static final Logger log = LoggerFactory.getLogger(WmsMemberController.class);
 
     @Resource
-    private WmsMerberService wmsMerberService;
+    private WmsMemberService wmsMemberService;
     @Resource
     private OmsPortalOrderService portalOrderService;
 
@@ -37,7 +37,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult info() {
-        JSONObject result= wmsMerberService.selectMerberInfo();
+        JSONObject result= wmsMemberService.selectMerberInfo();
         log.debug(result.toString());
         return CommonResult.success(result);
     }
@@ -54,7 +54,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult queryUserList() {
-        List<WmsMemberAreaDetail> result= wmsMerberService.queryAllUser();
+        List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser();
         return CommonResult.success(result);
     }
 
@@ -62,7 +62,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/changeDistribution", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult changeDistribution(Long changeId,Long orderId) {
-        wmsMerberService.changeDistribution(changeId,orderId);
+        wmsMemberService.changeDistribution(changeId,orderId);
         return CommonResult.success("操作成功");
     }
 
@@ -70,7 +70,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/acceptOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult acceptOrder(Long orderId) {
-        wmsMerberService.acceptOrder(orderId);
+        wmsMemberService.acceptOrder(orderId);
         return CommonResult.success("操作成功");
     }
 
@@ -78,7 +78,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/arriveOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult arriveOrder(Long orderId) {
-        wmsMerberService.arriveOrder(orderId);
+        wmsMemberService.arriveOrder(orderId);
         return CommonResult.success("操作成功");
     }
 
@@ -86,7 +86,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/replenishableList ", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult replenishableList() {
-        List<PmsProduct> list= wmsMerberService.queryReplenishableList();
+        List<PmsProduct> list= wmsMemberService.queryReplenishableList();
         return CommonResult.success(list);
     }
 
@@ -97,7 +97,7 @@ public class WmsMemberController {
         if(params==null){
             return CommonResult.validateFailed("参数缺失");
         }
-        wmsMerberService.replenishable(params);
+        wmsMemberService.replenishable(params);
         return CommonResult.success("操作成功");
     }
 
