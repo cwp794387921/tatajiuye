@@ -13,10 +13,7 @@ import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
-import com.tata.jiuye.portal.service.AcctSettleInfoService;
-import com.tata.jiuye.portal.service.OmsOrderItemService;
-import com.tata.jiuye.portal.service.OmsPortalOrderService;
-import com.tata.jiuye.portal.service.UmsMemberService;
+import com.tata.jiuye.portal.service.*;
 import com.tata.jiuye.portal.util.MD5Util;
 import com.tata.jiuye.portal.util.WxConfig;
 import io.swagger.annotations.Api;
@@ -66,6 +63,8 @@ public class PayController {
     private OmsDistributionMapper distributionMapper;
     @Resource
     private AcctSettleInfoService acctSettleInfoService;
+    @Resource
+    private AcctInfoService acctInfoService;
     @Resource
     private RedisService redisService;
 

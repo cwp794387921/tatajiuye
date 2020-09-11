@@ -75,6 +75,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private RedisService redisService;
     @Resource
     private OmsPortalOrderService omsPortalOrderService;
+    @Resource
+    private AcctInfoService acctInfoService;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -390,6 +392,15 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
             WmsMember wmsMember = wmsMemberService.insertWmsMember(member,omsOrderItem);
             wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
+            //插入新的账户
+            AcctInfo acctInfo = new AcctInfo();
+            acctInfo.setLockAmount(BigDecimal.ZERO);
+            acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_DELIVERYCENTER);
+            acctInfo.setBalance(BigDecimal.ZERO);
+            acctInfo.setBranchId(wmsMember.getId());
+            acctInfo.setInsertTime(new Date());
+            acctInfo.setStatus(1);
+            acctInfoService.saveOrUpdateAcctInfo(acctInfo);
         }
         log.info("------------------------提升用户等级  结束------------------------");
     }
