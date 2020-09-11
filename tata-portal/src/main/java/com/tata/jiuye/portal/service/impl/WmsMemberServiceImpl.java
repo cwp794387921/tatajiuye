@@ -406,6 +406,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         wmsMember.setUmsMemberId(umsMember.getId());
         wmsMember.setId(null);
         wmsMember.setParentId(0L);
+        wmsMember.setLevel(1);
         wmsMember.setCreditLine(omsOrderItem.getProductPrice());
         wmsMemberMapper.insert(wmsMember);
         return wmsMember;
