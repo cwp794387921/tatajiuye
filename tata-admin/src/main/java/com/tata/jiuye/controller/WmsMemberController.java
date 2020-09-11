@@ -64,7 +64,7 @@ public class WmsMemberController {
         if (examine==null){
             return CommonResult.failed("记录不存在");
         }
-        WmsMember wmsMember=memberMapper.selectByUmsId(examine.getApplyId());
+        WmsMember wmsMember=memberMapper.selectByPrimaryKey(examine.getApplyId());
         if(wmsMember==null){
             return CommonResult.failed("配送用户不存在");
         }
@@ -76,11 +76,9 @@ public class WmsMemberController {
         if(pmsProduct==null){
             return CommonResult.failed("商品不存在");
         }
-        if("1,3,4".contains(status.toString())){
-            //1补货审核通过 待确认收货
-            //3收货审核通过
-            //4补货申请驳回
-            //5确认收货驳回
+        if("1,2".contains(status.toString())){
+            //1审核通过
+            //2审核驳回
             log.info("补货申请id["+id+"]审核，状态["+status+"]");
             examine.setStatus(status.intValue());//待收货
             examine.setApplyId(umsAdmin.getId());
@@ -89,44 +87,7 @@ public class WmsMemberController {
         }else{
             return CommonResult.failed("审核状态异常");
         }
-        BigDecimal profit=new BigDecimal(0);
-        switch (wmsMember.getLevel()){
-            case 1:
-                profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
-                break;
-            case 2:
-                profit=pmsProduct.getRegionalWarehouseReplenishment();
-                break;
-            case 3:
-                profit=pmsProduct.getWebmasterWarehouseReplenishment();
-                break;
-        }
         if(status==1){
-            //待收货
-            //新增补货单
-            OmsDistribution distribution=new OmsDistribution();
-            distribution.setOrderSn(OrderUtil.getBhOrderNo());
-            distribution.setStatus(0);//待收货
-            distribution.setGoodsTitle(pmsProduct.getName());
-            distribution.setGoodsSubtitle(pmsProduct.getSubTitle());
-            distribution.setGoodsImg(pmsProduct.getPic());
-            distribution.setPrice(pmsProduct.getDeliveryCenterPrice());
-            distribution.setNumber(examine.getNumber());
-            distribution.setSubPrice(pmsProduct.getDeliveryCenterPrice().
-                    multiply(new BigDecimal(examine.getNumber())));
-            distribution.setName(wmsMember.getNickname());
-            distribution.setHeadImg(wmsMember.getIcon());
-            distribution.setAddress(area.getAddress());
-            distribution.setCreateTime(new Date());
-            distribution.setWmsMemberId(wmsMember.getId());
-            distribution.setType(2);//补货单
-            distribution.setProfit(profit);
-            distribution.setPhone(wmsMember.getPhone());
-            distribution.setProductId(pmsProduct.getId());
-            distribution.setReplenishableId(examine.getId());
-            distributionMapper.insert(distribution);
-        }
-        if(status==3){
             //收货审核通过
             //查找补货单
             OmsDistribution distribution=new OmsDistribution();
@@ -135,6 +96,13 @@ public class WmsMemberController {
              if (distribution==null){
                  return CommonResult.validateFailed("补货单不存在");
              }
+             //查找出货单
+            OmsDistribution Shipment=new OmsDistribution();
+            Shipment.setId(distribution.getShipmentId().intValue());
+            Shipment=distributionMapper.selectByParams(Shipment);
+            if(Shipment==null){
+                return CommonResult.validateFailed("出货单不存在");
+            }
             //添加库存
             PmsSkuStock pmsSkuStock=new PmsSkuStock();
             pmsSkuStock.setWmsMemberId(wmsMember.getId());
@@ -159,32 +127,66 @@ public class WmsMemberController {
                 pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
                 skuStockMapper.updateByPrimaryKey(pmsSkuStock);
             }
-            //查找账户信息
-            AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
-            if(acctInfo==null){
-                return CommonResult.validateFailed("配送账户不存在");
+            //扣减出货仓库存
+            PmsSkuStock ShipmentSkuStock=new PmsSkuStock();
+            ShipmentSkuStock.setWmsMemberId(Shipment.getWmsMemberId());
+            ShipmentSkuStock.setProductId(Shipment.getProductId());
+            ShipmentSkuStock=skuStockMapper.selectByParams(ShipmentSkuStock);
+            if(ShipmentSkuStock==null){
+                return CommonResult.validateFailed("出货库存不存在");
             }
-            //添加收益
+            ShipmentSkuStock.setLockStock(ShipmentSkuStock.getLockStock()-examine.getNumber());
+            ShipmentSkuStock.setStock(ShipmentSkuStock.getStock()-examine.getNumber());
+            skuStockMapper.updateByPrimaryKey(ShipmentSkuStock);
+            //查找账户信息
+            AcctInfo BHacctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());//补货账户
+            if(BHacctInfo==null){
+                return CommonResult.validateFailed("补货账户不存在");
+            }
+            AcctInfo CHacctInfo=acctInfoMapper.selectByWmsId(Shipment.getWmsMemberId());//出货账户
+            if(CHacctInfo==null){
+                return CommonResult.validateFailed("出货账户不存在");
+            }
+            //添加补货收益流水
             AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
             acctSettleInfo.setOrderNo(distribution.getOrderSn());
-            acctSettleInfo.setAcctId(acctInfo.getId());
-            acctSettleInfo.setBeforBal(acctInfo.getBalance());
+            acctSettleInfo.setAcctId(BHacctInfo.getId());
+            acctSettleInfo.setBeforBal(BHacctInfo.getBalance());
             acctSettleInfo.setChangeAmount(distribution.getProfit());
-            acctSettleInfo.setAfterBal(acctInfo.getBalance().add(distribution.getProfit()));
+            acctSettleInfo.setAfterBal(BHacctInfo.getBalance().add(distribution.getProfit()));
             acctSettleInfo.setInsertTime(new Date());
-            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
-            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.STORAGE_ALLOWANCE.value);
+            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
+            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.STORAGE_ALLOWANCE.value);//仓补
             acctSettleInfoMapper.insert(acctSettleInfo);
+            BHacctInfo.setBalance(BHacctInfo.getBalance().add(distribution.getProfit()));
+            BHacctInfo.setUpdateTime(new Date());
+            acctInfoMapper.updateByPrimaryKey(BHacctInfo);
+            //添加出货收益流水
+            acctSettleInfo=new AcctSettleInfo();
+            acctSettleInfo.setOrderNo(Shipment.getOrderSn());
+            acctSettleInfo.setAcctId(CHacctInfo.getId());
+            acctSettleInfo.setBeforBal(CHacctInfo.getBalance());
+            acctSettleInfo.setChangeAmount(Shipment.getProfit());
+            acctSettleInfo.setAfterBal(CHacctInfo.getBalance().add(Shipment.getProfit()));
+            acctSettleInfo.setInsertTime(new Date());
+            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
+            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);//仓补
+            acctSettleInfoMapper.insert(acctSettleInfo);
+            CHacctInfo.setBalance(CHacctInfo.getBalance().add(Shipment.getProfit()));
+            CHacctInfo.setUpdateTime(new Date());
+            acctInfoMapper.updateByPrimaryKey(CHacctInfo);
             //补货单状态完成
             distribution.setStatus(5);//更新补货单状态
             distributionMapper.updateByPrimaryKey(distribution);
+            //收货单状态完成
+            Shipment.setStatus(5);
+            distributionMapper.updateByPrimaryKey(Shipment);
         }
-        if(status==5){
+        if(status==2){
             //收货确认驳回
             examine.setApplyId(umsAdmin.getId());
             examine.setApplyName(umsAdmin.getNickName());
             examine.setUpdateTime(new Date());
-            examine.setImgs(null);
             //更改补货单状态
             OmsDistribution distribution=new OmsDistribution();
             distribution.setReplenishableId(examine.getId());
@@ -192,7 +194,7 @@ public class WmsMemberController {
             if (distribution==null){
                 return CommonResult.validateFailed("补货单不存在");
             }
-            distribution.setStatus(0);
+            distribution.setStatus(1);
             distributionMapper.updateByPrimaryKey(distribution);
         }
         examineMapper.updateByPrimaryKey(examine);

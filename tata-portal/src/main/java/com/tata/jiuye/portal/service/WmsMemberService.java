@@ -22,6 +22,8 @@ public interface WmsMemberService {
 
     void replenishable(List<ProductParams>  params);
 
+    void shipment(Long id);
+
     void replenishableCheck(Long id,List<String> imgs);
 
     List<PmsProduct>  queryReplenishableList();

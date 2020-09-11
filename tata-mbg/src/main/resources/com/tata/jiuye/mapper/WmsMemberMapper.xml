@@ -27,6 +27,8 @@
     <result column="credit_line" jdbcType="DECIMAL" property="creditLine" />
     <result column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -90,11 +92,16 @@
     city, job, personalized_signature, source_type, integration, growth, luckey_count, 
     history_integration, openid, update_time, parent_id, ums_member_id, credit_line,level
   </sql>
-  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from wms_member
-    where ums_member_id = #{id,jdbcType=BIGINT}
+  <resultMap extends="BaseResultMap" id="memberDetailMap" type="com.tata.jiuye.model.WmsMemberAreaDetail">
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+
+  <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="memberDetailMap">
+        select m.*,a.province ,a.area,a.address from wms_member m
+    LEFT JOIN wms_area a on a.wms_member_id=m.id
+    where m.ums_member_id= = #{id,jdbcType=BIGINT}
   </select>
 
   <resultMap type="com.tata.jiuye.model.WmsMemberAreaDetail" id="AllWmsMap">

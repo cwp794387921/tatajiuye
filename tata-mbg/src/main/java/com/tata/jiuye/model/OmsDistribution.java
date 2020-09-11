@@ -63,6 +63,9 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "补货单对应审核id")
     private Long replenishableId;
 
+    @ApiModelProperty(value = "补货单对应出货单id")
+    private Long shipmentId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getReplenishableId() {
@@ -71,6 +74,14 @@ public class OmsDistribution implements Serializable {
 
     public void setReplenishableId(Long replenishableId) {
         this.replenishableId = replenishableId;
+    }
+
+    public Long getShipmentId() {
+        return shipmentId;
+    }
+
+    public void setShipmentId(Long shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public Long getProductId() {

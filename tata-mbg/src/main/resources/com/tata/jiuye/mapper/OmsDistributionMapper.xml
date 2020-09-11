@@ -22,6 +22,7 @@
     <result column="ums_member_id" jdbcType="INTEGER" property="umsMemberId" />
       <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="replenishable_id" jdbcType="INTEGER" property="replenishableId" />
+    <result column="shipment_id" jdbcType="INTEGER" property="shipmentId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,7 +84,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
-    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id
+    name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id,shipment_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
     select
@@ -131,6 +132,9 @@
       <if test="replenishableId !=null and replenishableId !=''">
         and replenishable_id = #{replenishableId}
       </if>
+      <if test="shipmentId !=null and shipmentId !=''">
+        and shipment_id = #{shipmentId}
+      </if>
     </where>
   </select>
   <select id="queryList" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
@@ -174,13 +178,13 @@
       goods_title, goods_subtitle, price, 
       number, sub_price, name, 
       head_img, address, create_time, 
-      wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id)
+      wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id,shipment_id)
     values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
       #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
       #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL},
-    #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{replenishableId,jdbcType=INTEGER})
+    #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{replenishableId,jdbcType=INTEGER},#{shipmentId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsDistribution">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -460,6 +464,9 @@
       <if test="replenishableId != null">
         replenishable_id = #{replenishableId,jdbcType=INTEGER},
       </if>
+      <if test="shipmentId != null">
+        shipment_id = #{shipmentId,jdbcType=INTEGER},
+      </if>
       <if test="profit != null">
         profit = #{profit,jdbcType=DECIMAL},
       </if>
@@ -489,6 +496,7 @@
         phone = #{phone,jdbcType=VARCHAR},
         profit = #{profit,jdbcType=DECIMAL},
         replenishable_id = #{replenishableId,jdbcType=INTEGER},
+         shipment_id = #{shipmentId,jdbcType=INTEGER},
         product_id = #{productId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

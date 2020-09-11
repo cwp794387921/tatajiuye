@@ -42,7 +42,7 @@ public class WmsMemberController {
         return CommonResult.success(result);
     }
 
-    @ApiOperation("查询配送单列表（type=1时为配送单,status=0待接单 1待配送 ; type=2时为补货单,status=0待收货 1待审核 ; type=3时为借货单，status=0待取货，1待出货）")
+    @ApiOperation("查询配送单列表（type=1时为配送单,status=0待接单 1待配送 ; type=2时为补货单,status=0待补货 1待收货 2待审核; type=3时为出货单，status=0待出货，1待收货）")
     @RequestMapping(value = "/queryDistribution", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult queryDistribution() {
@@ -106,6 +106,15 @@ public class WmsMemberController {
             return CommonResult.validateFailed("参数缺失");
         }
         wmsMemberService.replenishable(params);
+        return CommonResult.success("操作成功");
+    }
+
+
+    @ApiOperation("出货接口")
+    @RequestMapping(value = "/shipment", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult shipment(Long id) {
+        wmsMemberService.shipment(id);
         return CommonResult.success("操作成功");
     }
 

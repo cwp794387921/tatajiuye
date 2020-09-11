@@ -21,7 +21,7 @@ public interface WmsMemberMapper {
 
     WmsMember selectByPrimaryKey(Long id);
 
-    WmsMember selectByUmsId(Long id);
+    WmsMemberAreaDetail selectByUmsId(Long id);
 
     List<WmsMemberAreaDetail> queryAllWmsUser(Long id);
 
