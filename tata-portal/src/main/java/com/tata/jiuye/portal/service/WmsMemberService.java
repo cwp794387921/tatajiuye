@@ -29,5 +29,5 @@ public interface WmsMemberService {
     List<PmsProduct>  queryReplenishableList();
 
     @Transactional
-    WmsMember insertWmsMember(UmsMember umsMember);
+    WmsMember insertWmsMember(UmsMember umsMember,OmsOrderItem omsOrderItem);
 }

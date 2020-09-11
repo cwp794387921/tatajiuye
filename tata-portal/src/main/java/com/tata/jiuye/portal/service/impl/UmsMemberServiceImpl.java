@@ -367,8 +367,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
 
     @Override
-    public void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName,String orderNo){
+    public void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName,OmsOrderItem omsOrderItem){
         log.info("------------------------提升用户等级  开始------------------------");
+        String orderNo = omsOrderItem.getOrderSn();
         if(StringUtils.isEmpty(orderNo)){
             Asserts.fail("订单号为空");
         }
@@ -387,7 +388,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         memberCacheService.setMember(member);
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
-            WmsMember wmsMember = wmsMemberService.insertWmsMember(member);
+            WmsMember wmsMember = wmsMemberService.insertWmsMember(member,omsOrderItem);
             wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
         }
         log.info("------------------------提升用户等级  结束------------------------");

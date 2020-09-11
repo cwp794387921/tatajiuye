@@ -1,7 +1,9 @@
 package com.tata.jiuye.portal.service;
 
 //import com.tata.jiuye.DTO.UmsMemberAndMemberResult;
+
 import com.tata.jiuye.DTO.RegisteredMemberParam;
+import com.tata.jiuye.model.OmsOrderItem;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -85,7 +87,7 @@ public interface UmsMemberService {
      * @param umsMemberLevelName               升级的会员等级名称
      */
     @Transactional
-    void updateUmsMemberLevel(UmsMember member,String umsMemberLevelName,String orderNo);
+    void updateUmsMemberLevel(UmsMember member, String umsMemberLevelName, OmsOrderItem omsOrderItem);
 
     /**
      * 通过被邀请人用户ID获取邀请链条
