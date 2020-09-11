@@ -399,6 +399,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             acctInfo.setBalance(BigDecimal.ZERO);
             acctInfo.setBranchId(wmsMember.getId());
             acctInfo.setInsertTime(new Date());
+            acctInfo.setUpdateTime(new Date());
             acctInfo.setStatus(1);
             acctInfoService.saveOrUpdateAcctInfo(acctInfo);
         }
