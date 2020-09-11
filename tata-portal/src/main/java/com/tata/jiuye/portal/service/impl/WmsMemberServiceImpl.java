@@ -8,6 +8,7 @@ import com.tata.jiuye.common.utils.OrderUtil;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.portal.service.UmsMemberInviteRelationService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMemberService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private ReplenishableExamineMapper examineMapper;
     @Resource
     private WmsAreaMapper areaMapper;
+    @Resource
+    private UmsMemberInviteRelationService umsMemberInviteRelationService;
+    @Resource
+    private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
 
     @Override
     public JSONObject selectMerberInfo(){
@@ -400,6 +405,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         BeanUtils.copyProperties(umsMember,wmsMember);
         wmsMember.setUmsMemberId(umsMember.getId());
         wmsMember.setId(null);
+        wmsMember.setParentId(0L);
         wmsMemberMapper.insert(wmsMember);
         return wmsMember;
     }
