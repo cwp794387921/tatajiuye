@@ -3,6 +3,10 @@ spring:
     name: tata-portal
   profiles:
     active: dev #默认为开发环境
+  servlet:
+    multipart:
+      max-file-size: 10MB   #上传文件大小
+      max-request-size: 100MB  #单次请求大小限制
 
 mybatis-plus:
   mapper-locations:
