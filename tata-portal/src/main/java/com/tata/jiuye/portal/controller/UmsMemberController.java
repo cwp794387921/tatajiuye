@@ -111,6 +111,7 @@ public class UmsMemberController {
             return CommonResult.unauthorized(null);
         }
         UmsMember member = memberService.getCurrentMember();
+        member=memberService.getById(member.getId());
         return CommonResult.success(member);
     }
 
