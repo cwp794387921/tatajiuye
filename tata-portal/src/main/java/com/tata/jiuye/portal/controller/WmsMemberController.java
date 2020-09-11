@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -122,13 +119,14 @@ public class WmsMemberController {
     @ApiOperation("收货审核接口")
     @RequestMapping(value = "/replenishableCheck", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult replenishableCheck(Long id,List<String> imgs) {
-        if(id==null||imgs==null||imgs.isEmpty()){
+    public CommonResult replenishableCheck(@RequestBody ReplenishableParams params) {
+        if(params==null){
             return CommonResult.validateFailed("参数缺失");
         }
-        wmsMemberService.replenishableCheck(id,imgs);
+        wmsMemberService.replenishableCheck(params.getId(),params.getImgs());
         return CommonResult.success("操作成功");
     }
+
 
 
 

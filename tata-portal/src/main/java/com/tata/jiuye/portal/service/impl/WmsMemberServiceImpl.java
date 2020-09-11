@@ -265,7 +265,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         Integer examineId= examineMapper.insert(examine);
         //修改补货单状态待审核
         distribution.setStatus(2);//待审核
-        distribution.setReplenishableId(examineId.longValue());
+        distribution.setReplenishableId(examine.getId());
         distributionMapper.updateByPrimaryKey(distribution);
     }
 
@@ -350,7 +350,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Integer ShipmentId= distributionMapper.insert(Shipment);
             //Shipment=distributionMapper.selectByParams(Shipment);
             //设置关联id
-            distribution.setShipmentId(ShipmentId.longValue());
+            distribution.setShipmentId(Shipment.getId().longValue());
             distributionMapper.insert(distribution);
         }
     }
