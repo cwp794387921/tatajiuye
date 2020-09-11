@@ -147,6 +147,8 @@ public class HomeController {
                 //保存文件
                 String  imagePath=aliyunOssUtil.uploadFile(tofile,fileName);
                 imgPath.add(imagePath);
+                //删除临时文件
+                tofile.delete();
             }
 
         }
