@@ -77,6 +77,42 @@
     id, apply_id, apply_name, create_time, approval_id, approval_name, status, update_time, 
     trans_sn, product_id, number,imgs
   </sql>
+
+  <select id="queryList" parameterType="com.tata.jiuye.model.ReplenishableExamineExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from replenishable_examine
+    <where>
+      <if test="id !=null and id !=''">
+        and id = #{id}
+      </if>
+      <if test="applyId !=null and applyId !=''">
+        and apply_id = #{applyId}
+      </if>
+      <if test="applyName !=null and applyName !=''">
+        and apply_name = #{applyName}
+      </if>
+      <if test="approvalId !=null and approvalId !=''">
+        and approval_id = #{approvalId}
+      </if>
+      <if test="approvalName !=null and approvalName !=''">
+        and approval_name = #{approvalName}
+      </if>
+      <if test="status !=null and status !=''">
+        and status = #{status}
+      </if>
+      <if test="productId !=null and productId !=''">
+        and product_id = #{productId}
+      </if>
+      <if test="startTime !=null and startTime !=''">
+        and createTime >= #{startTime}
+      </if>
+      <if test="endTime !=null and endTime !=''">
+        and createTime = #{endTime}
+      </if>
+    </where>
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

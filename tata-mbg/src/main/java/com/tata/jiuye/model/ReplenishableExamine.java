@@ -39,7 +39,27 @@ public class ReplenishableExamine implements Serializable {
 
     private String imgs;
 
+    private Date startTime;
+
+    private Date endTime;
+
     private static final long serialVersionUID = 1L;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public Long getId() {
         return id;

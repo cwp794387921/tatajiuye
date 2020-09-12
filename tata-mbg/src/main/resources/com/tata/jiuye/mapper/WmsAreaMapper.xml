@@ -86,7 +86,6 @@
         and wms_member_id = #{wmsMemberId}
       </if>
     </where>
-
   </select>
   <select id="selectByParams" parameterType="com.tata.jiuye.model.WmsArea" resultMap="BaseResultMap">
     select

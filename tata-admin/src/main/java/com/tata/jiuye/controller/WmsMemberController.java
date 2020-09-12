@@ -1,9 +1,10 @@
 package com.tata.jiuye.controller;
 
 
+import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
-import com.tata.jiuye.common.utils.OrderUtil;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.service.UmsAdminService;
@@ -14,16 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import springfox.documentation.swagger2.mappers.LicenseMapper;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Api(tags = "WmsMemberController", description = "配送中心用户管理")
@@ -51,6 +48,100 @@ public class WmsMemberController {
     private AcctInfoMapper acctInfoMapper;
     @Resource
     private AcctSettleInfoMapper acctSettleInfoMapper;
+
+
+    @ApiOperation("获取总仓出货单列表")
+    @RequestMapping(value = "/shipmentList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult shipmentList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<OmsDistribution> List= distributionMapper.queryCHList();
+        return CommonResult.success(List);
+    }
+
+    @ApiOperation("出货操作")
+    @RequestMapping(value = "/shipment", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult shipment(Long id) {
+        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+        if(shipment==null){
+            Asserts.fail("出货单不存在");
+        }
+        OmsDistribution distribution=new OmsDistribution();
+        distribution.setShipmentId(id);
+        distribution=distributionMapper.selectByParams(distribution);
+        if(distribution==null){
+            Asserts.fail("未找到对应补货单");
+        }
+        int number=distribution.getNumber();//补货数量
+        //判断库存是否充足
+        PmsSkuStock skuStock=new PmsSkuStock();
+        skuStock.setProductId(distribution.getProductId());
+        skuStock.setWmsMemberId(0L);
+        skuStock=skuStockMapper.selectByParams(skuStock);
+        if(skuStock==null){
+            Asserts.fail("未找到库存");
+        }
+        if((skuStock.getStock()-number)<0){
+            Asserts.fail("库存不足，无法出货");
+        }
+        //添加锁定库存
+        skuStock.setLockStock(skuStock.getLockStock()+number);
+        skuStockMapper.updateByPrimaryKey(skuStock);
+        //更新补货单状态
+        distribution.setStatus(1);//待收货
+        //更新出货单状态
+        shipment.setStatus(1);//待收货
+        distributionMapper.updateByPrimaryKey(distribution);
+        distributionMapper.updateByPrimaryKey(shipment);
+        return CommonResult.success("操作成功");
+    }
+
+
+    @ApiOperation("获取配送用户列表")
+    @RequestMapping(value = "/memberList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult memberList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        WmsMemberExample example = new WmsMemberExample();
+        example.setOrderByClause("create_time asc");
+        List<WmsMember> memberList= memberMapper.selectByExample(example);
+        return CommonResult.success(memberList);
+    }
+
+
+    @ApiOperation("配送用户更改绑定上级")
+    @RequestMapping(value = "/changeParent", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeParent(Long memberId,Long changeId) {
+        if (memberId==0L){
+            return CommonResult.failed("平台账号不允许修改上级");
+        }
+        WmsMember wmsMember=memberMapper.selectByPrimaryKey(memberId);
+        if(wmsMember==null){
+            return CommonResult.failed("用户信息不存在");
+        }
+        WmsMember changeInfo=memberMapper.selectByPrimaryKey(changeId);
+        if (changeInfo==null){
+            return CommonResult.failed("上级信息不存在");
+        }
+        wmsMember.setParentId(changeId);
+        wmsMember.setUpdateTime(new Date());
+        memberMapper.updateByPrimaryKey(wmsMember);
+        return CommonResult.success("更改成功");
+    }
+
+
+    @ApiOperation("补货审核列表")
+    @RequestMapping(value = "/replenishableList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult replenishableList(@RequestBody ReplenishableExamine examine) {
+        List<ReplenishableExamine> list=  examineMapper.queryList(examine);
+        return CommonResult.success(list);
+    }
+
 
     @ApiOperation("补货审核接口")
     @RequestMapping(value = "/replenishable", method = RequestMethod.POST)

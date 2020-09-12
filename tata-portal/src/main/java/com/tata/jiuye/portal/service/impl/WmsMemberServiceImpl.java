@@ -78,7 +78,6 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //查找补货单
         OmsDistribution distribution=new OmsDistribution();
         distribution.setType(2);
-        distribution.setStatus(0);
         distribution.setWmsMemberId(wmsMember.getId());
         List<OmsDistribution> BhList=distributionMapper.queryList(distribution);
         result.put("bh",BhList);

@@ -15,6 +15,8 @@ public interface ReplenishableExamineMapper {
 
     ReplenishableExamine selectByPrimaryKey(Long id);
 
+    List<ReplenishableExamine> queryList(ReplenishableExamine examine);
+
     int insert(ReplenishableExamine record);
 
     int insertSelective(ReplenishableExamine record);

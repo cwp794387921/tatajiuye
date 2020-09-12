@@ -20,6 +20,7 @@ public interface OmsDistributionMapper {
 
     List<OmsDistribution> queryList(OmsDistribution distribution);
 
+    List<OmsDistribution> queryCHList();
 
     OmsDistribution selectByPrimaryKey(Integer id);
 
