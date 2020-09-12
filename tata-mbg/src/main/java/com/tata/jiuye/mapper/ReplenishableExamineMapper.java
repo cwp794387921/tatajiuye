@@ -3,8 +3,8 @@ package com.tata.jiuye.mapper;
 import com.tata.jiuye.model.ReplenishableExamine;
 import com.tata.jiuye.model.ReplenishableExamineExample;
 import java.util.List;
+import java.util.Map;
 
-import com.tata.jiuye.model.WmsMember;
 import org.apache.ibatis.annotations.Param;
 
 public interface ReplenishableExamineMapper {
@@ -15,7 +15,7 @@ public interface ReplenishableExamineMapper {
 
     ReplenishableExamine selectByPrimaryKey(Long id);
 
-    List<ReplenishableExamine> queryList(ReplenishableExamine examine);
+    List<ReplenishableExamine> queryList(Map<String,Object> params);
 
     int insert(ReplenishableExamine record);
 

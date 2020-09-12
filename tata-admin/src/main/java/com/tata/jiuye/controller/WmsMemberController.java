@@ -135,10 +135,10 @@ public class WmsMemberController {
 
 
     @ApiOperation("补货审核列表")
-    @RequestMapping(value = "/replenishableList", method = RequestMethod.GET)
+    @RequestMapping(value = "/replenishableList", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult replenishableList(@RequestBody ReplenishableExamine examine) {
-        List<ReplenishableExamine> list=  examineMapper.queryList(examine);
+    public CommonResult replenishableList(@RequestParam Map<String,Object> params) {
+        List<ReplenishableExamine> list=  examineMapper.queryList(params);
         return CommonResult.success(list);
     }
 

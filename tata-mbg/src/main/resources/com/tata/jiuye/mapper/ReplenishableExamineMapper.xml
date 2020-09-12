@@ -78,7 +78,7 @@
     trans_sn, product_id, number,imgs
   </sql>
 
-  <select id="queryList" parameterType="com.tata.jiuye.model.ReplenishableExamineExample" resultMap="BaseResultMap">
+  <select id="queryList"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from replenishable_examine
