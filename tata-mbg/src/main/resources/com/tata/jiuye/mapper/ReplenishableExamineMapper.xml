@@ -105,10 +105,10 @@
         and product_id = #{productId}
       </if>
       <if test="startTime !=null and startTime !=''">
-        and createTime >= #{startTime}
+        and create_time <![CDATA[ >= ]]> #{startTime}
       </if>
       <if test="endTime !=null and endTime !=''">
-        and createTime = #{endTime}
+        and create_time <![CDATA[ <= ]]> #{endTime}
       </if>
     </where>
   </select>
