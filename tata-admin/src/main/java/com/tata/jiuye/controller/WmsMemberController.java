@@ -2,6 +2,7 @@ package com.tata.jiuye.controller;
 
 
 import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
 import com.tata.jiuye.common.exception.Asserts;
@@ -57,7 +58,7 @@ public class WmsMemberController {
                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         PageHelper.startPage(pageNum, pageSize);
         List<OmsDistribution> List= distributionMapper.queryCHList();
-        return CommonResult.success(List);
+        return CommonResult.success(CommonPage.restPage(List));
     }
 
     @ApiOperation("出货操作")
@@ -103,12 +104,10 @@ public class WmsMemberController {
     @RequestMapping(value = "/memberList", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult memberList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
-        WmsMemberExample example = new WmsMemberExample();
-        example.setOrderByClause("create_time asc");
-        List<WmsMember> memberList= memberMapper.selectByExample(example);
-        return CommonResult.success(memberList);
+        List<WmsMemberAreaDetail> memberList= memberMapper.queryMemberDetail(params);
+        return CommonResult.success(CommonPage.restPage(memberList));
     }
 
 

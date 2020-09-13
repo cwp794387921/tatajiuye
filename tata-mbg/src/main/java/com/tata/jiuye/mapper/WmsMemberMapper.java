@@ -4,6 +4,8 @@ import com.tata.jiuye.model.WmsMember;
 import com.tata.jiuye.model.WmsMemberAreaDetail;
 import com.tata.jiuye.model.WmsMemberExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface WmsMemberMapper {
@@ -19,11 +21,16 @@ public interface WmsMemberMapper {
 
     List<WmsMember> selectByExample(WmsMemberExample example);
 
+
+
+
     WmsMember selectByPrimaryKey(Long id);
 
     WmsMemberAreaDetail selectByUmsId(Long id);
 
     List<WmsMemberAreaDetail> queryAllWmsUser(Long id);
+
+    List<WmsMemberAreaDetail> queryMemberDetail(Map<String,Object> params);
 
     int updateByExampleSelective(@Param("record") WmsMember record, @Param("example") WmsMemberExample example);
 

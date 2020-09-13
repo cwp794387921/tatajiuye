@@ -104,6 +104,29 @@
     where m.ums_member_id = #{id,jdbcType=BIGINT}
   </select>
 
+
+  <select id="queryMemberDetail"  resultMap="memberDetailMap">
+        select m.*,a.province ,a.area,a.address from wms_member m
+    LEFT JOIN wms_area a on a.wms_member_id=m.id
+    <where>
+      <if test="id !=null and id !=''">
+        and m.id = #{id}
+      </if>
+      <if test="username !=null and username !=''">
+        and m.username = #{username}
+      </if>
+      <if test="nickname !=null and nickname !=''">
+        and m.nickname like concat("%",#{nickname},"%")
+      </if>
+      <if test="level !=null and level !=''">
+        and m.level = #{level}
+      </if>
+      <if test="parentId !=null and parentId !=''">
+        and m.parent_id = #{parentId}
+      </if>
+    </where>
+  </select>
+
   <resultMap type="com.tata.jiuye.model.WmsMemberAreaDetail" id="AllWmsMap">
   <result column="province" property="province"/>
   <collection property="areas" ofType="com.tata.jiuye.model.WmsMemberAreaDetail">
