@@ -691,6 +691,7 @@ public class PmsProductExample {
             return (Criteria) this;
         }
 
+
         public Criteria andPublishStatusNotEqualTo(Integer value) {
             addCriterion("publish_status <>", value, "publishStatus");
             return (Criteria) this;

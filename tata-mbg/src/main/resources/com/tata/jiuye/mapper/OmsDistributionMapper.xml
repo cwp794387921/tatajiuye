@@ -111,28 +111,28 @@
     <include refid="Base_Column_List" />
     from oms_distribution
     <where>
-      <if test="id !=null and id !=''">
+      <if test="id !=null">
         and id = #{id}
       </if>
-      <if test="wmsMemberId !=null and wmsMemberId !=''">
+      <if test="wmsMemberId !=null">
         and wms_member_id = #{wmsMemberId}
       </if>
-      <if test="umsMemberId !=null and umsMemberId !=''">
+      <if test="umsMemberId !=null">
         and ums_member_id = #{umsMemberId}
       </if>
-      <if test="status !=null and status !=''">
+      <if test="status !=null ">
         and status = #{status}
       </if>
-      <if test="status ==null or status ==''">
+      <if test="status ==null">
         and status != 5
       </if>
-      <if test="type !=null and type !=''">
+      <if test="type !=null ">
         and type = #{type}
       </if>
-      <if test="replenishableId !=null and replenishableId !=''">
+      <if test="replenishableId !=null ">
         and replenishable_id = #{replenishableId}
       </if>
-      <if test="shipmentId !=null and shipmentId !=''">
+      <if test="shipmentId !=null ">
         and shipment_id = #{shipmentId}
       </if>
     </where>
@@ -142,16 +142,16 @@
     <include refid="Base_Column_List" />
     from oms_distribution
     <where>
-      <if test="type !=null and type !=''">
+      <if test="type !=null">
         and type = #{type,jdbcType=INTEGER}
       </if>
-      <if test="status !=null and status !=''">
+      <if test="status !=null ">
         and status = #{status,jdbcType=INTEGER}
       </if>
-      <if test="wmsMemberId !=null and wmsMemberId !=''">
+      <if test="wmsMemberId !=null ">
         and wms_member_id = #{wmsMemberId,jdbcType=INTEGER}
       </if>
-      <if test="umsMemberId !=null and umsMemberId !=''">
+      <if test="umsMemberId !=null ">
         and ums_member_id = #{umsMemberId,jdbcType=INTEGER}
       </if>
     </where>

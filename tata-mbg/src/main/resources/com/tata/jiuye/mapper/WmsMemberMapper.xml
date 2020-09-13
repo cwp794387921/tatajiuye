@@ -116,7 +116,7 @@
         and m.username = #{username}
       </if>
       <if test="nickname !=null and nickname !=''">
-        and m.nickname like concat("%",#{nickname},"%")
+        and m.nickname like CONCAT('%',#{nickname}, '%')
       </if>
       <if test="level !=null and level !=''">
         and m.level = #{level}

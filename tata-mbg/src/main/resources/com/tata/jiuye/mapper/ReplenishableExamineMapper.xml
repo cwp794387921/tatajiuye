@@ -98,7 +98,7 @@
       <if test="approvalName !=null and approvalName !=''">
         and approval_name = #{approvalName}
       </if>
-      <if test="status !=null and status !=''">
+      <if test="status !=null">
         and status = #{status}
       </if>
       <if test="productId !=null and productId !=''">

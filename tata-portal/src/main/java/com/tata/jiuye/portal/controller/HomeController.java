@@ -3,10 +3,8 @@ package com.tata.jiuye.portal.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
-import com.tata.jiuye.model.CmsSubject;
-import com.tata.jiuye.model.PmsProduct;
-import com.tata.jiuye.model.PmsProductCategory;
-import com.tata.jiuye.model.area;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.domain.HomeContentResult;
 import com.tata.jiuye.portal.service.HomeService;
 import com.tata.jiuye.portal.util.aliyunOssUtil;
@@ -39,6 +37,9 @@ public class HomeController {
 
     @Resource
     private aliyunOssUtil aliyunOssUtil;
+
+    @Resource
+    private OmsDistributionMapper distributionMapper;
 
     @ApiOperation("首页内容页信息展示")
     @RequestMapping(value = "/content", method = RequestMethod.GET)
@@ -109,6 +110,7 @@ public class HomeController {
         List<area> areas=homeService.queryAllCityName();
         return CommonResult.success(areas);
     }
+
 
     @ApiOperation("获取地区列表")
     @RequestMapping(value = "/queryArea", method = RequestMethod.POST)

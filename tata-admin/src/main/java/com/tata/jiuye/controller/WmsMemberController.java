@@ -115,6 +115,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/changeParent", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult changeParent(Long memberId,Long changeId) {
+        log.info("==》更改所属上级请求：memberId["+memberId+"],changeId["+changeId+"]");
         if (memberId==0L){
             return CommonResult.failed("平台账号不允许修改上级");
         }
