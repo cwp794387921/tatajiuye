@@ -504,4 +504,20 @@
           invite_code = #{inviteCode,jdbcType=VARCHAR}
       limit 1
   </select>
+
+  <select id="getUmsMemberByParam" parameterType="com.tata.jiuye.DTO.UmsMemberQueryParam" resultMap="BaseResultMap">
+      select *
+      from ums_member
+      where
+        1 = 1
+      <if test="param.phone != null">
+        and phone = #{param.phone}
+      </if>
+      <if test="param.nickname != null">
+        and nickname = CONCAT('%',#{param.nickname},'%')
+      </if>
+      <if test="param.memberLevelId != null">
+        and memberLevelId = #{param.memberLevelId}
+      </if>
+  </select>
 </mapper>
