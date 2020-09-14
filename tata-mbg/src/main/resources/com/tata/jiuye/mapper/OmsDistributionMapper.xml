@@ -137,7 +137,7 @@
       </if>
     </where>
   </select>
-  <select id="queryList" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
+  <select id="queryList"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from oms_distribution
@@ -161,7 +161,20 @@
     select
     <include refid="Base_Column_List" />
     from oms_distribution
-    where type=3 and status!= 5 and wms_member_id=0
+      <where>
+          <if test="type !=null">
+              and type = #{type,jdbcType=INTEGER}
+          </if>
+          <if test="status !=null ">
+              and status = #{status,jdbcType=INTEGER}
+          </if>
+          <if test="wmsMemberId !=null ">
+              and wms_member_id = #{wmsMemberId,jdbcType=INTEGER}
+          </if>
+          <if test="umsMemberId !=null ">
+              and ums_member_id = #{umsMemberId,jdbcType=INTEGER}
+          </if>
+      </where>
   </select>
 
 

@@ -55,17 +55,22 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
 
 
     @Override
-    public void changeSkuStockNum(Long pmsSkuStockId,Integer changeNum,String operationType,String replenishmentOrderNo){
+    public void changeSkuStockNum(Long productId,Integer changeNum,String operationType,String replenishmentOrderNo){
         log.info("---------------------------变更库存   开始---------------------------");
-        if(pmsSkuStockId == null){
+        if(productId == null){
             Asserts.fail("库存表ID不能为空");
         }
-        log.info("---------------------------参数 库存ID "+pmsSkuStockId);
+        log.info("---------------------------参数 库存ID "+productId);
         log.info("---------------------------参数 变更数量 "+changeNum);
         log.info("---------------------------参数 变更类型 "+operationType);
         log.info("---------------------------参数 补货单号 "+replenishmentOrderNo);
-        PmsSkuStock pmsSkuStock = skuStockMapper.selectByPrimaryKey(pmsSkuStockId);
-        log.info("---------------------------变更前库存实体 "+pmsSkuStock);
+        PmsSkuStock pmsSkuStock=new PmsSkuStock();
+        pmsSkuStock.setWmsMemberId(0L);
+        pmsSkuStock.setProductId(productId);
+        pmsSkuStock = skuStockMapper.selectByParams(pmsSkuStock);
+        if(pmsSkuStock==null){
+            Asserts.fail("库存记录不存在");
+        }
         Integer quantityBeforeChange = pmsSkuStock.getStock();
         Integer quantityAfterChange = 0;
         PmsSkuStockChangeFlow pmsSkuStockChangeFlow = new PmsSkuStockChangeFlow();

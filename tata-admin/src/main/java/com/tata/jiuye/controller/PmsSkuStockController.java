@@ -51,9 +51,9 @@ public class PmsSkuStockController {
     @ApiOperation("修改库存数量")
     @RequestMapping(value ="/changeSkuStockNum",method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult changeSkuStockNum(@RequestParam @ApiParam("库存ID")Long pmsSkuStockId,@RequestParam @ApiParam("库存变更数量")Integer changeNum,
+    public CommonResult changeSkuStockNum(@RequestParam @ApiParam("商品id")Long productId,@RequestParam @ApiParam("库存变更数量")Integer changeNum,
                                           @RequestParam @ApiParam("库存变更类型(OUTOFSTOCK->出库,WAREHOUSING->入库)")String operationType,@RequestParam(required = false) @ApiParam("补货单号")String replenishmentOrderNo){
-        pmsSkuStockService.changeSkuStockNum(pmsSkuStockId,changeNum,operationType,replenishmentOrderNo);
+        pmsSkuStockService.changeSkuStockNum(productId,changeNum,operationType,replenishmentOrderNo);
         return CommonResult.success("修改库存成功");
     }
 

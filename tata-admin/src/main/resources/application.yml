@@ -61,7 +61,6 @@ secure:
       - /admin/info
       - /admin/logout
       - /minio/upload
-
 aliyun:
   oss:
     endpoint: oss-cn-zhangjiakou.aliyuncs.com # oss对外服务的访问域名

@@ -55,14 +55,16 @@ public class WmsMemberController {
     @RequestMapping(value = "/shipmentList", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult shipmentList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
-        List<OmsDistribution> List= distributionMapper.queryCHList();
+        params.put("type",3);//出货单
+        params.put("wms_member_id",0L);
+        List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
     }
 
     @ApiOperation("出货操作")
-    @RequestMapping(value = "/shipment", method = RequestMethod.GET)
+    @RequestMapping(value = "/shipment", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult shipment(Long id) {
         OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id.intValue());
@@ -137,9 +139,11 @@ public class WmsMemberController {
     @ApiOperation("补货审核列表")
     @RequestMapping(value = "/replenishableList", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult replenishableList(@RequestParam Map<String,Object> params) {
+    public CommonResult replenishableList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ReplenishableExamine> list=  examineMapper.queryList(params);
-        return CommonResult.success(list);
+        return CommonResult.success(CommonPage.restPage(list));
     }
 
 

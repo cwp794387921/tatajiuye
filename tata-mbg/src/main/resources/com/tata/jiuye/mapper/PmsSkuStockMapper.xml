@@ -362,10 +362,10 @@
   <select id="selectByParams" parameterType="com.tata.jiuye.model.PmsSkuStock" resultType="com.tata.jiuye.model.PmsSkuStock">
      select * from  pms_sku_stock
     <where>
-      <if test="productId !=null and productId !=''">
+      <if test="productId !=null ">
         and product_id = #{productId}
       </if>
-      <if test="wmsMemberId !=null and wmsMemberId !=''">
+      <if test="wmsMemberId !=null ">
         and wms_member_id = #{wmsMemberId}
       </if>
     </where>

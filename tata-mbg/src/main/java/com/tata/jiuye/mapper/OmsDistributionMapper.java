@@ -3,6 +3,8 @@ package com.tata.jiuye.mapper;
 import com.tata.jiuye.model.OmsDistribution;
 import com.tata.jiuye.model.OmsDistributionExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface OmsDistributionMapper {
@@ -20,7 +22,7 @@ public interface OmsDistributionMapper {
 
     List<OmsDistribution> queryList(OmsDistribution distribution);
 
-    List<OmsDistribution> queryCHList();
+    List<OmsDistribution> queryCHList(Map<String,Object> params);
 
     OmsDistribution selectByPrimaryKey(Integer id);
 
