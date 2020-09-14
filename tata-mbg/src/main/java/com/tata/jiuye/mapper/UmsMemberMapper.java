@@ -1,6 +1,7 @@
 package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tata.jiuye.DTO.UmsMemberQueryParam;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberExample;
 import java.util.List;
@@ -57,4 +58,11 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
      * @return
      */
     UmsMember getUmsMemberByInviteCode(@Param("inviteCode") String inviteCode);
+
+    /**
+     * 通过条件查询用户信息
+     * @param param
+     * @return
+     */
+    List<UmsMember> getUmsMemberByParam(@Param("param")UmsMemberQueryParam param);
 }
