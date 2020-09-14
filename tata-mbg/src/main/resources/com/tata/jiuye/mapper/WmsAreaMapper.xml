@@ -93,10 +93,10 @@
     from wms_area
     <where>
       <if test="wmsMemberId !=null and wmsMemberId !=''">
-        wms_member_id = #{wmsMemberId}
+        and wms_member_id = #{wmsMemberId}
       </if>
       <if test="status !=null and status !=''">
-        status = #{status}
+        and status = #{status}
       </if>
     </where>
   </select>

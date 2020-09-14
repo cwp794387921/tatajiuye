@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -150,10 +151,14 @@ public class WmsMemberController {
     @ApiOperation("补货审核接口")
     @RequestMapping(value = "/replenishable", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult replenishable(String umsAdminUserName,Long id,Long status) {
-        UmsAdmin umsAdmin = umsAdminService.getAdminByUsername(umsAdminUserName);
+    public CommonResult replenishable(Principal principal, Long id, Long status) {
+        if(principal==null){
+            return CommonResult.unauthorized(null);
+        }
+        String username = principal.getName();
+        UmsAdmin umsAdmin = umsAdminService.getAdminByUsername(username);
         if(umsAdmin == null){
-            return CommonResult.failed("当前用户未登录");
+            return CommonResult.failed("获取用户信息失败");
         }
         ReplenishableExamine examine=examineMapper.selectByPrimaryKey(id);
         if (examine==null){
