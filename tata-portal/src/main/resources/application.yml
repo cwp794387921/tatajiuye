@@ -42,6 +42,8 @@ secure:
       - /product/**
       - /brand/**
       - /pay/**
+      - /withdrawExamine/allWithdrawApplicationPage
+      - /withdrawExamine/approve
 # 自定义redis key
 redis:
   database: mall

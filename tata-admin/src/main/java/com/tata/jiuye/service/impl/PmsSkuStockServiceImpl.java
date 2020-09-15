@@ -5,9 +5,11 @@ import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.constant.StaticConstant;
 import com.tata.jiuye.dao.PmsSkuStockDao;
 import com.tata.jiuye.mapper.PmsSkuStockMapper;
+import com.tata.jiuye.model.PmsProduct;
 import com.tata.jiuye.model.PmsSkuStock;
 import com.tata.jiuye.model.PmsSkuStockChangeFlow;
 import com.tata.jiuye.model.PmsSkuStockExample;
+import com.tata.jiuye.service.PmsProductService;
 import com.tata.jiuye.service.PmsSkuStockChangeFlowService;
 import com.tata.jiuye.service.PmsSkuStockService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,8 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
 
     @Autowired
     private PmsSkuStockChangeFlowService pmsSkuStockChangeFlowService;
-
+    @Autowired
+    private PmsProductService pmsProductService;
     @Override
     public List<PmsSkuStock> getList(Long pid, String keyword) {
         PmsSkuStockExample example = new PmsSkuStockExample();
@@ -97,6 +100,11 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
         pmsSkuStockChangeFlow.setReplenishmentOrderNo(replenishmentOrderNo);
         pmsSkuStockChangeFlowService.insertPmsSkuStockChangeFlow(pmsSkuStockChangeFlow);
         log.info("---------------------------库存变更记录表 "+pmsSkuStockChangeFlow);
+
+        //反向同步到商品表的库存字段
+        PmsProduct pmsProduct = pmsProductService.getById(productId);
+        pmsProduct.setStock(quantityAfterChange);
+        pmsProductService.saveOrUpdate(pmsProduct);
         log.info("---------------------------变更库存   结束---------------------------");
     }
 }
