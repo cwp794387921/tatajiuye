@@ -72,8 +72,12 @@ public class BalanceFlowController {
         AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(umsMember.getId(),accountType);
         BigDecimal balance = BigDecimal.ZERO;
         if(acctInfo != null){
+            BigDecimal lockAmount = BigDecimal.ZERO;
+            if(acctInfo.getLockAmount() != null){
+                lockAmount = acctInfo.getLockAmount();
+            }
             //可用余额
-            balance = acctInfo.getBalance().subtract(acctInfo.getLockAmount());
+            balance = acctInfo.getBalance().subtract(lockAmount);
             jsonObject.put("balance",acctInfo.getBalance());//账户余额
             jsonObject.put("availableBalance",balance);//可用余额
         }
