@@ -6,6 +6,8 @@ import com.tata.jiuye.model.AcctInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
@@ -35,9 +37,7 @@ public interface AcctInfoMapper extends BaseMapper<AcctInfo> {
 
     /**
      * 通过用户ID获取账户
-     * @param memberId          用户ID
-     * @param acctType          账户类型
      * @return
      */
-    AcctInfo getByMemberIdAndAcctType(@Param("memberId") Long memberId,@Param("acctType") String acctType);
+    AcctInfo getByMemberIdAndAcctType(Map<String,Object> params);
 }

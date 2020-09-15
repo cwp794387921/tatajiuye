@@ -3,8 +3,10 @@ package com.tata.jiuye.portal.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctInfoMapper;
+import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.AcctSettleInfo;
+import com.tata.jiuye.model.WmsMember;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.AcctInfoService;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,8 +28,10 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> implements AcctInfoService {
-    @Autowired
+    @Resource
     private AcctInfoMapper acctInfoMapper;
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
 
     @Override
     public void saveOrUpdateAcctInfo(AcctInfo acctInfo){
@@ -34,11 +41,18 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
     @Override
     public AcctInfo getAcctInfoByMemberId(Long memberId,String acctType){
         log.info("--------------------通过用户ID获取账户信息  开始--------------------");
-        if(memberId == null){
-            Asserts.fail("用户ID为空");
+        Map<String,Object> params=new HashMap<>();
+        if(acctType.equals("COMMISSION")){
+            params.put("memberId",memberId);
+        }else if(acctType.equals("DELIVERYCENTER")){
+            WmsMember wmsMember=wmsMemberMapper.selectByUmsId(memberId);
+            if(wmsMember==null){
+                Asserts.fail("配送用户信息不存在");
+            }
+            params.put("branchId",wmsMember.getId());
         }
         log.info("--------------------通过用户ID获取账户信息  结束--------------------");
-       return acctInfoMapper.getByMemberIdAndAcctType(memberId,acctType);
+       return acctInfoMapper.getByMemberIdAndAcctType(params);
     }
 
 
