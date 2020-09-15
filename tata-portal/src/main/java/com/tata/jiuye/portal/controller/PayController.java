@@ -51,6 +51,9 @@ public class PayController {
     @Resource
     private OmsOrderItemService omsOrderItemService;
     @Resource
+    private  OmsOrderItemMapper omsOrderItemMapper;
+
+    @Resource
     private UmsMemberMapper umsMemberMapper;
     @Resource
     private UmsMemberService umsMemberService;
@@ -256,6 +259,9 @@ public class PayController {
                         distribution.setUmsMemberId(umsMember.getId());
                         distributionMapper.insert(distribution);
                         i++;
+                        omsOrderItem.setRelationDistributionId(distribution.getId().longValue());//关联id
+                        omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
+                        omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                     }
                 }
                 //会员等级提升到VIP用户

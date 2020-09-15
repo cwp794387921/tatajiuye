@@ -74,11 +74,31 @@ public class OmsOrderItem implements Serializable {
 
     @ApiModelProperty(value = "是否为升级配送中心商品:0 -> 不是, 1->是")
     private Integer ifUpgradeDistributionCenterProduct;
+    @ApiModelProperty(value = "关联配送单id")
+    private Long relationDistributionId;
+    @ApiModelProperty(value = "配送状态")
+    private Long distributionStatus;
 
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
+    }
+
+    public Long getRelationDistributionId() {
+        return relationDistributionId;
+    }
+
+    public void setRelationDistributionId(Long relationDistributionId) {
+        this.relationDistributionId = relationDistributionId;
+    }
+
+    public Long getDistributionStatus() {
+        return distributionStatus;
+    }
+
+    public void setDistributionStatus(Long distributionStatus) {
+        this.distributionStatus = distributionStatus;
     }
 
     public void setId(Long id) {
