@@ -110,8 +110,8 @@ public class WmsMemberController {
     @ApiOperation("出货接口")
     @RequestMapping(value = "/shipment", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult shipment(Long id) {
-        wmsMemberService.shipment(id);
+    public CommonResult shipment(Long id,Integer number) {
+        wmsMemberService.shipment(id,number);
         return CommonResult.success("操作成功");
     }
 
