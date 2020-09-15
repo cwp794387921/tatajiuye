@@ -1095,7 +1095,7 @@
         relation_product_id=#{relationProductId,jdbcType=INTEGER},
       </if>
       <if test="wmsCreditLine != null">
-        wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
+        wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL},
       </if>
       <if test="relationProductNum != null">
         relation_product_num=#{relationProductNum,jdbcType=INTEGER},
@@ -1220,7 +1220,7 @@
       delivery_center_warehouse_replenishment = #{deliveryCenterWarehouseReplenishment,jdbcType=DECIMAL},
       relation_product_id=#{relationProductId,jdbcType=INTEGER},
       relation_product_num=#{relationProductNum,jdbcType=INTEGER},
-        wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
+      wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
