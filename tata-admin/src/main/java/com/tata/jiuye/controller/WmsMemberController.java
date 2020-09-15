@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -168,10 +169,10 @@ public class WmsMemberController {
         if(wmsMember==null){
             return CommonResult.failed("配送用户不存在");
         }
-        WmsArea area=new WmsArea();
-        area.setStatus(1);
-        area.setWmsMemberId(wmsMember.getId());
-         area= areaMapper.selectByParams(area);
+//        WmsArea area=new WmsArea();
+//        area.setStatus(1);
+//        area.setWmsMemberId(wmsMember.getId());
+//         area= areaMapper.selectByParams(area);
         PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(examine.getProductId());
         if(pmsProduct==null){
             return CommonResult.failed("商品不存在");
@@ -238,6 +239,38 @@ public class WmsMemberController {
             ShipmentSkuStock.setLockStock(ShipmentSkuStock.getLockStock()-examine.getNumber());
             ShipmentSkuStock.setStock(ShipmentSkuStock.getStock()-examine.getNumber());
             skuStockMapper.updateByPrimaryKey(ShipmentSkuStock);
+            //添加出货仓授信额度 扣减进货仓授信额度
+            if(Shipment.getWmsMemberId()!=1L){
+                WmsMember CHmember=memberMapper.selectByPrimaryKey(Shipment.getWmsMemberId());
+                BigDecimal hz=new BigDecimal(0);//货值
+                switch (CHmember.getLevel()){
+                    case 1:
+                        hz=pmsProduct.getDeliveryCenterProductValue();
+                        break;
+                    case 2:
+                        hz=pmsProduct.getRegionalProductValue();
+                        break;
+                    case 3:
+                        hz=pmsProduct.getWebmasterProductValue();
+                        break;
+                }
+                CHmember.setCreditLine(CHmember.getCreditLine().add(hz.multiply(new BigDecimal(examine.getNumber()))));
+                memberMapper.updateByPrimaryKey(CHmember);
+            }
+            BigDecimal hz=new BigDecimal(0);//货值
+            switch (wmsMember.getLevel()){
+                case 1:
+                    hz=pmsProduct.getDeliveryCenterProductValue();
+                    break;
+                case 2:
+                    hz=pmsProduct.getRegionalProductValue();
+                    break;
+                case 3:
+                    hz=pmsProduct.getWebmasterProductValue();
+                    break;
+            }
+            wmsMember.setCreditLine(wmsMember.getCreditLine().add(hz.multiply(new BigDecimal(examine.getNumber()))));
+            memberMapper.updateByPrimaryKey(wmsMember);
             //查找账户信息
             AcctInfo BHacctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());//补货账户
             if(BHacctInfo==null){
