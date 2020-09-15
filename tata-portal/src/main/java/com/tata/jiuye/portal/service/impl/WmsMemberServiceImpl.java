@@ -408,6 +408,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         wmsMember.setLevel(1);
         wmsMember.setCreditLine(omsOrderItem.getProductPrice());
         wmsMemberMapper.insert(wmsMember);
+        log.info("---------插入的仓储账号信息为:"+wmsMember);
         return wmsMember;
     }
 
