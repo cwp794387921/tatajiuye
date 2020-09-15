@@ -402,7 +402,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             acctInfo.setStatus(1);
             acctInfoService.saveOrUpdateAcctInfo(acctInfo);
         }
-        memberCacheService.setMember(member);
+        memberCacheService.delMember(member.getId());
         log.info("------------------------提升用户等级  结束------------------------");
     }
 
