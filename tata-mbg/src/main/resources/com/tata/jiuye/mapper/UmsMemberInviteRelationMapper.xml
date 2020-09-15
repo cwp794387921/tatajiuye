@@ -336,7 +336,8 @@
       SELECT
       CASE
         WHEN  count( oo.order_sn ) IS NULL THEN
-        0 ELSE count( oo.order_sn ) AS order_count,
+        0 ELSE count( oo.order_sn )
+        END AS order_count,
       CASE
               WHEN SUM( oo.pay_amount ) IS NULL THEN
               0 ELSE SUM( oo.pay_amount )
