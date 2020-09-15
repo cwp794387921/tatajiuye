@@ -7,6 +7,7 @@ import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
 import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.mapper.AcctInfoMapper;
 import com.tata.jiuye.mapper.WithdrawalExamineMapper;
 import com.tata.jiuye.model.AcctInfo;
 import com.tata.jiuye.model.UmsMember;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -34,12 +36,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineMapper, WithdrawalExamine> implements WithdrawalExamineService {
 
-    @Autowired
+    @Resource
     private WithdrawalExamineMapper withdrawalExamineMapper;
     @Autowired
     private AcctInfoService acctInfoService;
     @Autowired
     private AcctSettleInfoService acctSettleInfoService;
+    @Resource
+    private AcctInfoMapper acctInfoMapper;
     @Override
     public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType){
         log.info("----------------------插入提现申请 开始----------------------");
@@ -72,7 +76,7 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         //更新账户表锁定金额
         lockAmount = lockAmount.add(withdrawAmount);
         acctInfo.setLockAmount(lockAmount);
-        acctInfoService.save(acctInfo);
+        acctInfoMapper.updateByPrimaryKey(acctInfo);
         log.info("----------------------插入提现申请 结束----------------------");
     }
 
