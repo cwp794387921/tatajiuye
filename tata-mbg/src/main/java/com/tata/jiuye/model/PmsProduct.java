@@ -164,11 +164,31 @@ public class PmsProduct implements Serializable {
 
     @ApiModelProperty(value = "移动端网页详情")
     private String detailMobileHtml;
+    @ApiModelProperty(value = "升级商品关联商品id")
+    private Long relationProductId;
+    @ApiModelProperty(value = "升级配送中心商品授信额度")
+    private BigDecimal wmsCreditLine;
 
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
+    }
+
+    public Long getRelationProductId() {
+        return relationProductId;
+    }
+
+    public void setRelationProductId(Long relationProductId) {
+        this.relationProductId = relationProductId;
+    }
+
+    public BigDecimal getWmsCreditLine() {
+        return wmsCreditLine;
+    }
+
+    public void setWmsCreditLine(BigDecimal wmsCreditLine) {
+        this.wmsCreditLine = wmsCreditLine;
     }
 
     public void setId(Long id) {
