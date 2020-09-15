@@ -441,9 +441,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             }
             Long fatherMemberId = umsMemberInviteRelation.getFatherMemberId();
             //如果最高级是平台账户,且没有配送中心,则直接挂放平台
-            if(fatherMemberId ==0){
+            if(fatherMemberId ==1){
                 log.info("------------------最高级是平台直接返回");
-                return 0L;
+                return 1L;
             }
             log.info("------------------递归查上级");
             return getSuperiorDistributionCenterMemberId(fatherMemberId);

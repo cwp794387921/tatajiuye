@@ -59,7 +59,7 @@ public class WmsMemberController {
                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
         params.put("type",3);//出货单
-        params.put("wms_member_id",0L);
+        params.put("wms_member_id",1L);
         List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
     }
@@ -82,7 +82,7 @@ public class WmsMemberController {
         //判断库存是否充足
         PmsSkuStock skuStock=new PmsSkuStock();
         skuStock.setProductId(distribution.getProductId());
-        skuStock.setWmsMemberId(0L);
+        skuStock.setWmsMemberId(1L);
         skuStock=skuStockMapper.selectByParams(skuStock);
         if(skuStock==null){
             Asserts.fail("未找到库存");
@@ -119,7 +119,7 @@ public class WmsMemberController {
     @ResponseBody
     public CommonResult changeParent(Long memberId,Long changeId) {
         log.info("==》更改所属上级请求：memberId["+memberId+"],changeId["+changeId+"]");
-        if (memberId==0L){
+        if (memberId==1L){
             return CommonResult.failed("平台账号不允许修改上级");
         }
         WmsMember wmsMember=memberMapper.selectByPrimaryKey(memberId);
@@ -212,7 +212,7 @@ public class WmsMemberController {
                 pmsSkuStock=new PmsSkuStock();
                 //查找总仓库存
                 PmsSkuStock centerSkuStock=new PmsSkuStock();
-                centerSkuStock.setWmsMemberId(0L);
+                centerSkuStock.setWmsMemberId(1L);
                 centerSkuStock.setProductId(pmsProduct.getId());
                 centerSkuStock=skuStockMapper.selectByParams(centerSkuStock);
                 //复制库存信息

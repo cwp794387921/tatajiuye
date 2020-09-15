@@ -237,7 +237,7 @@ public class PayController {
                         distribution.setName(omsOrder.getReceiverName());
                         distribution.setAddress(address);
                         distribution.setCreateTime(new Date());
-                        distribution.setWmsMemberId(wmsMember.getUmsMemberId());
+                        distribution.setWmsMemberId(wmsMember.getId());
                         distribution.setType(1);
                         distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
                         distribution.setUmsMemberId(umsMember.getId());
