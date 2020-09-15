@@ -286,29 +286,32 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         BigDecimal subPrice=new BigDecimal(0);
         for (ProductParams param: params){
             Long id=param.getId();//商品id
+            PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(id);
+            if(pmsProduct==null){
+                Asserts.fail("商品不存在");
+            }
             int num=param.getNumber();
-            BigDecimal price=param.getPrice();
+            BigDecimal price=BigDecimal.ZERO;
+            BigDecimal profit=new BigDecimal(0);//仓补收益
+            switch (wmsMember.getLevel()){
+                case 1:
+                    profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
+                    price=pmsProduct.getDeliveryCenterProductValue();
+                    break;
+                case 2:
+                    profit=pmsProduct.getRegionalWarehouseReplenishment();
+                    price=pmsProduct.getRegionalProductValue();
+                    break;
+                case 3:
+                    profit=pmsProduct.getWebmasterWarehouseReplenishment();
+                    price=pmsProduct.getWebmasterProductValue();
+                    break;
+            }
             subPrice=subPrice.add(new BigDecimal(num).multiply(price));
             if(subPrice.compareTo(wmsMember.getCreditLine())==1){
                 Asserts.fail("补货总价超过授信额度");
             }
             //生成补货单
-            PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(id);
-            if(pmsProduct==null){
-                Asserts.fail("商品不存在");
-            }
-            BigDecimal profit=new BigDecimal(0);//仓补收益
-            switch (wmsMember.getLevel()){
-                case 1:
-                    profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
-                    break;
-                case 2:
-                    profit=pmsProduct.getRegionalWarehouseReplenishment();
-                    break;
-                case 3:
-                    profit=pmsProduct.getWebmasterWarehouseReplenishment();
-                    break;
-            }
             OmsDistribution distribution=new OmsDistribution();
             distribution.setOrderSn(OrderUtil.getBhOrderNo());
             distribution.setStatus(0);//待收货
@@ -351,6 +354,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             //设置关联id
             distribution.setShipmentId(Shipment.getId().longValue());
             distributionMapper.insert(distribution);
+            wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(subPrice));
+            wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
         }
     }
 
