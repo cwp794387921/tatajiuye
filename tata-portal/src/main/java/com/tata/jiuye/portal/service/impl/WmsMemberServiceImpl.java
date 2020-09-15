@@ -404,7 +404,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         BeanUtils.copyProperties(umsMember,wmsMember);
         wmsMember.setUmsMemberId(umsMember.getId());
         wmsMember.setId(null);
-        wmsMember.setParentId(0L);
+        wmsMember.setParentId(1L);
         wmsMember.setLevel(1);
         wmsMember.setCreditLine(omsOrderItem.getProductPrice());
         wmsMemberMapper.insert(wmsMember);

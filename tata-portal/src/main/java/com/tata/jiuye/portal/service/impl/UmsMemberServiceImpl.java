@@ -340,8 +340,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }else{
             log.info("未携带邀请码注册");
             log.info("上级绑定到平台");
-            grandpaMemberId=0L;
-            parentMemberId=0L;
+            grandpaMemberId=1L;
+            parentMemberId=1L;
         }
         //生成会员关系表
         UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
