@@ -234,19 +234,18 @@ public class PayController {
                         distributionMapper.insert(distribution);
                         i++;
                     }
-
-                    //会员等级提升到VIP用户
-                    for(OmsOrderItem omsOrderItem : orderItemList){
-                        if(omsOrderItem.getIfJoinVipProduct() == 1){
-                            umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER,omsOrderItem);
-                        }
-                        if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
-                            umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER,omsOrderItem);
-                        }
-                    }
-                    //插入分佣流水
-                    acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 }
+                //会员等级提升到VIP用户
+                for(OmsOrderItem omsOrderItem : orderItemList){
+                    if(omsOrderItem.getIfJoinVipProduct() == 1){
+                        umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER,omsOrderItem);
+                    }
+                    if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                        umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER,omsOrderItem);
+                    }
+                }
+                //插入分佣流水
+                acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 //业务处理结束
             }
             BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
