@@ -356,22 +356,22 @@
     WHERE
       1 = 1
     <if test="param.applicantMemberId != null">
-      AND applicant_member_id = #{param.applicantMemberId},
+      AND applicant_member_id = #{param.applicantMemberId}
     </if>
     <if test="param.applicantMemberName != null">
-      AND applicant_member_name LIKE CONCAT('%',#{param.applicantMemberName},'%'),
+      AND applicant_member_name LIKE CONCAT('%',#{param.applicantMemberName},'%')
     </if>
     <if test="param.approverMemberId != null">
-      AND approver_member_id = #{param.approverMemberId},
+      AND approver_member_id = #{param.approverMemberId}
     </if>
     <if test="param.approverMemberName != null">
-      AND approver_member_name LIKE CONCAT('%',#{param.approverMemberName},'%'),
+      AND approver_member_name LIKE CONCAT('%',#{param.approverMemberName},'%')
     </if>
     <if test="param.withdrawalAmount != null">
-      AND withdrawal_amount = #{param.withdrawalAmount},
+      AND withdrawal_amount = #{param.withdrawalAmount}
     </if>
     <if test="param.status != null">
-      AND status = #{param.status},
+      AND status = #{param.status}
     </if>
     ORDER BY create_time
   </select>

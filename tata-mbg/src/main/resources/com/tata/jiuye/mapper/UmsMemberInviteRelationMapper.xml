@@ -334,7 +334,9 @@
 
   <select id="getTotalPerformance" resultType="com.tata.jiuye.DTO.TotalPerformanceResult">
       SELECT
-          count( oo.order_sn ) AS order_count,
+      CASE
+        WHEN  count( oo.order_sn ) IS NULL THEN
+        0 ELSE count( oo.order_sn ) AS order_count,
       CASE
               WHEN SUM( oo.pay_amount ) IS NULL THEN
               0 ELSE SUM( oo.pay_amount )
