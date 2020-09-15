@@ -384,9 +384,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if(CollectionUtils.isEmpty(umsMemberLevels)){
             Asserts.fail("传入的会员等级名称找不到对应的记录");
         }
-        UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
-        member.setMemberLevelId(umsMemberLevel.getId());
-        memberMapper.updateByPrimaryKeySelective(member);
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
             WmsMember wmsMember = wmsMemberService.insertWmsMember(member,omsOrderItem);
@@ -402,6 +399,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             acctInfo.setStatus(1);
             acctInfoService.saveOrUpdateAcctInfo(acctInfo);
         }
+        UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
+        member.setMemberLevelId(umsMemberLevel.getId());
+        memberMapper.updateByPrimaryKeySelective(member);
         memberCacheService.delMember(member.getId());
         log.info("------------------------提升用户等级  结束------------------------");
     }
