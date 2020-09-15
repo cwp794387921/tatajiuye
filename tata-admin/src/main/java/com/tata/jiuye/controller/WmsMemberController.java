@@ -223,6 +223,7 @@ public class WmsMemberController {
                 pmsSkuStock.setSale(0);
                 pmsSkuStock.setLowStock(10);
                 pmsSkuStock.setWmsMemberId(wmsMember.getId());
+                pmsSkuStock.setPic(pmsProduct.getPic());
                 skuStockMapper.insert(pmsSkuStock);
             }else {
                 pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
