@@ -290,7 +290,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.ReplenishableExamine">
     update replenishable_examine
-      apply_id = #{applyId,jdbcType=BIGINT},
+     set apply_id = #{applyId,jdbcType=BIGINT},
       apply_name = #{applyName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       approval_id = #{approvalId,jdbcType=BIGINT},

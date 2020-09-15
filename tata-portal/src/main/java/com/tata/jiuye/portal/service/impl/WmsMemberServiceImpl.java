@@ -249,7 +249,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         examine.setApplyId(wmsMember.getId());
         examine.setApplyName(wmsMember.getNickname());
         examine.setCreateTime(new Date());
-        examine.setProductId(id);
+        examine.setProductId(distribution.getProductId());
         examine.setNumber(distribution.getNumber());
         String imgStr="";
         for (String img :imgs){
