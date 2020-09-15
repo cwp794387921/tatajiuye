@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.AcctInfo;
@@ -67,12 +68,17 @@ public class BalanceFlowController {
         if(umsMember == null){
             return CommonResult.failed("当前用户未登录");
         }
+        JSONObject jsonObject=new JSONObject();
         AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(umsMember.getId(),accountType);
         BigDecimal balance = BigDecimal.ZERO;
         if(acctInfo != null){
-            balance = acctInfo.getBalance();
+            //可用余额
+            balance = acctInfo.getBalance().subtract(acctInfo.getLockAmount());
+            jsonObject.put("balance",acctInfo.getBalance());//账户余额
+            jsonObject.put("availableBalance",balance);//可用余额
         }
-        return CommonResult.success(balance);
+
+        return CommonResult.success(jsonObject);
     }
 
     @ApiOperation("获取当前用户余额明细(当flowType传空时,查余额明细,当flowType传'income'时,查收入明细,flowType传'expenditure'时查支出明细)")
