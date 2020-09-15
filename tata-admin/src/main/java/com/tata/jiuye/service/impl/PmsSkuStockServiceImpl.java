@@ -68,7 +68,7 @@ public class PmsSkuStockServiceImpl extends ServiceImpl<PmsSkuStockMapper, PmsSk
         log.info("---------------------------参数 变更类型 "+operationType);
         log.info("---------------------------参数 补货单号 "+replenishmentOrderNo);
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
-        pmsSkuStock.setWmsMemberId(0L);
+        pmsSkuStock.setWmsMemberId(1L);
         pmsSkuStock.setProductId(productId);
         pmsSkuStock = skuStockMapper.selectByParams(pmsSkuStock);
         if(pmsSkuStock==null){
