@@ -56,6 +56,7 @@
     <result column="delivery_center_warehouse_replenishment" jdbcType="DECIMAL" property="deliveryCenterWarehouseReplenishment" />
     <result column="relation_product_id" jdbcType="DECIMAL" property="relationProductId" />
     <result column="wms_credit_line" jdbcType="DECIMAL" property="wmsCreditLine" />
+    <result column="relation_product_num" jdbcType="INTEGER" property="relationProductNum" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tata.jiuye.model.PmsProduct">
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
@@ -130,7 +131,7 @@
     promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name,
     direct_push_amount, indirect_push_amount, delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product,
     vip_price, delivery_center_price, regional_warehouse_replenishment, webmaster_warehouse_replenishment,
-    regional_product_value, webmaster_product_value, delivery_center_product_value, delivery_center_warehouse_replenishment,relation_product_id,wms_credit_line
+    regional_product_value, webmaster_product_value, delivery_center_product_value, delivery_center_warehouse_replenishment,relation_product_id,wms_credit_line,relation_product_num
   </sql>
   <sql id="Blob_Column_List">
     description, detail_desc, detail_html, detail_mobile_html
@@ -178,13 +179,13 @@
     <include refid="Base_Column_List" />
     from pms_product
       <where>
-          <if test="publishStatus !=null and publishStatus !=''">
+          <if test="publishStatus !=null ">
               and publish_status = #{publishStatus}
           </if>
-          <if test="ifJoinVipProduct !=null and ifJoinVipProduct !=''">
+          <if test="ifJoinVipProduct !=null ">
               and if_join_vip_product = #{ifJoinVipProduct}
           </if>
-          <if test="ifUpgradeDistributionCenterProduct !=null and ifUpgradeDistributionCenterProduct !=''">
+          <if test="ifUpgradeDistributionCenterProduct !=null ">
               and if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct}
           </if>
       </where>
@@ -223,7 +224,7 @@
       webmaster_warehouse_replenishment, regional_product_value,
       webmaster_product_value, delivery_center_product_value,
       delivery_center_warehouse_replenishment, description,
-      detail_desc, detail_html, detail_mobile_html,relation_product_id,wms_credit_line
+      detail_desc, detail_html, detail_mobile_html,relation_product_id,wms_credit_line,relation_product_num
       )
     values (#{brandId,jdbcType=BIGINT}, #{productCategoryId,jdbcType=BIGINT}, #{feightTemplateId,jdbcType=BIGINT},
       #{productAttributeCategoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR},
@@ -244,7 +245,7 @@
       #{webmasterWarehouseReplenishment,jdbcType=DECIMAL}, #{regionalProductValue,jdbcType=DECIMAL},
       #{webmasterProductValue,jdbcType=DECIMAL}, #{deliveryCenterProductValue,jdbcType=DECIMAL},
       #{deliveryCenterWarehouseReplenishment,jdbcType=DECIMAL}, #{description,jdbcType=LONGVARCHAR},
-      #{detailDesc,jdbcType=LONGVARCHAR}, #{detailHtml,jdbcType=LONGVARCHAR}, #{detailMobileHtml,jdbcType=LONGVARCHAR},#{relationProductId,jdbcType=INTEGER}, #{wmsCreditLine,jdbcType=DECIMAL}
+      #{detailDesc,jdbcType=LONGVARCHAR}, #{detailHtml,jdbcType=LONGVARCHAR}, #{detailMobileHtml,jdbcType=LONGVARCHAR},#{relationProductId,jdbcType=INTEGER}, #{wmsCreditLine,jdbcType=DECIMAL},#{relationProductNum,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.PmsProduct">
@@ -424,6 +425,9 @@
       <if test="wmsCreditLine != null">
         wms_credit_line,
       </if>
+      <if test="relationProductNum != null">
+        relation_product_num,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="brandId != null">
@@ -596,6 +600,9 @@
       </if>
       <if test="wmsCreditLine != null">
         #{wmsCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="relationProductNum != null">
+        #{relationProductNum,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -782,6 +789,9 @@
       <if test="record.wmsCreditLine != null">
         wms_credit_line=  #{record.wmsCreditLine,jdbcType=DECIMAL},
       </if>
+      <if test="record.relationProductNum != null">
+        relation_product_num=#{record.relationProductNum,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -846,6 +856,7 @@
       detail_html = #{record.detailHtml,jdbcType=LONGVARCHAR},
       detail_mobile_html = #{record.detailMobileHtml,jdbcType=LONGVARCHAR},
     relation_product_id=#{record.relationProductId,jdbcType=INTEGER},
+    relation_product_num=#{record.relationProductNum,jdbcType=INTEGER},
     wms_credit_line=  #{record.wmsCreditLine,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -906,6 +917,7 @@
       delivery_center_product_value = #{record.deliveryCenterProductValue,jdbcType=DECIMAL},
       delivery_center_warehouse_replenishment = #{record.deliveryCenterWarehouseReplenishment,jdbcType=DECIMAL},
     relation_product_id=#{record.relationProductId,jdbcType=INTEGER},
+    relation_product_num=#{record.relationProductNum,jdbcType=INTEGER},
     wms_credit_line=  #{record.wmsCreditLine,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -1085,6 +1097,9 @@
       <if test="wmsCreditLine != null">
         wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
       </if>
+      <if test="relationProductNum != null">
+        relation_product_num=#{relationProductNum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -1146,6 +1161,7 @@
       detail_html = #{detailHtml,jdbcType=LONGVARCHAR},
       detail_mobile_html = #{detailMobileHtml,jdbcType=LONGVARCHAR},
        relation_product_id=#{relationProductId,jdbcType=INTEGER},
+       relation_product_num=#{relationProductNum ,jdbcType=INTEGER},
         wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -1203,6 +1219,7 @@
       delivery_center_product_value = #{deliveryCenterProductValue,jdbcType=DECIMAL},
       delivery_center_warehouse_replenishment = #{deliveryCenterWarehouseReplenishment,jdbcType=DECIMAL},
       relation_product_id=#{relationProductId,jdbcType=INTEGER},
+      relation_product_num=#{relationProductNum,jdbcType=INTEGER},
         wms_credit_line=  #{wmsCreditLine,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>

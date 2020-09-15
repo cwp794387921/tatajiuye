@@ -206,7 +206,7 @@ public class WmsMemberController {
             }
             //添加库存
             PmsSkuStock pmsSkuStock=new PmsSkuStock();
-            pmsSkuStock.setWmsMemberId(wmsMember.getId());
+            pmsSkuStock.setWmsMemberId(Shipment.getWmsMemberId());
             pmsSkuStock.setProductId(pmsProduct.getId());
             pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
             if(pmsSkuStock==null){
@@ -243,19 +243,19 @@ public class WmsMemberController {
             //添加出货仓授信额度 扣减进货仓授信额度
             if(Shipment.getWmsMemberId()!=1L){
                 WmsMember CHmember=memberMapper.selectByPrimaryKey(Shipment.getWmsMemberId());
-                BigDecimal hz=new BigDecimal(0);//货值
+                BigDecimal chhz=new BigDecimal(0);//货值
                 switch (CHmember.getLevel()){
                     case 1:
-                        hz=pmsProduct.getDeliveryCenterProductValue();
+                        chhz=pmsProduct.getDeliveryCenterProductValue();
                         break;
                     case 2:
-                        hz=pmsProduct.getRegionalProductValue();
+                        chhz=pmsProduct.getRegionalProductValue();
                         break;
                     case 3:
-                        hz=pmsProduct.getWebmasterProductValue();
+                        chhz=pmsProduct.getWebmasterProductValue();
                         break;
                 }
-                CHmember.setCreditLine(CHmember.getCreditLine().add(hz.multiply(new BigDecimal(examine.getNumber()))));
+                CHmember.setCreditLine(CHmember.getCreditLine().add(chhz.multiply(new BigDecimal(examine.getNumber()))));
                 memberMapper.updateByPrimaryKey(CHmember);
             }
             BigDecimal hz=new BigDecimal(0);//货值

@@ -7,10 +7,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
-import com.tata.jiuye.mapper.OmsDistributionMapper;
-import com.tata.jiuye.mapper.OmsOrderMapper;
-import com.tata.jiuye.mapper.UmsMemberMapper;
-import com.tata.jiuye.mapper.WmsMemberMapper;
+import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
@@ -63,6 +60,8 @@ public class PayController {
     private OmsDistributionMapper distributionMapper;
     @Resource
     private AcctSettleInfoService acctSettleInfoService;
+    @Resource
+    private PmsProductMapper productMapper;
     @Resource
     private AcctInfoService acctInfoService;
     @Resource
@@ -214,15 +213,40 @@ public class PayController {
                     int i=1;
                     for(OmsOrderItem omsOrderItem : orderItemList){
                         OmsDistribution distribution=new OmsDistribution();
+                        if(omsOrderItem.getIfJoinVipProduct() == 1||omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                            PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+                            PmsProduct glProduct=null;//关联商品
+                            if(pmsProduct==null){
+                                Asserts.fail("==>找不到商品信息");
+                            }else {
+                                if(pmsProduct.getRelationProductId()==null||pmsProduct.getRelationProductNum()==null){
+                                    Asserts.fail("==>未配置关联商品信息");
+                                }
+                                glProduct=productMapper.selectByPrimaryKey(pmsProduct.getRelationProductId());
+                                if(glProduct==null){
+                                    Asserts.fail("==>未找到关联商品信息");
+                                }
+                            }
+                            log.info("==》升级商品，配送货物id:"+pmsProduct.getRelationProductId());
+                            distribution.setGoodsImg(glProduct.getPic());
+                            distribution.setGoodsTitle(glProduct.getName());
+                            distribution.setGoodsSubtitle(glProduct.getSubTitle());
+                            distribution.setPrice(glProduct.getOriginalPrice());
+                            distribution.setNumber(pmsProduct.getRelationProductNum());
+                            distribution.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                            distribution.setProductId(pmsProduct.getRelationProductId());
+                        }else {
+                            distribution.setGoodsImg(omsOrderItem.getProductPic());
+                            distribution.setGoodsTitle(omsOrderItem.getProductName());
+                            distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                            distribution.setPrice(omsOrderItem.getProductPrice());
+                            distribution.setNumber(omsOrderItem.getProductQuantity());
+                            distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                            distribution.setProductId(omsOrderItem.getProductId());
+                        }
                         distribution.setOrderSn(omsOrder.getOrderSn()+"-"+i);
                         distribution.setStatus(0);
                         distribution.setPhone(omsOrder.getReceiverPhone());
-                        distribution.setGoodsImg(omsOrderItem.getProductPic());
-                        distribution.setGoodsTitle(omsOrderItem.getProductName());
-                        distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
-                        distribution.setPrice(omsOrderItem.getProductPrice());
-                        distribution.setNumber(omsOrderItem.getProductQuantity());
-                        distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
                         distribution.setName(omsOrder.getReceiverName());
                         distribution.setAddress(address);
                         distribution.setCreateTime(new Date());
@@ -230,7 +254,6 @@ public class PayController {
                         distribution.setType(1);
                         distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
                         distribution.setUmsMemberId(umsMember.getId());
-                        distribution.setProductId(omsOrderItem.getProductId());
                         distributionMapper.insert(distribution);
                         i++;
                     }

@@ -168,11 +168,21 @@ public class PmsProduct implements Serializable {
     private Long relationProductId;
     @ApiModelProperty(value = "升级配送中心商品授信额度")
     private BigDecimal wmsCreditLine;
+    @ApiModelProperty(value = "升级配送中心商品配送数量")
+    private Integer relationProductNum;
 
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
+    }
+
+    public Integer getRelationProductNum() {
+        return relationProductNum;
+    }
+
+    public void setRelationProductNum(Integer relationProductNum) {
+        this.relationProductNum = relationProductNum;
     }
 
     public Long getRelationProductId() {
