@@ -56,6 +56,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Resource
     private  UmsMemberMapper memberMapper;
     @Resource
+    private PmsProductMapper productMapper;
+    @Resource
     private AcctInfoMapper acctInfoMapper;
     @Resource
     private  UmsMemberLevelMapper memberLevelMapper;
@@ -386,7 +388,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
-            WmsMember wmsMember = wmsMemberService.insertWmsMember(member,omsOrderItem);
+            PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+            WmsMember wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
             wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
             //插入新的账户
             AcctInfo acctInfo = new AcctInfo();

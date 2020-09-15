@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.model.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WmsMemberService {
@@ -29,5 +30,5 @@ public interface WmsMemberService {
     List<PmsProduct>  queryReplenishableList();
 
     @Transactional
-    WmsMember insertWmsMember(UmsMember umsMember,OmsOrderItem omsOrderItem);
+    WmsMember insertWmsMember(UmsMember umsMember, BigDecimal creditLine);
 }

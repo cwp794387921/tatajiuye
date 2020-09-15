@@ -380,14 +380,14 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
-    public WmsMember insertWmsMember(UmsMember umsMember,OmsOrderItem omsOrderItem){
+    public WmsMember insertWmsMember(UmsMember umsMember,BigDecimal creditLine){
         WmsMember wmsMember = new WmsMember();
         BeanUtils.copyProperties(umsMember,wmsMember);
         wmsMember.setUmsMemberId(umsMember.getId());
         wmsMember.setId(null);
         wmsMember.setParentId(1L);
         wmsMember.setLevel(1);
-        wmsMember.setCreditLine(omsOrderItem.getProductPrice());
+        wmsMember.setCreditLine(creditLine);
         wmsMemberMapper.insert(wmsMember);
         log.info("---------插入的仓储账号信息为:"+wmsMember);
         return wmsMember;
