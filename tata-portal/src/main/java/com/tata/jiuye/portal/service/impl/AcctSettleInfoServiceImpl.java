@@ -175,19 +175,19 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     }
 
     @Override
-    public CommonPage getBalanceAndFlow(Integer pageNum, Integer pageSize, Long memberId, String year, String month,String flowType){
+    public CommonPage getBalanceAndFlow(Integer pageNum, Integer pageSize, Long acctId, String year, String month,String flowType){
         log.info("----------------------获取某个时间段明细   开始----------------------");
-        if(memberId == null){
+        if(acctId == null){
             Asserts.fail("用户未登录");
         }
         log.info("----------------------参数 页码 "+pageNum);
         log.info("----------------------参数 每页条数 "+pageSize);
-        log.info("----------------------参数 用户ID "+memberId);
+        log.info("----------------------参数 账户ID "+acctId);
         log.info("----------------------参数 年份 "+year);
         log.info("----------------------参数 月份 "+month);
         log.info("----------------------参数 流水类型 "+flowType);
         PageHelper.startPage(pageNum,pageSize);
-        List<AcctSettleInfo> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(memberId,year,month,flowType);
+        List<AcctSettleInfo> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(acctId,year,month,flowType);
         CommonPage<AcctSettleInfo> commonPage = CommonPage.restPage(acctSettleInfos);
         log.info("----------------------获取某个时间段明细   开始----------------------");
         return commonPage;

@@ -263,7 +263,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         params.put("orderId",orderItem.getOrderId());
         params.put("statusNo",2);
         List<OmsOrderItem> list=omsOrderItemMapper.queryList(params);
-        if(list==null){
+        if(null == list || list.size() ==0){
             OmsOrder order=orderMapper.selectByPrimaryKey(orderItem.getOrderId());
             order.setStatus(2);
             order.setModifyTime(new Date());

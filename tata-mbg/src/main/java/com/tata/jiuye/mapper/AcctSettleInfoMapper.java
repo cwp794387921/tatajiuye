@@ -40,10 +40,10 @@ public interface AcctSettleInfoMapper extends BaseMapper<AcctSettleInfo> {
 
     /**
      * 获取某时间段内的余额明细
-     * @param memberId          用户ID
+     * @param acctId          用户ID
      * @param year               年份
      * @param month              月份
      * @return
      */
-    List<AcctSettleInfo> getIncomeFlow(@Param("memberId")Long memberId,@Param("year") String year,@Param("month") String month,@Param("flowType") String flowType);
+    List<AcctSettleInfo> getIncomeFlow(@Param("acctId")Long acctId,@Param("year") String year,@Param("month") String month,@Param("flowType") String flowType);
 }

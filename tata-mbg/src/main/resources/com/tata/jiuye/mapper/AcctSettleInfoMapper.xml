@@ -324,9 +324,8 @@
         asi.*
     FROM
         acct_settle_info asi
-        LEFT JOIN acct_info ai ON ai.id = asi.acct_id
     WHERE
-        ai.member_id = #{memberId}
+      asi.acct_id = #{acctId}
         AND YEAR (asi.insert_time) = #{year}
         AND MONTH (asi.insert_time)= #{month}
     <if test="flowType != null">

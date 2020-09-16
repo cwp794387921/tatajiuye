@@ -85,14 +85,18 @@ public class BalanceFlowController {
         return CommonResult.success(jsonObject);
     }
 
-    @ApiOperation("获取当前用户余额明细(当flowType传空时,查余额明细,当flowType传'income'时,查收入明细,flowType传'expenditure'时查支出明细)")
+    @ApiOperation("获取当前用户余额明细(当flowType传空时,查余额明细,当flowType传'income'时,查收入明细,flowType传'expenditure'时查支出明细    acctType=COMMISSION时查普通账户流水 acctType=DELIVERYCENTER时查配送账户流水)")
     @RequestMapping(value = "/getBalanceFlow", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult getBalanceFlow(@RequestParam(defaultValue = "1") @ApiParam("页码")Integer pageNum, @RequestParam(defaultValue = "10") @ApiParam("每页条数") Integer pageSize,
-                                       @RequestParam @ApiParam("年份")String year, @RequestParam @ApiParam("月份")String month, @RequestParam(required = false) @ApiParam("查询流水类型:空->查余额明细,income->收入明细,expenditure查支出明细")String flowType) {
+                                       @RequestParam @ApiParam("年份")String year, @RequestParam @ApiParam("月份")String month, @RequestParam(required = false) @ApiParam("查询流水类型:空->查余额明细,income->收入明细,expenditure查支出明细")String flowType,String acctType) {
         UmsMember umsMember = memberService.getCurrentMember();
         if(umsMember == null){
             return CommonResult.failed("当前用户未登录");
+        }
+        AcctInfo acctInfo=acctInfoService.getAcctInfoByMemberId(umsMember.getId(),acctType);
+        if(acctInfo==null){
+            Asserts.fail("==>找不到对应账户信息");
         }
         CommonPage<AcctSettleInfo> resultPage = acctSettleInfoService.getBalanceAndFlow(pageNum,pageSize,umsMember.getId(),year,month,flowType);
         return CommonResult.success(resultPage);
