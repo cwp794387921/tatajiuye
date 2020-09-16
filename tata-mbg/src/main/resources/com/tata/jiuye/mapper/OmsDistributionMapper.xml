@@ -154,6 +154,12 @@
       <if test="umsMemberId !=null ">
         and ums_member_id = #{umsMemberId,jdbcType=INTEGER}
       </if>
+      <if test="statusNo1 !=null ">
+        and status != #{statusNo1,jdbcType=INTEGER}
+      </if>
+      <if test="statusNo2 !=null ">
+        and status != #{statusNo2,jdbcType=INTEGER}
+      </if>
     </where>
   </select>
 

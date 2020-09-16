@@ -206,7 +206,7 @@ public class WmsMemberController {
             }
             //添加库存
             PmsSkuStock pmsSkuStock=new PmsSkuStock();
-            pmsSkuStock.setWmsMemberId(Shipment.getWmsMemberId());
+            pmsSkuStock.setWmsMemberId(distribution.getWmsMemberId());//补货人库存
             pmsSkuStock.setProductId(pmsProduct.getId());
             pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
             if(pmsSkuStock==null){

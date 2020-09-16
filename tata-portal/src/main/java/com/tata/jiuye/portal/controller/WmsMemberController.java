@@ -87,6 +87,14 @@ public class WmsMemberController {
         return CommonResult.success("操作成功");
     }
 
+    @ApiOperation("取消补货申请,或拒绝出货申请  type=1 补货单取消申请 type=2 出货单拒绝申请")
+    @RequestMapping(value = "/cancelReplenishable", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult cancelReplenishable(Long id,String type) {
+        wmsMemberService.cancelReplenishable(id,type);
+        return CommonResult.success("操作成功");
+    }
+
     @ApiOperation("获取可补货列表")
     @RequestMapping(value = "/replenishableList", method = RequestMethod.POST)
     @ResponseBody

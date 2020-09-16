@@ -15,6 +15,9 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "状态 0待配送 1配送完成")
     private Integer status;
 
+    private Integer statusNo1;
+    private Integer statusNo2;
+
     @ApiModelProperty(value = "商品图片 ")
     private String goodsImg;
 
@@ -66,6 +69,8 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "补货单对应出货单id")
     private Long shipmentId;
 
+
+
     private static final long serialVersionUID = 1L;
 
     public Long getReplenishableId() {
@@ -82,6 +87,22 @@ public class OmsDistribution implements Serializable {
 
     public void setShipmentId(Long shipmentId) {
         this.shipmentId = shipmentId;
+    }
+
+    public Integer getStatusNo1() {
+        return statusNo1;
+    }
+
+    public void setStatusNo1(Integer statusNo1) {
+        this.statusNo1 = statusNo1;
+    }
+
+    public Integer getStatusNo2() {
+        return statusNo2;
+    }
+
+    public void setStatusNo2(Integer statusNo2) {
+        this.statusNo2 = statusNo2;
     }
 
     public Long getProductId() {

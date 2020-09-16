@@ -247,7 +247,7 @@ public class PayController {
                             distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
                             distribution.setProductId(omsOrderItem.getProductId());
                         }
-                        distribution.setOrderSn(omsOrder.getOrderSn()+"-"+i);
+                        distribution.setOrderSn(omsOrderItem.getOrderSn());
                         distribution.setStatus(0);
                         distribution.setPhone(omsOrder.getReceiverPhone());
                         distribution.setName(omsOrder.getReceiverName());

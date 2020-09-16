@@ -77,6 +77,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         result.put("stock",stockList);
         //查找补货单
         OmsDistribution distribution=new OmsDistribution();
+        distribution.setStatusNo1(4);//取消
+        distribution.setStatusNo2(5);//已完成
         distribution.setType(2);
         distribution.setWmsMemberId(wmsMember.getId());
         List<OmsDistribution> BhList=distributionMapper.queryList(distribution);
@@ -137,6 +139,45 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //更改配送单配送人id
         omsDistribution.setWmsMemberId(changeId);
         distributionMapper.updateByPrimaryKey(omsDistribution);
+    }
+
+
+    @Override
+    public void cancelReplenishable(Long id,String type){
+        OmsDistribution omsDistribution=null;
+        OmsDistribution shipment=null;
+        if(type.equals("1")){
+            omsDistribution=distributionMapper.selectByPrimaryKey(id.intValue());
+            if(omsDistribution==null){
+                Asserts.fail("补货单不存在");
+            }
+            if(omsDistribution.getStatus()!=0){
+                Asserts.fail("已被接单不可取消");
+            }
+            //查找对应出货单
+            shipment=distributionMapper.selectByPrimaryKey(omsDistribution.getShipmentId().intValue());
+            if(shipment==null){
+                Asserts.fail("出货单不存在");
+            }
+        }else if(type.equals("2")){
+            shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+            if(shipment==null){
+                Asserts.fail("出货单不存在");
+            }
+            if(shipment.getStatus()!=0){
+                Asserts.fail("已接单不可取消");
+            }
+            //查找对应补货单
+            omsDistribution.setShipmentId(shipment.getId().longValue());
+            omsDistribution=distributionMapper.selectByParams(omsDistribution);
+            if(omsDistribution==null){
+                Asserts.fail("补货单不存在");
+            }
+        }
+        omsDistribution.setStatus(4);
+        shipment.setStatus(4);
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+        distributionMapper.updateByPrimaryKey(shipment);
     }
 
     @Override

@@ -19,6 +19,8 @@ public interface WmsMemberService {
 
     void acceptOrder(Long orderId);
 
+    void cancelReplenishable(Long id,String type);
+
     void arriveOrder(Long orderId);
 
     void replenishable(List<ProductParams>  params);
