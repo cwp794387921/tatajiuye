@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -50,6 +52,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private ReplenishableExamineMapper examineMapper;
     @Resource
     private WmsAreaMapper areaMapper;
+    @Resource
+    private OmsOrderItemMapper omsOrderItemMapper;
+    @Resource
+    private OmsOrderMapper orderMapper;
     @Resource
     private UmsMemberInviteRelationService umsMemberInviteRelationService;
     @Resource
@@ -206,6 +212,15 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()+omsDistribution.getNumber());//添加锁定库存
         //更新库存信息
         pmsSkuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
+        //更新商品配送状态信息
+        Map<String,Object>params=new HashMap<>();
+        params.put("relationDistributionId",omsDistribution.getId());
+        OmsOrderItem orderItem=omsOrderItemMapper.selectByParams(params);
+        if(orderItem==null){
+            Asserts.fail("未找到订单详情");
+        }
+        orderItem.setDistributionStatus(1L);//配送中
+        omsOrderItemMapper.updateByPrimaryKey(orderItem);
     }
 
     @Override
@@ -235,6 +250,25 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()-omsDistribution.getNumber());//减少锁定库存
         pmsSkuStock.setStock(pmsSkuStock.getStock()-omsDistribution.getNumber());//减少实际库存
         pmsSkuStockMapper.updateByPrimaryKey(pmsSkuStock);//更新库存
+        //更新商品配送状态信息
+        Map<String,Object>params=new HashMap<>();
+        params.put("relationDistributionId",omsDistribution.getId());
+        OmsOrderItem orderItem=omsOrderItemMapper.selectByParams(params);
+        if(orderItem==null){
+            Asserts.fail("未找到订单详情");
+        }
+        orderItem.setDistributionStatus(2L);//送达
+        omsOrderItemMapper.updateByPrimaryKey(orderItem);
+        params=new HashMap<>();
+        params.put("orderId",orderItem.getOrderId());
+        params.put("statusNo",2);
+        List<OmsOrderItem> list=omsOrderItemMapper.queryList(params);
+        if(list==null){
+            OmsOrder order=orderMapper.selectByPrimaryKey(orderItem.getOrderId());
+            order.setStatus(2);
+            order.setModifyTime(new Date());
+            orderMapper.updateByPrimaryKey(order);
+        }
         //添加账户流水
         AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
         if (acctInfo==null){

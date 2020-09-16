@@ -116,6 +116,51 @@
     from oms_order_item
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectByParams"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oms_order_item
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="orderSn != null">
+      and order_sn = #{orderSn}
+    </if>
+    <if test="distributionStatus != null">
+      and distribution_status = #{distributionStatus}
+    </if>
+    <if test="relationDistributionId != null">
+      and relation_distribution_id = #{relationDistributionId}
+    </if>
+
+  </select>
+
+  <select id="queryList"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oms_order_item
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="orderId != null">
+      and order_id = #{orderId}
+    </if>
+    <if test="orderSn != null">
+      and order_sn = #{orderSn}
+    </if>
+    <if test="distributionStatus != null">
+      and distribution_status = #{distributionStatus}
+    </if>
+    <if test="relationDistributionId != null">
+      and relation_distribution_id = #{relationDistributionId}
+    </if>
+    <if test="statusNo != null">
+      and distribution_status != #{statusNo}
+    </if>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from oms_order_item
     where id = #{id,jdbcType=BIGINT}
