@@ -2,6 +2,7 @@ package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.DTO.UmsMemberQueryParam;
+import com.tata.jiuye.DTO.UmsMemberQueryResult;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberExample;
 import java.util.List;
@@ -64,5 +65,5 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
      * @param param
      * @return
      */
-    List<UmsMember> getUmsMemberByParam(@Param("param")UmsMemberQueryParam param);
+    List<UmsMemberQueryResult> getUmsMemberByParam(@Param("param")UmsMemberQueryParam param);
 }

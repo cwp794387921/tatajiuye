@@ -79,3 +79,11 @@ minio:
   bucketName: jiuye #存储桶名称
   accessKey: minioadmin #访问的key
   secretKey: minioadmin #访问的秘钥
+
+umsmemberlevelname:
+  vip: "VIP会员"
+  deliverycenter: "配送中心"
+  ordinarymember: "普通会员"
+
+pmsproductcategoryname:
+  memberrepurchase: "会员复购"
