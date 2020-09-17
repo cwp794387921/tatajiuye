@@ -153,8 +153,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     public void cancelReplenishable(Long id,String type){
         OmsDistribution omsDistribution=null;
         OmsDistribution shipment=null;
+        WmsMember wmsMember=null;
         if(type.equals("1")){
             omsDistribution=distributionMapper.selectByPrimaryKey(id.intValue());
+            wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
             if(omsDistribution==null){
                 Asserts.fail("补货单不存在");
             }
@@ -175,14 +177,18 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 Asserts.fail("已接单不可取消");
             }
             //查找对应补货单
+            omsDistribution=new OmsDistribution();
             omsDistribution.setShipmentId(shipment.getId().longValue());
             omsDistribution=distributionMapper.selectByParams(omsDistribution);
             if(omsDistribution==null){
                 Asserts.fail("补货单不存在");
             }
+            wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
         }
         omsDistribution.setStatus(4);
         shipment.setStatus(4);
+        wmsMember.setCreditLine(wmsMember.getCreditLine().add(omsDistribution.getPrice().multiply(new BigDecimal(omsDistribution.getNumber()))));
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);//返还授信额度
         distributionMapper.updateByPrimaryKey(omsDistribution);
         distributionMapper.updateByPrimaryKey(shipment);
     }

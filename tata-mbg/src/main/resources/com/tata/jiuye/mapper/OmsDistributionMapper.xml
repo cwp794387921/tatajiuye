@@ -161,6 +161,7 @@
         and status != #{statusNo2,jdbcType=INTEGER}
       </if>
     </where>
+    order by id desc
   </select>
 
   <select id="queryCHList"  resultMap="BaseResultMap">

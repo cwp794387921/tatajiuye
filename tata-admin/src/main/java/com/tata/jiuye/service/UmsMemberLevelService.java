@@ -16,4 +16,13 @@ public interface UmsMemberLevelService extends IService<UmsMemberLevel> {
      * @param defaultStatus 是否为默认会员
      */
     List<UmsMemberLevel> list(Integer defaultStatus);
+
+
+    /**
+     * 判断用户等级是否为传入的名称
+     * @param memberLevelId
+     * @param memberLevelName
+     * @return
+     */
+    Boolean isSomeOneLevel(Long memberLevelId,String memberLevelName);
 }

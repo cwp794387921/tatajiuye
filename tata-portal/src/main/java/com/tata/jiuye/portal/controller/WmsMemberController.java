@@ -35,7 +35,6 @@ public class WmsMemberController {
     @ResponseBody
     public CommonResult info() {
         JSONObject result= wmsMemberService.selectMerberInfo();
-        log.debug(result.toString());
         return CommonResult.success(result);
     }
 
