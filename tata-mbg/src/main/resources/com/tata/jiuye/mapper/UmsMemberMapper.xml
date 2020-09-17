@@ -505,19 +505,32 @@
       limit 1
   </select>
 
-  <select id="getUmsMemberByParam" parameterType="com.tata.jiuye.DTO.UmsMemberQueryParam" resultMap="BaseResultMap">
-      select *
-      from ums_member
-      where
+  <resultMap id="UmsMemberQueryResult" type="com.tata.jiuye.DTO.UmsMemberQueryResult">
+
+  </resultMap>
+
+  <select id="getUmsMemberByParam" parameterType="com.tata.jiuye.DTO.UmsMemberQueryParam" resultMap="UmsMemberQueryResult">
+      SELECT
+      DISTINCT
+      um.*,
+      fum.nickname AS father_member_name,
+      gum.nickname AS grandpa_member_name
+      FROM
+      ums_member um
+      LEFT JOIN ums_member_invite_relation umir ON umir.member_id = um.id
+      LEFT JOIN ums_member fum ON fum.id = umir.father_member_id
+      LEFT JOIN ums_member gum ON gum.id = umir.grandpa_member_id
+      WHERE
         1 = 1
       <if test="param.phone != null">
-        and phone = #{param.phone}
+        AND phone = #{param.phone}
       </if>
       <if test="param.nickname != null">
-        and nickname = CONCAT('%',#{param.nickname},'%')
+        AND nickname = CONCAT('%',#{param.nickname},'%')
       </if>
       <if test="param.memberLevelId != null">
-        and memberLevelId = #{param.memberLevelId}
+        AND memberLevelId = #{param.memberLevelId}
       </if>
+      ORDER BY um.create_time
   </select>
 </mapper>
