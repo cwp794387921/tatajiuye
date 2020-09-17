@@ -32,6 +32,9 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="sub_title" jdbcType="VARCHAR" property="subTitle" />
     <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="delivery_center_product_value" jdbcType="VARCHAR" property="deliveryCenterProductValue" />
+    <result column="regional_product_value" jdbcType="VARCHAR" property="regionalProductValue" />
+    <result column="webmaster_product_value" jdbcType="VARCHAR" property="webmasterProductValue" />
   </resultMap>
 
   <sql id="Example_Where_Clause">
@@ -116,7 +119,10 @@
               s.*,
               p.NAME,
               p.sub_title,
-              p.description
+              p.description,
+              p.delivery_center_product_value,
+			  p.regional_product_value,
+			  p.webmaster_product_value
           FROM
               pms_sku_stock s
               LEFT JOIN pms_product p ON p.id = s.product_id

@@ -174,6 +174,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 Asserts.fail("已接单不可取消");
             }
             //查找对应补货单
+            omsDistribution=new OmsDistribution();
             omsDistribution.setShipmentId(shipment.getId().longValue());
             omsDistribution=distributionMapper.selectByParams(omsDistribution);
             if(omsDistribution==null){
