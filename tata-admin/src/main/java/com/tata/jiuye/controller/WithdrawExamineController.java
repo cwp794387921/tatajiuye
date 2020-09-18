@@ -1,6 +1,8 @@
 package com.tata.jiuye.controller;
 
 import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
+import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.model.UmsAdmin;
 import com.tata.jiuye.service.UmsAdminService;
@@ -10,12 +12,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.DefaultDefaultValueProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @Controller
 @Api(tags = "WithdrawExamineController", value = "后台提现相关业务")
@@ -38,7 +44,34 @@ public class WithdrawExamineController {
         if(withdrawExamineQueryParam == null){
             return CommonResult.failed("提现流水参数为空");
         }
-        JSONObject json = JSONObject.fromObject(withdrawExamineQueryParam);
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.registerDefaultValueProcessor(Long.class, new DefaultDefaultValueProcessor() {
+            public Object getDefaultValue(Class type) {
+                return null;
+            }
+        });
+        jsonConfig.registerDefaultValueProcessor(Integer.class, new DefaultDefaultValueProcessor() {
+            public Object getDefaultValue(Class type) {
+                return null;
+            }
+        });
+        jsonConfig.registerDefaultValueProcessor(BigDecimal.class, new DefaultDefaultValueProcessor() {
+            public Object getDefaultValue(Class type) {
+                return null;
+            }
+        });
+        jsonConfig.registerDefaultValueProcessor(String.class, new DefaultDefaultValueProcessor() {
+            public Object getDefaultValue(Class type) {
+                return null;
+            }
+        });
+        if(withdrawExamineQueryParam.getPageSize() == null || withdrawExamineQueryParam.getPageSize() == 0){
+            withdrawExamineQueryParam.setPageSize(10);
+        }
+        if(withdrawExamineQueryParam.getPageNum() == null || withdrawExamineQueryParam.getPageNum() == 0){
+            withdrawExamineQueryParam.setPageNum(1);
+        }
+        JSONObject json = JSONObject.fromObject(withdrawExamineQueryParam,jsonConfig);
         String paramJson = json.toString();
         CommonResult commonResult = HttpTools.sendPostRequestForRequestBody(REQUEST_TEMPLATE_URL + url, paramJson);
         return commonResult;
