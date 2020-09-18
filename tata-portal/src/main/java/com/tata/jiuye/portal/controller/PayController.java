@@ -218,6 +218,8 @@ public class PayController {
                     for(OmsOrderItem omsOrderItem : orderItemList){
                         if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
                             log.info("==》升级配送中心商品，不生成配送单");
+                            omsOrder.setStatus(2);
+                            orderMapper.updateByPrimaryKey(omsOrder);
                         }else {
                             OmsDistribution distribution=new OmsDistribution();
                             if(omsOrderItem.getIfJoinVipProduct() == 1){
