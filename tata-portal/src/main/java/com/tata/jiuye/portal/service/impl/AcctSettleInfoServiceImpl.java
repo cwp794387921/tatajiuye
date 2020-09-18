@@ -89,7 +89,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                     //插入上级配送中心分佣
                     if(directSuperiorDistributionCenterMemberId != null){
                         insertCommissionFlow(directSuperiorDistributionCenterMemberId,DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId());
-                        if(!directSuperiorDistributionCenterMemberId.equals(BigDecimal.ONE)){
+                        if(!directSuperiorDistributionCenterMemberId.equals(1L)){
                             Long indirectSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberIdNotOwner(directSuperiorDistributionCenterMemberId);
                             log.info("----------------------上上级配送中心的用户ID : "+indirectSuperiorDistributionCenterMemberId);
                             //插入上上级配送中心分佣
