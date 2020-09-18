@@ -399,8 +399,8 @@ public class WmsMemberController {
                     hz=pmsProduct.getWebmasterProductValue();
                     break;
             }
-            wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(hz.multiply(new BigDecimal(examine.getNumber()))));
-            memberMapper.updateByPrimaryKey(wmsMember);
+            //wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(hz.multiply(new BigDecimal(examine.getNumber()))));
+            //memberMapper.updateByPrimaryKey(wmsMember);
             //查找账户信息
             AcctInfo BHacctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());//补货账户
             if(BHacctInfo==null){
