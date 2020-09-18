@@ -543,7 +543,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 return 1L;
             }
             log.info("------------------递归查上级");
-            return getSuperiorDistributionCenterMemberId(fatherMemberId);
+            return getSuperiorDistributionCenterMemberIdNotOwner(fatherMemberId);
         }
         else{
             Long deliveryCenterMemberId = fatherMember.getId();
