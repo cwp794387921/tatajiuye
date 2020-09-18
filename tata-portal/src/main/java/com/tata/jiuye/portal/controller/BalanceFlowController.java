@@ -99,7 +99,7 @@ public class BalanceFlowController {
         if(acctInfo==null){
             Asserts.fail("==>找不到对应账户信息");
         }
-        CommonPage<AcctSettleInfo> resultPage = acctSettleInfoService.getBalanceAndFlow(pageNum,pageSize,umsMember.getId(),year,month,flowType);
+        CommonPage<AcctSettleInfo> resultPage = acctSettleInfoService.getBalanceAndFlow(pageNum,pageSize,acctInfo.getId(),year,month,flowType);
         return CommonResult.success(resultPage);
     }
 }

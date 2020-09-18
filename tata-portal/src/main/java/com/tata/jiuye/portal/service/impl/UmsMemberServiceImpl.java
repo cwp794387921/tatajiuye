@@ -506,4 +506,45 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         return sb.toString();
     }
+
+
+    @Override
+    public Long getSuperiorDistributionCenterMemberIdNotOwner(Long memberId){
+        log.info("--------------------------获取所属配送中心用户ID   开始--------------------------");
+        if(memberId == null){
+            Asserts.fail("传入的用户ID为空");
+        }
+        log.info("memberID "+memberId);
+        //查找上级
+        UmsMemberInviteRelation umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(memberId);
+        log.info("------------------该用户的关联关系为 : "+umsMemberInviteRelation);
+        UmsMember fatherMember = memberMapper.selectByPrimaryKey(umsMemberInviteRelation.getFatherMemberId());
+        log.info("上级用户信息 "+ fatherMember);
+        Long fatherMemberId = fatherMember.getId();
+        //通过用户ID查找用户信息,再用用户信息上的用户等级ID获取用户等级,是否为配送中心
+        Boolean isDeliveryCenter = umsMemberLevelService.isSomeOneLevel(fatherMember.getMemberLevelId(),UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER);
+        log.info("上级是否配送中心 "+ isDeliveryCenter);
+        // 判断用户等级,若不为配送中心,则查找绑定关系表找到上级,再看其是否配送中心
+        if(!isDeliveryCenter){
+            //如果最高级是平台账户,且没有配送中心,则直接挂放平台
+            if(fatherMemberId ==1){
+                log.info("------------------最高级是平台直接返回");
+                return 1L;
+            }
+            //再查找上上级
+            umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(fatherMemberId);
+            if(umsMemberInviteRelation == null){
+                return null;
+            }
+            //如果最高级是平台账户,且没有配送中心,则直接挂放平台
+            log.info("------------------递归查上级");
+            return getSuperiorDistributionCenterMemberIdNotOwner(fatherMemberId);
+        }
+        else{
+            Long deliveryCenterMemberId = fatherMember.getId();
+            log.info("--------------------------配送中心用户ID "+deliveryCenterMemberId);
+            log.info("--------------------------获取所属配送中心用户ID   结束--------------------------");
+            return deliveryCenterMemberId;
+        }
+    }
 }

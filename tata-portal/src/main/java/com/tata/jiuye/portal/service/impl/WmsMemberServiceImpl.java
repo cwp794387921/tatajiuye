@@ -78,6 +78,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         JSONObject result=new JSONObject();
         result.put("level",wmsMember.getLevel());
         result.put("bal",acctInfo.getBalance());
+        result.put("lockBal",acctInfo.getLockAmount());
         result.put("creditLine",wmsMember.getCreditLine());
         //查找库存列表
         List<PmsSkuStockDetail> stockList=pmsSkuStockMapper.queryStockByMemberId(wmsMember.getId());
@@ -373,8 +374,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 Asserts.fail("商品不存在");
             }
             int num=param.getNumber();
-            BigDecimal price=BigDecimal.ZERO;
-            BigDecimal profit=new BigDecimal(0);//仓补收益
+            BigDecimal price=BigDecimal.ZERO;//补货货值
+            BigDecimal CHprice=BigDecimal.ZERO;//出货货值
+            BigDecimal profit=BigDecimal.ZERO;//仓补收益
+            BigDecimal CHprofit=BigDecimal.ZERO;//出货收益
             switch (wmsMember.getLevel()){
                 case 1:
                     profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
@@ -387,6 +390,20 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 case 3:
                     profit=pmsProduct.getWebmasterWarehouseReplenishment();
                     price=pmsProduct.getWebmasterProductValue();
+                    break;
+            }
+            switch (parent.getLevel()){
+                case 1:
+                    CHprofit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
+                    CHprice=pmsProduct.getDeliveryCenterProductValue();
+                    break;
+                case 2:
+                    CHprofit=pmsProduct.getRegionalWarehouseReplenishment();
+                    CHprice=pmsProduct.getRegionalProductValue();
+                    break;
+                case 3:
+                    CHprofit=pmsProduct.getWebmasterWarehouseReplenishment();
+                    CHprice=pmsProduct.getWebmasterProductValue();
                     break;
             }
             subPrice=subPrice.add(new BigDecimal(num).multiply(price));
@@ -419,16 +436,16 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Shipment.setGoodsTitle(pmsProduct.getName());
             Shipment.setGoodsSubtitle(pmsProduct.getSubTitle());
             Shipment.setGoodsImg(pmsProduct.getPic());
-            Shipment.setPrice(price);
+            Shipment.setPrice(CHprice);
             Shipment.setNumber(num);
-            Shipment.setSubPrice(price.multiply(new BigDecimal(num)));
+            Shipment.setSubPrice(CHprice.multiply(new BigDecimal(num)));
             Shipment.setName(wmsMember.getNickname());
             Shipment.setHeadImg(wmsMember.getIcon());
             Shipment.setAddress(wmsMember.getAddress());
             Shipment.setCreateTime(new Date());
             Shipment.setWmsMemberId(parent.getId());
             Shipment.setType(3);//出货单
-            Shipment.setProfit(pmsProduct.getDeliveryAmount());
+            Shipment.setProfit(CHprofit.multiply(new BigDecimal(num)));//出货收益
             Shipment.setPhone(wmsMember.getPhone());
             Shipment.setProductId(pmsProduct.getId());
             Integer ShipmentId= distributionMapper.insert(Shipment);
@@ -441,6 +458,50 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         }
     }
 
+
+    @Override
+    public void CHshipment(Long id){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMemberAreaDetail wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+        if(shipment==null){
+            Asserts.fail("出货单不存在");
+        }
+        OmsDistribution distribution=new OmsDistribution();
+        distribution.setShipmentId(id);
+        distribution=distributionMapper.selectByParams(distribution);
+        if(distribution==null){
+            Asserts.fail("未找到对应补货单");
+        }
+        int number=distribution.getNumber();//补货数量
+        //判断库存是否充足
+        PmsSkuStock skuStock=new PmsSkuStock();
+        skuStock.setProductId(distribution.getProductId());
+        skuStock.setWmsMemberId(wmsMember.getId());
+        skuStock=pmsSkuStockMapper.selectByParams(skuStock);
+        if(skuStock==null){
+            Asserts.fail("未找到库存");
+        }
+        if((skuStock.getStock()-number)<0){
+            Asserts.fail("库存不足，无法出货");
+        }
+        //添加锁定库存
+        skuStock.setLockStock(skuStock.getLockStock()+number);
+        pmsSkuStockMapper.updateByPrimaryKey(skuStock);
+        //更新补货单状态
+        distribution.setStatus(1);//待收货
+        //更新出货单状态
+        shipment.setStatus(1);//待收货
+        distributionMapper.updateByPrimaryKey(distribution);
+        distributionMapper.updateByPrimaryKey(shipment);
+
+    }
 
     @Override
     public void shipment(Long id,Integer number){

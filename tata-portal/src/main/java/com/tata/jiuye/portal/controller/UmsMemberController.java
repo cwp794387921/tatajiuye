@@ -272,6 +272,10 @@ public class UmsMemberController {
     //public CommonResult getShareQrCodeBase64(@RequestParam(required = false) @ApiParam("海报URL")String imgUrl) throws Exception{
     public CommonResult getShareQrCodeBase64() throws Exception{
         UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            return CommonResult.failed("用户未登录");
+        }
+        currentMember = memberService.getById(currentMember.getId());
         String umsMemberLevelName = umsMemberLevelService.getUmsMemberLevelName(currentMember.getMemberLevelId());
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(umsMemberLevelName)){
             return CommonResult.failed("普通会员,不能邀请其他会员");

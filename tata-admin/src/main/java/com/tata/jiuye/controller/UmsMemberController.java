@@ -44,6 +44,15 @@ public class UmsMemberController {
     @RequestMapping(value ="/getUmsMemberPageByParam",method = RequestMethod.POST)
     @ResponseBody
     public CommonResult getUmsMemberPageByParam(@RequestBody UmsMemberQueryParam param){
+        if(param == null){
+            return CommonResult.failed("查询对象参数不能全为空");
+        }
+        if(param.getPageNum() == null || param.getPageNum() == 0){
+            param.setPageNum(1);
+        }
+        if(param.getPageSize() == null || param.getPageSize() == 0){
+            param.setPageSize(10);
+        }
         PageHelper.startPage(param.getPageNum(),param.getPageSize());
         List<UmsMemberQueryResult> umsMembers = umsMemberMapper.getUmsMemberByParam(param);
         CommonPage<UmsMemberQueryResult> umsMemberCommonPage = CommonPage.restPage(umsMembers);

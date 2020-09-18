@@ -121,6 +121,9 @@
       <if test="level !=null and level !=''">
         and m.level = #{level}
       </if>
+      <if test="minLevel !=null and minLevel !=''">
+        and m.level > #{minLevel}
+      </if>
       <if test="parentId !=null and parentId !=''">
         and m.parent_id = #{parentId}
       </if>

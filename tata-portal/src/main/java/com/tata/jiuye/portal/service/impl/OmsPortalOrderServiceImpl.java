@@ -548,6 +548,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         OmsDistribution distribution=new OmsDistribution();
         distribution.setWmsMemberId(wmsMember.getId());
         distribution.setStatusNo1(2);//不查找已完成
+        distribution.setStatusNo2(5);//不查找已完成
+        distribution.setStatusNo3(4);
         distribution.setType(1);//配送单
         List<OmsDistribution> list= DistributionMapper.queryList(distribution);
         if(list!=null){

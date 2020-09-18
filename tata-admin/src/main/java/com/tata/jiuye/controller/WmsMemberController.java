@@ -175,7 +175,7 @@ public class WmsMemberController {
                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
         params.put("type",3);//出货单
-        params.put("wms_member_id",1L);
+        params.put("wmsMemberId",1L);
         List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
     }
@@ -245,6 +245,9 @@ public class WmsMemberController {
         WmsMember changeInfo=memberMapper.selectByPrimaryKey(changeId);
         if (changeInfo==null){
             return CommonResult.failed("上级信息不存在");
+        }
+        if(changeInfo.getLevel()<=wmsMember.getLevel()){
+            return CommonResult.failed("上级等级应该大于该配送用户等级");
         }
         wmsMember.setParentId(changeId);
         wmsMember.setUpdateTime(new Date());
@@ -334,6 +337,17 @@ public class WmsMemberController {
                 //复制库存信息
                 BeanUtils.copyProperties(centerSkuStock,pmsSkuStock);
                 pmsSkuStock.setStock(examine.getNumber());
+                switch (wmsMember.getLevel()){
+                    case 1:
+                        pmsSkuStock.setPrice(pmsProduct.getDeliveryCenterProductValue());
+                        break;
+                    case 2:
+                        pmsSkuStock.setPrice(pmsProduct.getRegionalProductValue());
+                        break;
+                    case 3:
+                        pmsSkuStock.setPrice(pmsProduct.getWebmasterProductValue());
+                        break;
+                }
                 pmsSkuStock.setLockStock(0);
                 pmsSkuStock.setSale(0);
                 pmsSkuStock.setLowStock(10);

@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 @Api(tags = "WithdrawExamineController", description = "提现相关业务")
 @RequestMapping("/withdrawExamine")
 @RequiredArgsConstructor
+@Slf4j
 public class WithdrawExamineController {
 
     @Autowired
@@ -61,6 +63,7 @@ public class WithdrawExamineController {
     @RequestMapping(value = "/allWithdrawApplicationPage", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult allWithdrawApplicationPage(@RequestBody WithdrawExamineQueryParam param) {
+        log.info("----------------参数 param :"+param);
         CommonPage<WithdrawExamineQueryResult> resultCommonPage = withdrawalExamineService.getAllWithdrawalExaminePageByQueryParam(param);
         return CommonResult.success(resultCommonPage);
     }
