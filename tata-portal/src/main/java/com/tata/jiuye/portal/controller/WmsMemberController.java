@@ -70,7 +70,7 @@ public class WmsMemberController {
         return CommonResult.success("操作成功");
     }
 
-    @ApiOperation("接单接口")
+    @ApiOperation("配送单接单接口")
     @RequestMapping(value = "/acceptOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult acceptOrder(Long orderId) {
@@ -78,7 +78,7 @@ public class WmsMemberController {
         return CommonResult.success("操作成功");
     }
 
-    @ApiOperation("送达接口")
+    @ApiOperation("配送单送达接口")
     @RequestMapping(value = "/arriveOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult arriveOrder(Long orderId) {
@@ -114,7 +114,16 @@ public class WmsMemberController {
     }
 
 
-    @ApiOperation("出货接口")
+    @ApiOperation("出货单出货接口")
+    @RequestMapping(value = "/CHshipment", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult CHshipment(Long id) {
+        wmsMemberService.CHshipment(id);
+        return CommonResult.success("操作成功");
+    }
+
+
+    @ApiOperation("库存出货接口")
     @RequestMapping(value = "/shipment", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult shipment(Long id,Integer number) {
