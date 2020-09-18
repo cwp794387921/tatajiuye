@@ -160,6 +160,9 @@
       <if test="statusNo2 !=null ">
         and status != #{statusNo2,jdbcType=INTEGER}
       </if>
+      <if test="statusNo3 !=null ">
+        and status != #{statusNo3,jdbcType=INTEGER}
+      </if>
     </where>
     order by id desc
   </select>

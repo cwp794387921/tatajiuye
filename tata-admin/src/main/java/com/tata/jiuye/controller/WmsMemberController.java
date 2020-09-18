@@ -334,6 +334,17 @@ public class WmsMemberController {
                 //复制库存信息
                 BeanUtils.copyProperties(centerSkuStock,pmsSkuStock);
                 pmsSkuStock.setStock(examine.getNumber());
+                switch (wmsMember.getLevel()){
+                    case 1:
+                        pmsSkuStock.setPrice(pmsProduct.getDeliveryCenterProductValue());
+                        break;
+                    case 2:
+                        pmsSkuStock.setPrice(pmsProduct.getRegionalProductValue());
+                        break;
+                    case 3:
+                        pmsSkuStock.setPrice(pmsProduct.getWebmasterProductValue());
+                        break;
+                }
                 pmsSkuStock.setLockStock(0);
                 pmsSkuStock.setSale(0);
                 pmsSkuStock.setLowStock(10);

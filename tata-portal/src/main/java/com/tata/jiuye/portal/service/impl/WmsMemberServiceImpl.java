@@ -373,8 +373,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 Asserts.fail("商品不存在");
             }
             int num=param.getNumber();
-            BigDecimal price=BigDecimal.ZERO;
-            BigDecimal profit=new BigDecimal(0);//仓补收益
+            BigDecimal price=BigDecimal.ZERO;//补货货值
+            BigDecimal CHprice=BigDecimal.ZERO;//出货货值
+            BigDecimal profit=BigDecimal.ZERO;//仓补收益
+            BigDecimal CHprofit=BigDecimal.ZERO;//出货收益
             switch (wmsMember.getLevel()){
                 case 1:
                     profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
@@ -387,6 +389,20 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 case 3:
                     profit=pmsProduct.getWebmasterWarehouseReplenishment();
                     price=pmsProduct.getWebmasterProductValue();
+                    break;
+            }
+            switch (parent.getLevel()){
+                case 1:
+                    CHprofit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
+                    CHprice=pmsProduct.getDeliveryCenterProductValue();
+                    break;
+                case 2:
+                    CHprofit=pmsProduct.getRegionalWarehouseReplenishment();
+                    CHprice=pmsProduct.getRegionalProductValue();
+                    break;
+                case 3:
+                    CHprofit=pmsProduct.getWebmasterWarehouseReplenishment();
+                    CHprice=pmsProduct.getWebmasterProductValue();
                     break;
             }
             subPrice=subPrice.add(new BigDecimal(num).multiply(price));
@@ -419,16 +435,16 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Shipment.setGoodsTitle(pmsProduct.getName());
             Shipment.setGoodsSubtitle(pmsProduct.getSubTitle());
             Shipment.setGoodsImg(pmsProduct.getPic());
-            Shipment.setPrice(price);
+            Shipment.setPrice(CHprice);
             Shipment.setNumber(num);
-            Shipment.setSubPrice(price.multiply(new BigDecimal(num)));
+            Shipment.setSubPrice(CHprice.multiply(new BigDecimal(num)));
             Shipment.setName(wmsMember.getNickname());
             Shipment.setHeadImg(wmsMember.getIcon());
             Shipment.setAddress(wmsMember.getAddress());
             Shipment.setCreateTime(new Date());
             Shipment.setWmsMemberId(parent.getId());
             Shipment.setType(3);//出货单
-            Shipment.setProfit(pmsProduct.getDeliveryAmount());
+            Shipment.setProfit(CHprofit.multiply(new BigDecimal(num)));//出货收益
             Shipment.setPhone(wmsMember.getPhone());
             Shipment.setProductId(pmsProduct.getId());
             Integer ShipmentId= distributionMapper.insert(Shipment);

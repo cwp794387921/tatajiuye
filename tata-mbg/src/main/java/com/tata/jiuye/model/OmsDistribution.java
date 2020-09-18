@@ -17,6 +17,7 @@ public class OmsDistribution implements Serializable {
 
     private Integer statusNo1;
     private Integer statusNo2;
+    private Integer statusNo3;
 
     @ApiModelProperty(value = "商品图片 ")
     private String goodsImg;
@@ -91,6 +92,14 @@ public class OmsDistribution implements Serializable {
 
     public Integer getStatusNo1() {
         return statusNo1;
+    }
+
+    public Integer getStatusNo3() {
+        return statusNo3;
+    }
+
+    public void setStatusNo3(Integer statusNo3) {
+        this.statusNo3 = statusNo3;
     }
 
     public void setStatusNo1(Integer statusNo1) {

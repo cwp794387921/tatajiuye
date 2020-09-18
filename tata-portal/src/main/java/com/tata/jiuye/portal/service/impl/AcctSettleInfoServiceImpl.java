@@ -41,10 +41,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private OmsOrderItemService omsOrderItemService;
     @Autowired
     private AcctInfoService acctInfoService;
-    @Autowired
+    @Resource
     private AcctSettleInfoMapper acctSettleInfoMapper;
-    @Autowired
-    private WithdrawalExamineService withdrawalExamineService;
     @Override
     public void saveOrUpdateAcctSettleInfo(AcctSettleInfo acctSettleInfo){
         this.saveOrUpdate(acctSettleInfo);
