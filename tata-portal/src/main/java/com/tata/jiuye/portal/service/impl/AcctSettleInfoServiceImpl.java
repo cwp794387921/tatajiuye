@@ -82,13 +82,16 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                 //当购买商品为升级为配送中心时
                 if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
                     Long memberId = umsMember.getId();
+                    log.info("----------------------升级人的用户ID : "+memberId);
                     //上级配送中心ID
-                    Long directSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberId(memberId);
+                    Long directSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberIdNotOwner(memberId);
+                    log.info("----------------------上级配送中心的用户ID : "+directSuperiorDistributionCenterMemberId);
                     //插入上级配送中心分佣
                     if(directSuperiorDistributionCenterMemberId != null){
                         insertCommissionFlow(directSuperiorDistributionCenterMemberId,DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId());
                         if(!directSuperiorDistributionCenterMemberId.equals(BigDecimal.ONE)){
-                            Long indirectSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberId(directSuperiorDistributionCenterMemberId);
+                            Long indirectSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberIdNotOwner(directSuperiorDistributionCenterMemberId);
+                            log.info("----------------------上上级配送中心的用户ID : "+indirectSuperiorDistributionCenterMemberId);
                             //插入上上级配送中心分佣
                             if(indirectSuperiorDistributionCenterMemberId != null){
                                 insertCommissionFlow(indirectSuperiorDistributionCenterMemberId,INDIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId());
@@ -99,10 +102,12 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                 else{
                     //获取直邀账户并增加余额
                     if(!directPushAmount.equals(BigDecimal.ZERO)){
+                        log.info("-----------------执行正常商品直邀分佣 ");
                         insertCommissionFlow(parentMemberId,directPushAmount,orderSn,umsMember.getId());
                     }
                     //获取间邀账户并增加余额
                     if(!indirectPushAmount.equals(BigDecimal.ZERO)){
+                        log.info("-----------------执行正常商品间邀分佣 ");
                         insertCommissionFlow(grandpaMemberId,indirectPushAmount,orderSn,umsMember.getId());
                     }
                 }

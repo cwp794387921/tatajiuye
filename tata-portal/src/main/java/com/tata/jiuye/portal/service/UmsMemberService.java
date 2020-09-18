@@ -102,4 +102,12 @@ public interface UmsMemberService {
      * @return
      */
     Long getSuperiorDistributionCenterMemberId(Long memberId);
+
+
+    /**
+     * 通过用户ID获取其上级配送中心用户的用户ID(不包含自身)
+     * @param memberId
+     * @return
+     */
+    Long getSuperiorDistributionCenterMemberIdNotOwner(Long memberId);
 }
