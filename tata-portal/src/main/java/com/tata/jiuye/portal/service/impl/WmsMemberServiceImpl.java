@@ -78,6 +78,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         JSONObject result=new JSONObject();
         result.put("level",wmsMember.getLevel());
         result.put("bal",acctInfo.getBalance());
+        result.put("lockBal",acctInfo.getLockAmount());
         result.put("creditLine",wmsMember.getCreditLine());
         //查找库存列表
         List<PmsSkuStockDetail> stockList=pmsSkuStockMapper.queryStockByMemberId(wmsMember.getId());
