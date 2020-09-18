@@ -246,6 +246,9 @@ public class WmsMemberController {
         if (changeInfo==null){
             return CommonResult.failed("上级信息不存在");
         }
+        if(changeInfo.getLevel()<=wmsMember.getLevel()){
+            return CommonResult.failed("上级等级应该大于该配送用户等级");
+        }
         wmsMember.setParentId(changeId);
         wmsMember.setUpdateTime(new Date());
         memberMapper.updateByPrimaryKey(wmsMember);
