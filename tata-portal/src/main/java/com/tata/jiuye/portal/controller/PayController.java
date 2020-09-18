@@ -185,13 +185,15 @@ public class PayController {
                 String orderSn=map.get("out_trade_no");
                 String wxOrderNum=map.get("transaction_id");
                 String openId = map.get("openid");
-                OmsOrder omsOrder = portalOrderService.getOmsOrderByOrderSn(orderSn);
+                OmsOrder omsOrder = orderMapper.selectByOrderNum(orderSn);
                 if(omsOrder!=null & !omsOrder.getStatus().equals("0")){
                     //更新交易记录
                     omsOrder.setChannelOrderNum(wxOrderNum);//微信订单号
                     omsOrder.setModifyTime(new Date());
                     omsOrder.setStatus(1);
                     orderMapper.updateByPrimaryKey(omsOrder);
+                }else {
+                    Asserts.fail("==>订单不存在或订单状态异常");
                 }
                 UmsMember umsMember = umsMemberMapper.getUmsMemberByOpenId(openId);
                 if(umsMember == null){
