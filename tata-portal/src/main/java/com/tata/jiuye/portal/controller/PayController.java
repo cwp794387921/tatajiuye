@@ -7,6 +7,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
+import com.tata.jiuye.common.utils.OrderUtil;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.applet.Main;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -198,9 +200,6 @@ public class PayController {
                 }
                 //生成配送单
                 WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
-                if(isWms!=null){
-                    log.info("==》自身是配送中心，不生成配送单");
-                }else{
                     Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
                     log.info("找到的配送中心ID 为"+id);
                     WmsMember wmsMember=null;
@@ -255,7 +254,12 @@ public class PayController {
                         distribution.setCreateTime(new Date());
                         distribution.setWmsMemberId(wmsMember.getId());
                         distribution.setType(1);
-                        distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                        if(isWms!=null) {
+                            log.info("==》自身是配送中心，沒有配送费");
+                            distribution.setProfit(BigDecimal.ZERO);
+                        }else {
+                            distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                        }
                         distribution.setUmsMemberId(umsMember.getId());
                         distributionMapper.insert(distribution);
                         i++;
@@ -263,7 +267,7 @@ public class PayController {
                         omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
                         omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                     }
-                }
+
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(omsOrderItem.getIfJoinVipProduct() == 1){
