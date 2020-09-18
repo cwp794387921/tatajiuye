@@ -330,6 +330,7 @@
         AND MONTH (asi.insert_time)= #{month}
     <if test="flowType != null">
         AND asi.flow_type = #{flowType,jdbcType=VARCHAR}
+        and asi.change_amount!=0
     </if>
   </select>
 </mapper>
