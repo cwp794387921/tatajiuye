@@ -412,32 +412,36 @@ public class WmsMemberController {
             }
             //添加补货收益流水
             AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
-            acctSettleInfo.setOrderNo(distribution.getOrderSn());
-            acctSettleInfo.setAcctId(BHacctInfo.getId());
-            acctSettleInfo.setBeforBal(BHacctInfo.getBalance());
-            acctSettleInfo.setChangeAmount(distribution.getProfit());
-            acctSettleInfo.setAfterBal(BHacctInfo.getBalance().add(distribution.getProfit()));
-            acctSettleInfo.setInsertTime(new Date());
-            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
-            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.STORAGE_ALLOWANCE.value);//仓补
-            acctSettleInfoMapper.insert(acctSettleInfo);
-            BHacctInfo.setBalance(BHacctInfo.getBalance().add(distribution.getProfit()));
-            BHacctInfo.setUpdateTime(new Date());
-            acctInfoMapper.updateByPrimaryKey(BHacctInfo);
+            if(distribution.getProfit()!=null&&!distribution.getProfit().equals(BigDecimal.ZERO)){
+                acctSettleInfo.setOrderNo(distribution.getOrderSn());
+                acctSettleInfo.setAcctId(BHacctInfo.getId());
+                acctSettleInfo.setBeforBal(BHacctInfo.getBalance());
+                acctSettleInfo.setChangeAmount(distribution.getProfit());
+                acctSettleInfo.setAfterBal(BHacctInfo.getBalance().add(distribution.getProfit()));
+                acctSettleInfo.setInsertTime(new Date());
+                acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
+                acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.STORAGE_ALLOWANCE.value);//仓补
+                acctSettleInfoMapper.insert(acctSettleInfo);
+                BHacctInfo.setBalance(BHacctInfo.getBalance().add(distribution.getProfit()));
+                BHacctInfo.setUpdateTime(new Date());
+                acctInfoMapper.updateByPrimaryKey(BHacctInfo);
+            }
             //添加出货收益流水
             acctSettleInfo=new AcctSettleInfo();
-            acctSettleInfo.setOrderNo(Shipment.getOrderSn());
-            acctSettleInfo.setAcctId(CHacctInfo.getId());
-            acctSettleInfo.setBeforBal(CHacctInfo.getBalance());
-            acctSettleInfo.setChangeAmount(Shipment.getProfit());
-            acctSettleInfo.setAfterBal(CHacctInfo.getBalance().add(Shipment.getProfit()));
-            acctSettleInfo.setInsertTime(new Date());
-            acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
-            acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);//仓补
-            acctSettleInfoMapper.insert(acctSettleInfo);
-            CHacctInfo.setBalance(CHacctInfo.getBalance().add(Shipment.getProfit()));
-            CHacctInfo.setUpdateTime(new Date());
-            acctInfoMapper.updateByPrimaryKey(CHacctInfo);
+            if(Shipment.getProfit()!=null&&!Shipment.getProfit().equals(BigDecimal.ZERO)){
+                acctSettleInfo.setOrderNo(Shipment.getOrderSn());
+                acctSettleInfo.setAcctId(CHacctInfo.getId());
+                acctSettleInfo.setBeforBal(CHacctInfo.getBalance());
+                acctSettleInfo.setChangeAmount(Shipment.getProfit());
+                acctSettleInfo.setAfterBal(CHacctInfo.getBalance().add(Shipment.getProfit()));
+                acctSettleInfo.setInsertTime(new Date());
+                acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);//收入
+                acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);//仓补
+                acctSettleInfoMapper.insert(acctSettleInfo);
+                CHacctInfo.setBalance(CHacctInfo.getBalance().add(Shipment.getProfit()));
+                CHacctInfo.setUpdateTime(new Date());
+                acctInfoMapper.updateByPrimaryKey(CHacctInfo);
+            }
             //补货单状态完成
             distribution.setStatus(5);//更新补货单状态
             distributionMapper.updateByPrimaryKey(distribution);

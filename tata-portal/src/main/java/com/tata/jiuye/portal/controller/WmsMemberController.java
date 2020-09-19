@@ -127,6 +127,9 @@ public class WmsMemberController {
     @RequestMapping(value = "/shipment", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult shipment(Long id,Integer number) {
+        if(id==null||number==null){
+            return CommonResult.validateFailed("参数缺失");
+        }
         wmsMemberService.shipment(id,number);
         return CommonResult.success("操作成功");
     }
