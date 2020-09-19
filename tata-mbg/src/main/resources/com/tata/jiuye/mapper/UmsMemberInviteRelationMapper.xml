@@ -332,16 +332,10 @@
           um.create_time DESC
    </select>
 
-  <select id="getTotalPerformance" resultType="com.tata.jiuye.DTO.TotalPerformanceResult">
+  <select id="getTotalPerformance" resultType="java.util.HashMap">
       SELECT
-      CASE
-        WHEN  count( oo.order_sn ) IS NULL THEN
-        0 ELSE count( oo.order_sn )
-        END AS order_count,
-      CASE
-              WHEN SUM( oo.pay_amount ) IS NULL THEN
-              0 ELSE SUM( oo.pay_amount )
-          END AS total_pay_amount
+      count( 1 ) AS order_count,
+	ifnull(sum( oo.pay_amount ),0) AS total_pay_amount
       FROM
           ums_member_invite_relation umir
           LEFT JOIN ums_member um ON umir.member_id = um.id

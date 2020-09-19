@@ -6,6 +6,8 @@ import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.model.WithdrawalExamine;
 import com.tata.jiuye.model.WithdrawalExamineExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface WithdrawalExamineMapper extends BaseMapper<WithdrawalExamine> {
@@ -44,4 +46,7 @@ public interface WithdrawalExamineMapper extends BaseMapper<WithdrawalExamine> {
      * @return
      */
     List<WithdrawExamineQueryResult> getAllWithdrawalExamineListByQueryParam(@Param("param") WithdrawExamineQueryParam queryParam);
+
+    List<WithdrawExamineQueryResult> queryList(Map<String,Object>params);
+
 }

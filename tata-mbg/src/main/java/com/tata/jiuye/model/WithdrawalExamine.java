@@ -44,7 +44,44 @@ public class WithdrawalExamine implements Serializable {
     @ApiModelProperty(value = "账户类型 0普通会员账户 1配送中心账户")
     private String acctType;
 
+    private String name;
+    private String type;
+    private String withdrawalAccount;
+    private String bank;
+
     private static final long serialVersionUID = 1L;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getWithdrawalAccount() {
+        return withdrawalAccount;
+    }
+
+    public void setWithdrawalAccount(String withdrawalAccount) {
+        this.withdrawalAccount = withdrawalAccount;
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
+    }
 
     public Long getId() {
         return id;

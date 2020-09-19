@@ -14,6 +14,11 @@
     <result column="remake" jdbcType="VARCHAR" property="remake" />
     <result column="acct_settle_info_id" jdbcType="BIGINT" property="acctSettleInfoId" />
     <result column="acct_type" jdbcType="VARCHAR" property="acctType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="withdrawal_account" jdbcType="VARCHAR" property="withdrawalAccount" />
+    <result column="bank" jdbcType="VARCHAR" property="bank" />
+
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,7 +81,7 @@
   <sql id="Base_Column_List">
     id, applicant_member_id, applicant_member_name, approver_member_id, approver_member_name,
     create_time, update_time, withdrawal_amount, status, remake, acct_settle_info_id,
-    acct_type
+    acct_type,name,type,withdrawal_account,bank
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample" resultMap="BaseResultMap">
     select
@@ -115,12 +120,13 @@
     insert into withdrawal_examine (applicant_member_id, applicant_member_name,
       approver_member_id, approver_member_name, create_time,
       update_time, withdrawal_amount, status,
-      remake, acct_settle_info_id, acct_type
+      remake, acct_settle_info_id, acct_type,name,type,withdrawal_account,bank
       )
     values (#{applicantMemberId,jdbcType=BIGINT}, #{applicantMemberName,jdbcType=VARCHAR},
       #{approverMemberId,jdbcType=BIGINT}, #{approverMemberName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{withdrawalAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER},
-      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT}, #{acctType,jdbcType=VARCHAR}
+      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT}, #{acctType,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{withdrawalAccount,jdbcType=VARCHAR}
+    ,#{bank,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.WithdrawalExamine">
@@ -162,6 +168,18 @@
       <if test="acctType != null">
         acct_type,
       </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="withdrawalAccount != null">
+        withdrawal_account,
+      </if>
+      <if test="bank != null">
+        bank,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="applicantMemberId != null">
@@ -196,6 +214,18 @@
       </if>
       <if test="acctType != null">
         #{acctType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawalAccount != null">
+        #{withdrawalAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null">
+        #{bank,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -244,6 +274,18 @@
       <if test="record.acctType != null">
         acct_type = #{record.acctType,jdbcType=VARCHAR},
       </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.withdrawalAccount != null">
+        withdrawal_account = #{record.withdrawalAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bank != null">
+        bank = #{record.bank,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +304,11 @@
       status = #{record.status,jdbcType=INTEGER},
       remake = #{record.remake,jdbcType=VARCHAR},
       acct_settle_info_id = #{record.acctSettleInfoId,jdbcType=BIGINT},
-      acct_type = #{record.acctType,jdbcType=VARCHAR}
+      acct_type = #{record.acctType,jdbcType=VARCHAR},
+    name = #{record.name,jdbcType=VARCHAR},
+    type = #{record.type,jdbcType=VARCHAR},
+    withdrawal_account = #{record.withdrawalAccount,jdbcType=VARCHAR},
+    bank = #{record.bank,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -303,6 +349,18 @@
       <if test="acctType != null">
         acct_type = #{acctType,jdbcType=VARCHAR},
       </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawalAccount != null">
+        withdrawal_account = #{withdrawalAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null">
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -318,7 +376,11 @@
       status = #{status,jdbcType=INTEGER},
       remake = #{remake,jdbcType=VARCHAR},
       acct_settle_info_id = #{acctSettleInfoId,jdbcType=BIGINT},
-      acct_type = #{acctType,jdbcType=VARCHAR}
+      acct_type = #{acctType,jdbcType=VARCHAR},
+       name = #{name,jdbcType=VARCHAR},
+       type = #{type,jdbcType=VARCHAR},
+       withdrawal_account = #{withdrawalAccount,jdbcType=VARCHAR},
+       bank = #{bank,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -338,6 +400,33 @@
     FROM
         withdrawal_examine
     WHERE applicant_member_id = #{applicantMemberId,jdbcType=BIGINT}
+    ORDER BY create_time
+  </select>
+
+  <select id="queryList" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        withdrawal_examine
+    WHERE 1=1
+    <if test="applicantMemberId != null">
+      AND applicant_member_id = #{applicantMemberId}
+    </if>
+    <if test="applicantMemberName != null">
+      AND applicant_member_name LIKE CONCAT('%',#{applicantMemberName},'%')
+    </if>
+    <if test="approverMemberId != null">
+      AND approver_member_id = #{approverMemberId}
+    </if>
+    <if test="approverMemberName != null">
+      AND approver_member_name LIKE CONCAT('%',#{approverMemberName},'%')
+    </if>
+    <if test="withdrawalAmount != null">
+      AND withdrawal_amount = #{withdrawalAmount}
+    </if>
+    <if test="status != null">
+      AND status = #{status}
+    </if>
     ORDER BY create_time
   </select>
 

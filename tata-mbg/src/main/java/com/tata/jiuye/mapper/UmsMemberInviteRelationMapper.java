@@ -7,6 +7,8 @@ import com.tata.jiuye.DTO.TotalPerformanceResult;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.UmsMemberInviteRelationExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface UmsMemberInviteRelationMapper extends BaseMapper<UmsMemberInviteRelation> {
@@ -70,5 +72,5 @@ public interface UmsMemberInviteRelationMapper extends BaseMapper<UmsMemberInvit
      * @param memberId
      * @return
      */
-    TotalPerformanceResult getTotalPerformance(@Param("memberId") Long memberId);
+    Map<String,Object> getTotalPerformance(@Param("memberId") Long memberId);
 }

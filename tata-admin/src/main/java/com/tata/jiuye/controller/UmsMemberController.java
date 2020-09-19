@@ -22,6 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UmsMemberController {
 
-    @Autowired
+    @Resource
     private UmsMemberMapper umsMemberMapper;
     @Autowired
     private UmsMemberService umsMemberService;

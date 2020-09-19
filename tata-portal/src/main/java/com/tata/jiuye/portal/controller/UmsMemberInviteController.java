@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 @Controller
 @Api(tags = "UmsMemberInviteController", description = "邀请业绩")
 @RequestMapping("/invite")
@@ -66,7 +68,7 @@ public class UmsMemberInviteController {
         if(umsMember == null){
             return CommonResult.failed("用户未登录");
         }
-        TotalPerformanceResult result = umsMemberInviteRelationService.getTotalPerformance(umsMember.getId());
+        Map<String,Object> result = umsMemberInviteRelationService.getTotalPerformance(umsMember.getId());
         return CommonResult.success(result);
     }
 }

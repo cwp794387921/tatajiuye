@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
 import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.common.api.CommonPage;
@@ -33,7 +34,12 @@ public class WithdrawExamineController {
     @ApiOperation("提现申请(小程序端用)")
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult apply(@RequestParam @ApiParam("提现金额")BigDecimal withdrawAmount,@RequestParam @ApiParam("提现申请账户类型:COMMISSION->分佣账户,DELIVERYCENTER->配送中心账户")String accountType) {
+    public CommonResult apply(@RequestParam @ApiParam("提现金额")BigDecimal withdrawAmount,
+                              @RequestParam @ApiParam("提现申请账户类型:COMMISSION->分佣账户,DELIVERYCENTER->配送中心账户")String accountType,
+                              @RequestParam @ApiParam("提现到账类型 1微信 2支付宝 3银行卡")String type,
+                              @RequestParam @ApiParam("真实姓名")String name,
+                              @RequestParam @ApiParam("提现账户(微信号，手机号或银行卡号)")String accountId,
+                              @RequestParam(required = false) @ApiParam("所在行 类型3银行卡时必传")String bank) {
         UmsMember currentMember = memberService.getCurrentMember();
         if(currentMember == null){
             return CommonResult.failed("用户未登录");
@@ -41,7 +47,10 @@ public class WithdrawExamineController {
         if(withdrawAmount == null || BigDecimal.ZERO.equals(withdrawAmount)){
             return CommonResult.failed("提现金额不能为空或0");
         }
-        withdrawalExamineService.insertWithdrawalExamine(currentMember,withdrawAmount,accountType);
+        if(type.equals("3")&& StrUtil.isEmpty(bank)){
+            return CommonResult.failed("参数缺失");
+        }
+        withdrawalExamineService.insertWithdrawalExamine(currentMember,withdrawAmount,accountType,type,name,accountId,bank);
         return CommonResult.success("提现申请已提交");
     }
 

@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户邀请关系(绑定邀请关系业务实现)
@@ -26,7 +28,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInviteRelationMapper, UmsMemberInviteRelation> implements UmsMemberInviteRelationService {
-    @Autowired
+    @Resource
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
 
 
@@ -62,7 +64,7 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
 
 
     @Override
-    public TotalPerformanceResult getTotalPerformance(Long memberId){
+    public Map<String,Object> getTotalPerformance(Long memberId){
         if(memberId == null){
             Asserts.fail("用户ID为空");
         }

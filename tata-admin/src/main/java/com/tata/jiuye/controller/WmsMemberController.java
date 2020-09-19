@@ -229,6 +229,30 @@ public class WmsMemberController {
         return CommonResult.success(CommonPage.restPage(memberList));
     }
 
+    @ApiOperation("配送用户更改额度")
+    @RequestMapping(value = "/modifyCreditLine", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeParent(Long memberId,String value,String type) {
+        log.info("==》更改额度请求：memberId["+memberId+"],type["+type+"],value["+value+"]");
+        if (memberId==1L){
+            return CommonResult.failed("平台账号不允许修改");
+        }
+        WmsMember wmsMember=memberMapper.selectByPrimaryKey(memberId);
+        if(wmsMember==null){
+            return CommonResult.failed("用户信息不存在");
+        }
+        if(type.equals("1")){
+            wmsMember.setCreditLine(wmsMember.getCreditLine().add(new BigDecimal(value)));
+        }else if(type.equals("2")){
+            wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(new BigDecimal(value)));
+        }else {
+            return CommonResult.failed("参数错误");
+        }
+        wmsMember.setUpdateTime(new Date());
+        memberMapper.updateByPrimaryKey(wmsMember);
+        return CommonResult.success("更改成功");
+    }
+
 
     @ApiOperation("配送用户更改绑定上级")
     @RequestMapping(value = "/changeParent", method = RequestMethod.POST)
@@ -387,20 +411,6 @@ public class WmsMemberController {
                 CHmember.setCreditLine(CHmember.getCreditLine().add(chhz.multiply(new BigDecimal(examine.getNumber()))));
                 memberMapper.updateByPrimaryKey(CHmember);
             }
-            BigDecimal hz=new BigDecimal(0);//货值
-            switch (wmsMember.getLevel()){
-                case 1:
-                    hz=pmsProduct.getDeliveryCenterProductValue();
-                    break;
-                case 2:
-                    hz=pmsProduct.getRegionalProductValue();
-                    break;
-                case 3:
-                    hz=pmsProduct.getWebmasterProductValue();
-                    break;
-            }
-            //wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(hz.multiply(new BigDecimal(examine.getNumber()))));
-            //memberMapper.updateByPrimaryKey(wmsMember);
             //查找账户信息
             AcctInfo BHacctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());//补货账户
             if(BHacctInfo==null){

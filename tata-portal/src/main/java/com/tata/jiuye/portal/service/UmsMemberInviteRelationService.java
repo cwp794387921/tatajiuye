@@ -7,6 +7,8 @@ import com.tata.jiuye.DTO.TotalPerformanceResult;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
 
+import java.util.Map;
+
 
 /**
  *  用户之间邀请关系
@@ -37,5 +39,5 @@ public interface UmsMemberInviteRelationService extends IService<UmsMemberInvite
      * @param memberId
      * @return
      */
-    TotalPerformanceResult getTotalPerformance(Long memberId);
+    Map<String,Object> getTotalPerformance(Long memberId);
 }

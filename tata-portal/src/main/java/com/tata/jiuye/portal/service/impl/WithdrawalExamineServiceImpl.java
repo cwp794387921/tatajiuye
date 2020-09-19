@@ -45,7 +45,7 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
     @Resource
     private AcctInfoMapper acctInfoMapper;
     @Override
-    public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType){
+    public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType,String type,String name,String accountId,String bank){
         log.info("----------------------插入提现申请 开始----------------------");
         log.info("----------------------提现申请参数 申请人信息为: "+umsMember);
         log.info("----------------------提现申请参数 提现金额: "+withdrawAmount);
@@ -71,6 +71,10 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         withdrawalExamine.setWithdrawalAmount(withdrawAmount);
         withdrawalExamine.setStatus(WithdrawStatusEnum.PENDING.getValue());
         withdrawalExamine.setAcctType(accountType);
+        withdrawalExamine.setType(type);
+        withdrawalExamine.setName(name);
+        withdrawalExamine.setWithdrawalAccount(accountId);
+        withdrawalExamine.setBank(bank);
         this.saveOrUpdate(withdrawalExamine);
 
         //更新账户表锁定金额
