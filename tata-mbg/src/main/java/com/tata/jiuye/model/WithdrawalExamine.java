@@ -46,9 +46,8 @@ public class WithdrawalExamine implements Serializable {
 
     private String name;
     private String type;
-    private String withdrawalAccount;
     private String bank;
-
+    private String accountId;
     private static final long serialVersionUID = 1L;
 
     public String getName() {
@@ -67,12 +66,12 @@ public class WithdrawalExamine implements Serializable {
         this.type = type;
     }
 
-    public String getWithdrawalAccount() {
-        return withdrawalAccount;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setWithdrawalAccount(String withdrawalAccount) {
-        this.withdrawalAccount = withdrawalAccount;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getBank() {

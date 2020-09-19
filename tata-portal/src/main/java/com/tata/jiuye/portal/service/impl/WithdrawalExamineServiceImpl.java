@@ -73,10 +73,9 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         withdrawalExamine.setAcctType(accountType);
         withdrawalExamine.setType(type);
         withdrawalExamine.setName(name);
-        withdrawalExamine.setWithdrawalAccount(accountId);
+        withdrawalExamine.setAccountId(accountId);
         withdrawalExamine.setBank(bank);
-        this.saveOrUpdate(withdrawalExamine);
-
+        withdrawalExamineMapper.insert(withdrawalExamine);
         //更新账户表锁定金额
         lockAmount = lockAmount.add(withdrawAmount);
         acctInfo.setLockAmount(lockAmount);

@@ -247,6 +247,20 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         }
         omsDistribution.setStatus(5);//已完成
         distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
+        //返还补货额度
+        PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(omsDistribution.getProductId());
+        switch (wmsMember.getLevel()){
+            case 1:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getDeliveryCenterProductValue()));
+                break;
+            case 2:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getRegionalProductValue()));
+                break;
+            case 3:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getWebmasterProductValue()));
+                break;
+        }
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);
         //清除锁定库存
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());

@@ -128,6 +128,7 @@
         and m.parent_id = #{parentId}
       </if>
     </where>
+    order by id desc
   </select>
 
   <resultMap type="com.tata.jiuye.model.WmsMemberAreaDetail" id="AllWmsMap">

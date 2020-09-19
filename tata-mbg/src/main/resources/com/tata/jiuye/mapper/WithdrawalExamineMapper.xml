@@ -16,7 +16,7 @@
     <result column="acct_type" jdbcType="VARCHAR" property="acctType" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="withdrawal_account" jdbcType="VARCHAR" property="withdrawalAccount" />
+    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
     <result column="bank" jdbcType="VARCHAR" property="bank" />
 
   </resultMap>
@@ -81,7 +81,7 @@
   <sql id="Base_Column_List">
     id, applicant_member_id, applicant_member_name, approver_member_id, approver_member_name,
     create_time, update_time, withdrawal_amount, status, remake, acct_settle_info_id,
-    acct_type,name,type,withdrawal_account,bank
+    acct_type,name,type,account_id,bank
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.WithdrawalExamineExample" resultMap="BaseResultMap">
     select
@@ -120,12 +120,12 @@
     insert into withdrawal_examine (applicant_member_id, applicant_member_name,
       approver_member_id, approver_member_name, create_time,
       update_time, withdrawal_amount, status,
-      remake, acct_settle_info_id, acct_type,name,type,withdrawal_account,bank
+      remake, acct_settle_info_id, acct_type,name,type,account_id,bank
       )
     values (#{applicantMemberId,jdbcType=BIGINT}, #{applicantMemberName,jdbcType=VARCHAR},
       #{approverMemberId,jdbcType=BIGINT}, #{approverMemberName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{withdrawalAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER},
-      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT}, #{acctType,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{withdrawalAccount,jdbcType=VARCHAR}
+      #{remake,jdbcType=VARCHAR}, #{acctSettleInfoId,jdbcType=BIGINT}, #{acctType,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{accountId,jdbcType=VARCHAR}
     ,#{bank,jdbcType=VARCHAR}
       )
   </insert>
@@ -174,8 +174,8 @@
       <if test="type != null">
         type,
       </if>
-      <if test="withdrawalAccount != null">
-        withdrawal_account,
+      <if test="accountId != null">
+        account_id,
       </if>
       <if test="bank != null">
         bank,
@@ -221,8 +221,8 @@
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="withdrawalAccount != null">
-        #{withdrawalAccount,jdbcType=VARCHAR},
+      <if test="accountId != null">
+        #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="bank != null">
         #{bank,jdbcType=VARCHAR},
@@ -280,8 +280,8 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
-      <if test="record.withdrawalAccount != null">
-        withdrawal_account = #{record.withdrawalAccount,jdbcType=VARCHAR},
+      <if test="record.accountId != null">
+        account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
       <if test="record.bank != null">
         bank = #{record.bank,jdbcType=VARCHAR},
@@ -307,7 +307,7 @@
       acct_type = #{record.acctType,jdbcType=VARCHAR},
     name = #{record.name,jdbcType=VARCHAR},
     type = #{record.type,jdbcType=VARCHAR},
-    withdrawal_account = #{record.withdrawalAccount,jdbcType=VARCHAR},
+    account_id = #{record.accountId,jdbcType=VARCHAR},
     bank = #{record.bank,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -355,8 +355,8 @@
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="withdrawalAccount != null">
-        withdrawal_account = #{withdrawalAccount,jdbcType=VARCHAR},
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="bank != null">
         bank = #{bank,jdbcType=VARCHAR},
@@ -379,7 +379,7 @@
       acct_type = #{acctType,jdbcType=VARCHAR},
        name = #{name,jdbcType=VARCHAR},
        type = #{type,jdbcType=VARCHAR},
-       withdrawal_account = #{withdrawalAccount,jdbcType=VARCHAR},
+       account_id = #{accountId,jdbcType=VARCHAR},
        bank = #{bank,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -427,7 +427,7 @@
     <if test="status != null">
       AND status = #{status}
     </if>
-    ORDER BY create_time
+    ORDER BY create_time desc
   </select>
 
 

@@ -531,6 +531,6 @@
       <if test="param.memberLevelId != null">
         AND memberLevelId = #{param.memberLevelId}
       </if>
-      ORDER BY um.create_time
+      ORDER BY um.create_time desc
   </select>
 </mapper>

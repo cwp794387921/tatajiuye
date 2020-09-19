@@ -58,7 +58,8 @@ public class WmsMemberController {
     private AcctInfoMapper acctInfoMapper;
     @Resource
     private AcctSettleInfoMapper acctSettleInfoMapper;
-
+    @Resource
+    private ChangeDistributionMapper changeDistributionMapper;
 
     @ApiOperation("获取平台配送单列表")
     @RequestMapping(value = "/distributionList", method = RequestMethod.GET)
@@ -71,6 +72,32 @@ public class WmsMemberController {
         List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
     }
+
+    @ApiOperation("转配送接口")
+    @RequestMapping(value = "/changeDistribution", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeDistribution(Long changeId,Long orderId) {
+        WmsMember changeWmsMember=memberMapper.selectByPrimaryKey(changeId);
+        if(changeWmsMember==null){
+            Asserts.fail("所选配送中心不存在");
+        }
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+        //插入转配送记录表
+        ChangeDistribution changeDistribution=new ChangeDistribution();
+        changeDistribution.setCreateTime(new Date());
+        changeDistribution.setChangeMemberId(changeWmsMember.getId());
+        changeDistribution.setOrderSn(omsDistribution.getOrderSn());
+        changeDistribution.setWmsMemberId(omsDistribution.getWmsMemberId());
+        changeDistributionMapper.insert(changeDistribution);
+        //更改配送单配送人id
+        omsDistribution.setWmsMemberId(changeId);
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+        return CommonResult.success("操作成功");
+    }
+
 
     @ApiOperation("接单接口")
     @RequestMapping(value = "/acceptOrder", method = RequestMethod.POST)
@@ -114,6 +141,21 @@ public class WmsMemberController {
         }
         omsDistribution.setStatus(5);//已完成
         distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
+        //返还补货额度
+        PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(omsDistribution.getProductId());
+        WmsMember wmsMember=memberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
+        switch (wmsMember.getLevel()){
+            case 1:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getDeliveryCenterProductValue()));
+                break;
+            case 2:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getRegionalProductValue()));
+                break;
+            case 3:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(pmsProduct.getWebmasterProductValue()));
+                break;
+        }
+        memberMapper.updateByPrimaryKey(wmsMember);
         //清除锁定库存
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());

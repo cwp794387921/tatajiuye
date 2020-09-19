@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.processors.DefaultDefaultValueProcessor;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ import java.util.Map;
 @Api(tags = "WithdrawExamineController", value = "后台提现相关业务")
 @RequestMapping("/adminWithdrawExamine")
 @RequiredArgsConstructor
+@Slf4j
 public class WithdrawExamineController {
 
     @Value("${requestempleurl}")
@@ -49,6 +52,7 @@ public class WithdrawExamineController {
     public CommonResult allWithdrawApplicationPage (@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                     @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params){
         PageHelper.startPage(pageNum, pageSize);
+        log.info("查询参数"+params.toString());
         List<WithdrawExamineQueryResult> list = withdrawalExamineMapper.queryList(params);
         return CommonResult.success(CommonPage.restPage(list));
     }
@@ -57,11 +61,15 @@ public class WithdrawExamineController {
     @ApiOperation("提现审批(后台用)")
     @RequestMapping(value = "/approve", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult approve(@RequestParam @ApiParam("当前登录管理员用户名")String umsAdminUserName,@RequestParam @ApiParam("提现申请表ID")Long withdrExamineId,
+    public CommonResult approve(Principal principal, @RequestParam @ApiParam("提现申请表ID")Long withdrExamineId,
                                 @RequestParam @ApiParam("操作编码:PASS->通过,REFUSE->拒绝") String operateType) {
-        UmsAdmin umsAdmin = umsAdminService.getAdminByUsername(umsAdminUserName);
+        if(principal==null){
+            return CommonResult.unauthorized(null);
+        }
+        String username = principal.getName();
+        UmsAdmin umsAdmin = umsAdminService.getAdminByUsername(username);
         if(umsAdmin == null){
-            return CommonResult.failed("当前用户未登录");
+            return CommonResult.failed("获取用户信息失败");
         }
         //通过查询条件获取所有提现申请列表
         String url = "withdrawExamine/approve";

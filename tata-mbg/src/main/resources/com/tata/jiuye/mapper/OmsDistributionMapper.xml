@@ -185,6 +185,7 @@
               and ums_member_id = #{umsMemberId,jdbcType=INTEGER}
           </if>
       </where>
+      order by id desc
   </select>
 
 
