@@ -68,7 +68,7 @@ public class WmsMemberController {
                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
         params.put("type",1);//出货单
-        params.put("wms_member_id",1L);
+        params.put("wmsMemberId",1L);
         List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
     }
