@@ -330,8 +330,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             log.info("邀请人的邀请码:"+inviteCode);
             UmsMember fatherUmsMember = memberMapper.getUmsMemberByInviteCode(inviteCode);
             if(fatherUmsMember == null){
-                log.info("邀请人信息不存在");
-                return null;
+                Asserts.fail("邀请人信息不存在");
             }
             //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
             UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
