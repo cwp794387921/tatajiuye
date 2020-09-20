@@ -208,8 +208,6 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
-        omsDistribution.setStatus(1);//待配送
-        distributionMapper.updateByPrimaryKey(omsDistribution);
         PmsSkuStock pmsSkuStock=new PmsSkuStock();
         pmsSkuStock.setProductId(omsDistribution.getProductId());
         pmsSkuStock.setWmsMemberId(wmsMember.getId());
@@ -217,6 +215,11 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(pmsSkuStock==null){
             Asserts.fail("库存不存在");
         }
+        if(pmsSkuStock.getStock()-pmsSkuStock.getLockStock()<omsDistribution.getNumber()){
+            Asserts.fail("库存不足，无法接单");
+        }
+        omsDistribution.setStatus(1);//待配送
+        distributionMapper.updateByPrimaryKey(omsDistribution);
         pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()+omsDistribution.getNumber());//添加锁定库存
         //更新库存信息
         pmsSkuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);

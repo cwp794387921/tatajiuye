@@ -299,7 +299,7 @@ public class WmsMemberController {
     @ApiOperation("配送用户更改绑定上级")
     @RequestMapping(value = "/changeParent", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult changeParent(Long memberId,Long changeId) {
+    public CommonResult changeParent(Long memberId,Long changeId,@RequestParam(required = false) Integer level) {
         log.info("==》更改所属上级请求：memberId["+memberId+"],changeId["+changeId+"]");
         if (memberId==1L){
             return CommonResult.failed("平台账号不允许修改上级");
@@ -317,6 +317,9 @@ public class WmsMemberController {
         }
         wmsMember.setParentId(changeId);
         wmsMember.setUpdateTime(new Date());
+        if(level!=null){
+            wmsMember.setLevel(level);
+        }
         memberMapper.updateByPrimaryKey(wmsMember);
         return CommonResult.success("更改成功");
     }
