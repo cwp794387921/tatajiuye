@@ -9,6 +9,7 @@ import com.tata.jiuye.dto.PmsProductQueryParam;
 import com.tata.jiuye.dto.PmsProductResult;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
+import com.tata.jiuye.service.OmsCartItemService;
 import com.tata.jiuye.service.PmsProductService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -51,7 +52,8 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
     private final CmsPrefrenceAreaProductRelationMapper prefrenceAreaProductRelationMapper;
     private final PmsProductDao productDao;
     private final PmsProductVertifyRecordDao productVertifyRecordDao;
-
+    private final OmsCartItemMapper cartItemMapper;
+    private final OmsCartItemService omsCartItemService;
     @Override
     public int create(PmsProductParam productParam) {
         int count;
@@ -111,6 +113,9 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         PmsProduct product = productParam;
         product.setId(id);
         productMapper.updateByPrimaryKeySelective(product);
+        //同步购物车商品价格信息
+        List<OmsCartItem> cartItemList = omsCartItemService.getByProductId(product.getId());
+        omsCartItemService.updateOmsCartItems(cartItemList,product);
         //会员价格
         PmsMemberPriceExample pmsMemberPriceExample = new PmsMemberPriceExample();
         pmsMemberPriceExample.createCriteria().andProductIdEqualTo(id);
