@@ -47,7 +47,7 @@ public class WmsMemberController {
         return CommonResult.success(jsonObject);
     }
 
-    @ApiOperation("获取配送用户列表")
+    @ApiOperation("获取配送用户列表 可选搜索参数：memberId（配送会员id），phone（手机号），nickname（会员名称）")
     @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult queryUserList(@RequestParam Map<String,Object> params) {
