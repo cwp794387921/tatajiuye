@@ -1,6 +1,8 @@
 package com.tata.jiuye.portal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tata.jiuye.DTO.AcctSettleInfoResult;
+import com.tata.jiuye.DTO.OmsOrderDetailDTO;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.UmsMember;
@@ -48,7 +50,7 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      * @param flowType                      流水类型
      * @return
      */
-    CommonPage getBalanceAndFlow(Integer pageNum,Integer pageSize,Long memberId, String year, String month,String flowType);
+    CommonPage<AcctSettleInfoResult> getBalanceAndFlow(Integer pageNum, Integer pageSize, Long memberId, String year, String month, String flowType);
 
 
     /**
@@ -57,4 +59,12 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      * @param withdrawAmount               提现金额
      */
     void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType);
+
+
+    /**
+     * 通过订单号获取订单详情
+     * @param orderNo
+     * @return
+     */
+    OmsOrderDetailDTO getDetailedDetails(String orderNo);
 }

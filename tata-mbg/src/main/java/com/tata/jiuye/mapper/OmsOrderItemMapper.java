@@ -35,4 +35,11 @@ public interface OmsOrderItemMapper extends BaseMapper<OmsOrderItem> {
     int updateByPrimaryKeySelective(OmsOrderItem record);
 
     int updateByPrimaryKey(OmsOrderItem record);
+
+    /**
+     * 通过订单号获取订单商品
+     * @param orderNo
+     * @return
+     */
+    List<OmsOrderItem> getByOrderNo(@Param("orderSn") String orderNo);
 }

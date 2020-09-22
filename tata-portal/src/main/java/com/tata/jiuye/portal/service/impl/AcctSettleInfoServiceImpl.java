@@ -2,6 +2,8 @@ package com.tata.jiuye.portal.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.DTO.AcctSettleInfoResult;
+import com.tata.jiuye.DTO.OmsOrderDetailDTO;
 import com.tata.jiuye.DTO.TotalFlowQueryParam;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -44,7 +47,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     @Autowired
     private AcctSettleInfoMapper acctSettleInfoMapper;
     @Autowired
-    private WithdrawalExamineService withdrawalExamineService;
+    private OmsPortalOrderService omsPortalOrderService;
 
     //上级配送中心分佣金额(当购买的商品为升级配送中心商品时,专用)
     private static BigDecimal DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT = new BigDecimal("1500");
@@ -209,7 +212,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     }
 
     @Override
-    public CommonPage getBalanceAndFlow(Integer pageNum, Integer pageSize, Long acctId, String year, String month,String flowType){
+    public CommonPage<AcctSettleInfoResult> getBalanceAndFlow(Integer pageNum, Integer pageSize, Long acctId, String year, String month,String flowType){
         log.info("----------------------获取某个时间段明细   开始----------------------");
         if(acctId == null){
             Asserts.fail("用户未登录");
@@ -221,8 +224,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------参数 月份 "+month);
         log.info("----------------------参数 流水类型 "+flowType);
         PageHelper.startPage(pageNum,pageSize);
-        List<AcctSettleInfo> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(acctId,year,month,flowType);
-        CommonPage<AcctSettleInfo> commonPage = CommonPage.restPage(acctSettleInfos);
+        List<AcctSettleInfoResult> acctSettleInfos = acctSettleInfoMapper.getIncomeFlow(acctId,year,month,flowType);
+        CommonPage<AcctSettleInfoResult> commonPage = CommonPage.restPage(acctSettleInfos);
         log.info("----------------------获取某个时间段明细   开始----------------------");
         return commonPage;
     }
@@ -256,5 +259,32 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW);
         }
         log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   结束----------------------");
+    }
+
+
+    //获取明细详情
+    @Override
+    public OmsOrderDetailDTO getDetailedDetails(String orderNo){
+        if(StringUtils.isEmpty(orderNo)){
+            Asserts.fail("订单号为空");
+        }
+        OmsOrderDetailDTO resultDto = new OmsOrderDetailDTO();
+        //1.通过订单号获取订单信息
+        OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
+        if(omsOrder == null){
+            Asserts.fail("查询不到订单号 "+orderNo+" 对应的订单信息");
+        }
+        resultDto.setOrderAmount(omsOrder.getPayAmount());
+        if(3 == omsOrder.getStatus()){
+            resultDto.setFlowStatus(StaticConstant.CREDITED);
+        }
+        else{
+            resultDto.setFlowStatus(StaticConstant.TO_BE_CREDITED);
+        }
+        resultDto.setOrderNo(orderNo);
+        //2.通过订单号获取商品详情
+        List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
+        resultDto.setOrderItems(omsOrderItems);
+        return  resultDto;
     }
 }

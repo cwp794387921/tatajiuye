@@ -317,13 +317,16 @@
         AND asi.insert_time BETWEEN #{sumParam.startDate} AND #{sumParam.endDate}
     </if>
   </select>
+    <resultMap id="AcctResultMap" type="com.tata.jiuye.DTO.AcctSettleInfoResult" extends="BaseResultMap">
+        <result property="icon" column="icon"></result>
+    </resultMap>
 
-
-    <select id="getIncomeFlow" resultMap="BaseResultMap">
+    <select id="getIncomeFlow" resultMap="AcctResultMap">
     SELECT
-        asi.*
+        asi.*,um.icon
     FROM
         acct_settle_info asi
+    LEFT JOIN ums_member um ON um.id = ai.member_id
     WHERE
       asi.acct_id = #{acctId}
         AND YEAR (asi.insert_time) = #{year}

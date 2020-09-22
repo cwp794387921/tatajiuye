@@ -1,13 +1,14 @@
 package com.tata.jiuye.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tata.jiuye.DTO.AcctSettleInfoResult;
 import com.tata.jiuye.DTO.TotalFlowQueryParam;
 import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.AcctSettleInfoExample;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface AcctSettleInfoMapper extends BaseMapper<AcctSettleInfo> {
     long countByExample(AcctSettleInfoExample example);
@@ -45,5 +46,5 @@ public interface AcctSettleInfoMapper extends BaseMapper<AcctSettleInfo> {
      * @param month              月份
      * @return
      */
-    List<AcctSettleInfo> getIncomeFlow(@Param("acctId")Long acctId,@Param("year") String year,@Param("month") String month,@Param("flowType") String flowType);
+    List<AcctSettleInfoResult> getIncomeFlow(@Param("acctId")Long acctId, @Param("year") String year, @Param("month") String month, @Param("flowType") String flowType);
 }

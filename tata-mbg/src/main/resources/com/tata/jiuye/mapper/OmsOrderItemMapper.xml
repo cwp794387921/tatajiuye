@@ -90,10 +90,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, order_id, order_sn, product_id, product_pic, product_name, product_brand, product_sn, 
-    product_price, product_quantity, product_sku_id, product_sku_code, product_category_id, 
-    promotion_name, promotion_amount, coupon_amount, integration_amount, real_amount, 
-    gift_integration, gift_growth, product_attr, direct_push_amount, indirect_push_amount, 
+    id, order_id, order_sn, product_id, product_pic, product_name, product_brand, product_sn,
+    product_price, product_quantity, product_sku_id, product_sku_code, product_category_id,
+    promotion_name, promotion_amount, coupon_amount, integration_amount, real_amount,
+    gift_integration, gift_growth, product_attr, direct_push_amount, indirect_push_amount,
     delivery_amount, if_join_vip_product, if_upgrade_distribution_center_product,relation_distribution_id,distribution_status
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsOrderItemExample" resultMap="BaseResultMap">
@@ -111,7 +111,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from oms_order_item
     where id = #{id,jdbcType=BIGINT}
@@ -175,23 +175,23 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into oms_order_item (order_id, order_sn, product_id, 
-      product_pic, product_name, product_brand, 
-      product_sn, product_price, product_quantity, 
-      product_sku_id, product_sku_code, product_category_id, 
-      promotion_name, promotion_amount, coupon_amount, 
-      integration_amount, real_amount, gift_integration, 
-      gift_growth, product_attr, direct_push_amount, 
-      indirect_push_amount, delivery_amount, if_join_vip_product, 
+    insert into oms_order_item (order_id, order_sn, product_id,
+      product_pic, product_name, product_brand,
+      product_sn, product_price, product_quantity,
+      product_sku_id, product_sku_code, product_category_id,
+      promotion_name, promotion_amount, coupon_amount,
+      integration_amount, real_amount, gift_integration,
+      gift_growth, product_attr, direct_push_amount,
+      indirect_push_amount, delivery_amount, if_join_vip_product,
       if_upgrade_distribution_center_product,relation_distribution_id,distribution_status)
-    values (#{orderId,jdbcType=BIGINT}, #{orderSn,jdbcType=VARCHAR}, #{productId,jdbcType=BIGINT}, 
-      #{productPic,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{productBrand,jdbcType=VARCHAR}, 
-      #{productSn,jdbcType=VARCHAR}, #{productPrice,jdbcType=DECIMAL}, #{productQuantity,jdbcType=INTEGER}, 
-      #{productSkuId,jdbcType=BIGINT}, #{productSkuCode,jdbcType=VARCHAR}, #{productCategoryId,jdbcType=BIGINT}, 
-      #{promotionName,jdbcType=VARCHAR}, #{promotionAmount,jdbcType=DECIMAL}, #{couponAmount,jdbcType=DECIMAL}, 
-      #{integrationAmount,jdbcType=DECIMAL}, #{realAmount,jdbcType=DECIMAL}, #{giftIntegration,jdbcType=INTEGER}, 
-      #{giftGrowth,jdbcType=INTEGER}, #{productAttr,jdbcType=VARCHAR}, #{directPushAmount,jdbcType=DECIMAL}, 
-      #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL}, #{ifJoinVipProduct,jdbcType=INTEGER}, 
+    values (#{orderId,jdbcType=BIGINT}, #{orderSn,jdbcType=VARCHAR}, #{productId,jdbcType=BIGINT},
+      #{productPic,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{productBrand,jdbcType=VARCHAR},
+      #{productSn,jdbcType=VARCHAR}, #{productPrice,jdbcType=DECIMAL}, #{productQuantity,jdbcType=INTEGER},
+      #{productSkuId,jdbcType=BIGINT}, #{productSkuCode,jdbcType=VARCHAR}, #{productCategoryId,jdbcType=BIGINT},
+      #{promotionName,jdbcType=VARCHAR}, #{promotionAmount,jdbcType=DECIMAL}, #{couponAmount,jdbcType=DECIMAL},
+      #{integrationAmount,jdbcType=DECIMAL}, #{realAmount,jdbcType=DECIMAL}, #{giftIntegration,jdbcType=INTEGER},
+      #{giftGrowth,jdbcType=INTEGER}, #{productAttr,jdbcType=VARCHAR}, #{directPushAmount,jdbcType=DECIMAL},
+      #{indirectPushAmount,jdbcType=DECIMAL}, #{deliveryAmount,jdbcType=DECIMAL}, #{ifJoinVipProduct,jdbcType=INTEGER},
       #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER},#{relationDistributionId,jdbcType=INTEGER},#{distributionStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsOrderItem">
@@ -616,4 +616,12 @@
       if_upgrade_distribution_center_product = #{ifUpgradeDistributionCenterProduct,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getByOrderNo" resultMap="BaseResultMap">
+    SELECT * FROM
+      oms_order_item
+    WHERE
+      order_sn = #{orderSn,jdbcType=VARCHAR}
+    ORDER BY id DESC
+  </select>
 </mapper>

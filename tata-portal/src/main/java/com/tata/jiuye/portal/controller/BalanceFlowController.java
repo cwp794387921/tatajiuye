@@ -1,6 +1,8 @@
 package com.tata.jiuye.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tata.jiuye.DTO.AcctSettleInfoResult;
+import com.tata.jiuye.DTO.OmsOrderDetailDTO;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
@@ -99,7 +101,17 @@ public class BalanceFlowController {
         if(acctInfo==null){
             Asserts.fail("==>找不到对应账户信息");
         }
-        CommonPage<AcctSettleInfo> resultPage = acctSettleInfoService.getBalanceAndFlow(pageNum,pageSize,acctInfo.getId(),year,month,flowType);
+        CommonPage<AcctSettleInfoResult> resultPage = acctSettleInfoService.getBalanceAndFlow(pageNum,pageSize,acctInfo.getId(),year,month,flowType);
         return CommonResult.success(resultPage);
+    }
+
+
+
+    @ApiOperation("流水详情(流水中的订单详情)")
+    @RequestMapping(value = "/getDetailedDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getDetailedDetails(@RequestParam @ApiParam("订单号")String orderNo){
+        OmsOrderDetailDTO result =  acctSettleInfoService.getDetailedDetails(orderNo);
+        return CommonResult.success(result);
     }
 }

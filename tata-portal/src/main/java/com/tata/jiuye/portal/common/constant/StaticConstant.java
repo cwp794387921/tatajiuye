@@ -102,4 +102,18 @@ public class StaticConstant {
      */
     public static final String ACCOUNT_TYPE_PLATFORMACCOUNT = "PLATFORM";
     /***************************************************************************************/
+
+
+    /********************************流水状态类型常量***************************************/
+    /**
+     * 待入账
+     */
+    public static final String TO_BE_CREDITED = "待入账";
+
+    /**
+     * 已入账
+     */
+    public static final String CREDITED = "已入账";
+
+    /***********************************************************************************/
 }
