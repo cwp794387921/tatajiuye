@@ -86,6 +86,9 @@ public class PayController {
                                          HttpServletResponse httpResponse)throws ServletException, IOException {
         log.info("===========微信web支付:进入============");
         log.info("===========用户请求IP:{}============",getIp(httpRequest));
+        log.info("APPID : "+APPID);
+        log.info("MCHID : "+MCHID);
+        log.info("NOTIFYURL : "+NOTIFYURL);
         if(StrUtil.isEmpty(orderNum)){
             return CommonResult.validateFailed("参数错误");
         }

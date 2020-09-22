@@ -39,4 +39,6 @@ public interface WmsMemberMapper {
     int updateByPrimaryKeySelective(WmsMember record);
 
     int updateByPrimaryKey(WmsMember record);
+
+    WmsMember getAvailableByMemberId(@Param("memberId")Long memberId);
 }

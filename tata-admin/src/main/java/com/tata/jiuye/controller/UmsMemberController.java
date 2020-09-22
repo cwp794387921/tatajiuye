@@ -99,4 +99,12 @@ public class UmsMemberController {
         umsMemberService.changeSuperior(memberId,targetMemberId);
         return CommonResult.success("换绑成功");
     }
+
+    @ApiOperation("降级")
+    @RequestMapping(value ="/downgrade",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult downgrade(@RequestParam @ApiParam("待降级用户ID") Long memberId){
+        umsMemberService.downgrade(memberId);
+        return CommonResult.success("降级成功");
+    }
 }

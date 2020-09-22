@@ -5,8 +5,10 @@ import com.tata.jiuye.DTO.UmsMemberInfoByMemberIdResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
+import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.UmsMemberInviteRelation;
+import com.tata.jiuye.model.WmsMember;
 import com.tata.jiuye.service.UmsMemberLevelService;
 import com.tata.jiuye.service.UmsMemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,9 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
     @Autowired
     private UmsMemberMapper memberMapper;
+    @Autowired
+    private WmsMemberMapper wmsMemberMapper;
+
     @Autowired
     private UmsMemberLevelService umsMemberLevelService;
     @Value("${umsmemberlevelname.deliverycenter}")
@@ -135,6 +140,40 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
             relation.setGrandpaMemberId(targetGrandpaMemberId);
             updateTarget(relation);
         }
+    }
+
+    //降级
+    @Override
+    public void downgrade(Long memberId){
+        if(memberId == null){
+            Asserts.fail("待降级用户ID不能为空");
+        }
+        //1.将用户等级下降为3
+        UmsMember member = memberMapper.selectById(memberId);
+        if(member == null){
+            Asserts.fail("找不到该用户ID对应的用户");
+        }
+        member.setMemberLevelId(3L);
+        updateMember(member);
+        //2.将wms_member账户状态置为不可用
+        WmsMember wmsMember = wmsMemberMapper.getAvailableByMemberId(memberId);
+        if(wmsMember != null){
+            wmsMember.setUpdateTime(new Date());
+            wmsMember.setStatus(0);
+            updateWmsMember(wmsMember);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateWmsMember(WmsMember wmsMember){
+        wmsMemberMapper.updateByPrimaryKeySelective(wmsMember);
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMember(UmsMember umsMember){
+        memberMapper.updateByPrimaryKeySelective(umsMember);
     }
 
 

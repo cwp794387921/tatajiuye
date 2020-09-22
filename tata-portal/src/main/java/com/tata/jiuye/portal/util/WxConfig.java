@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.util;
 
 import com.github.wxpay.sdk.WXPayConfig;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,6 +12,15 @@ import java.net.URL;
 public class WxConfig implements WXPayConfig {
 
     public static String PATH="/usr/local/tata-jiuye/tata-portal/apiclient_cert.p12";
+    //public static String PATH = "/usr/local/tata-jiuye/tata-portal/prod/apiclient_cert.p12";
+
+
+    @Value("${auth.wechat.appId}")
+    private String APPID;
+    @Value("${auth.wechat.pay.mchId}")
+    private String MCHID;
+    @Value("${auth.wechat.pay.notifyurl}")
+    private String NOTIFYURL;
 
     private byte[] certData;
 
@@ -27,24 +37,29 @@ public class WxConfig implements WXPayConfig {
     @Override
     public String  getAppID() {
         return "wxdaa9fb4025511958";
+        //return "wxd920cb3c36501e46";
     }
 
     //商户号
     @Override
     public String getMchID() {
         return "1494508502";
+        //return "1601954250";
     }
 
     public String getAppSecret() {
         return "56bcec96c36b270da318979e4c41f8fc";
+        //return "5c4953f10adadc5cf6bcee10b27c108c";
     }
     @Override
     public String getKey() {
         return "xiamenshihuliquceyiwangluo111111";
+        //return "HYKJxmjdiosajdiosjdoidj545454545";
     }
 
     public String getNotifyUrl(){
         return "https://www.cyjyt.com:8085/pay/wxNotify";
+        //return "https://www.xmzzhy.com:8085/pay/wxNotify";
     }
 
     public InputStream getCertStream() {

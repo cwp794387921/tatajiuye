@@ -18,4 +18,11 @@ public interface UmsMemberService extends IService<UmsMember> {
      * @param targetMemberId           换绑目标用户ID
      */
     void changeSuperior(Long memberId,Long targetMemberId);
+
+
+    /**
+     * 降级
+     * @param memberId
+     */
+    void downgrade(Long memberId);
 }
