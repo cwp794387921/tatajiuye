@@ -100,9 +100,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         result.put("bal",acctInfo.getBalance());
         result.put("lockBal",acctInfo.getLockAmount());
         result.put("creditLine",wmsMember.getCreditLine());
-        //查找库存列表
+        /*//查找库存列表
         List<PmsSkuStockDetail> stockList=pmsSkuStockMapper.queryStockByMemberId(wmsMember.getId());
-        result.put("stock",stockList);
+        result.put("stock",stockList);*/
         //查找补货单
         OmsDistribution distribution=new OmsDistribution();
         distribution.setStatusNo1(4);//取消
