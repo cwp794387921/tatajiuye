@@ -28,7 +28,7 @@ public interface WmsMemberMapper {
 
     WmsMemberAreaDetail selectByUmsId(Long id);
 
-    List<WmsMemberAreaDetail> queryAllWmsUser(Long id);
+    List<WmsMemberAreaDetail> queryAllWmsUser(Map<String,Object> params);
 
     List<WmsMemberAreaDetail> queryMemberDetail(Map<String,Object> params);
 

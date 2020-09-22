@@ -157,6 +157,15 @@
           LEFT JOIN wms_area a ON a.wms_member_id = m.id
       WHERE
           a.`status` = 1 and m.id != #{id}
+    <if test="memberId !=null">
+      and m.id = #{memberId}
+    </if>
+    <if test="phone !=null and phone !=''">
+      and m.phone = #{phone}
+    </if>
+    <if test="nickname !=null and nickname !=''">
+      and m.nickname like CONCAT('%',#{nickname}, '%')
+    </if>
       ORDER BY
           a.province
   </select>

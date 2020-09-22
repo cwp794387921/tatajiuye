@@ -6,12 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface WmsMemberService {
 
     JSONObject selectMerberInfo();
 
-    List<WmsMemberAreaDetail> queryAllUser();
+    List<WmsMemberAreaDetail> queryAllUser(Map<String,Object> params);
 
     List<WmsArea> queryAllArea();
 

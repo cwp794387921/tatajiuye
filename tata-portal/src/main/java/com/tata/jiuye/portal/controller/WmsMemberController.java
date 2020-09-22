@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Api(tags = "WmsMemberController", description = "配送中心用户管理")
@@ -49,8 +50,8 @@ public class WmsMemberController {
     @ApiOperation("获取配送用户列表")
     @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult queryUserList() {
-        List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser();
+    public CommonResult queryUserList(@RequestParam Map<String,Object> params) {
+        List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser(params);
         return CommonResult.success(result);
     }
 
