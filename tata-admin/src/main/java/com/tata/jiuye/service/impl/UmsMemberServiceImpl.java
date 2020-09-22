@@ -14,6 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -95,5 +98,53 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
             log.info("--------------------------获取所属配送中心用户ID   结束--------------------------");
             return deliveryCenterMemberId;
         }
+    }
+
+
+    @Override
+    public void changeSuperior(Long memberId,Long targetMemberId){
+        if(memberId == null){
+            Asserts.fail("换绑人用户ID为空");
+        }
+        if(targetMemberId == null){
+            Asserts.fail("换绑目标用户ID为空");
+        }
+        //1.通过换绑人用户ID,找到该条换绑关系
+        UmsMemberInviteRelation relation = umsMemberInviteRelationMapper.getByMemberId(memberId);
+        //2.通过换绑目标用户ID找到该用户的直邀上级
+        UmsMemberInviteRelation targetRelation = umsMemberInviteRelationMapper.getByMemberId(targetMemberId);
+        if(targetRelation == null){
+            Asserts.fail("换绑目标用户未找到自身上级");
+        }
+        Long targetGrandpaMemberId = targetRelation.getFatherMemberId();
+        //3.修改1中的直邀上级为 换绑目标用户ID,间邀上级为换绑目标用户直邀上级的用户ID
+        if(relation == null){
+            //如果原邀请关系为空,则直接新增
+            UmsMemberInviteRelation theRelation = new UmsMemberInviteRelation();
+            theRelation.setMemberId(memberId);
+            theRelation.setGrandpaMemberId(targetGrandpaMemberId);
+            theRelation.setFatherMemberId(targetMemberId);
+            theRelation.setCreateTime(new Date());
+            theRelation.setUpdateTime(new Date());
+            addTarget(theRelation);
+        }
+        else{
+            //若不为空,则更新
+            relation.setUpdateTime(new Date());
+            relation.setFatherMemberId(targetMemberId);
+            relation.setGrandpaMemberId(targetGrandpaMemberId);
+            updateTarget(relation);
+        }
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTarget(UmsMemberInviteRelation relation){
+        umsMemberInviteRelationMapper.updateByPrimaryKeySelective(relation);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void addTarget(UmsMemberInviteRelation relation){
+        umsMemberInviteRelationMapper.insertSelective(relation);
     }
 }

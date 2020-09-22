@@ -90,4 +90,13 @@ public class UmsMemberController {
         UmsMemberInfoByMemberIdResult result = umsMemberService.getUmsInfoByMemberId(memberId);
         return CommonResult.success(result);
     }
+
+
+    @ApiOperation("换绑")
+    @RequestMapping(value ="/changeSuperior",method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeSuperior(@RequestParam @ApiParam("换绑人用户ID") Long memberId,@RequestParam @ApiParam("换绑目标用户ID") Long targetMemberId){
+        umsMemberService.changeSuperior(memberId,targetMemberId);
+        return CommonResult.success("换绑成功");
+    }
 }

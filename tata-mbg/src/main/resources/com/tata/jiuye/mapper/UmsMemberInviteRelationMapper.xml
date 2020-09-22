@@ -224,16 +224,6 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="getByMemberId" parameterType="java.lang.Long" resultType="com.tata.jiuye.model.UmsMemberInviteRelation">
-      SELECT
-          *
-      FROM
-          ums_member_invite_relation
-      WHERE
-          member_id = #{memberId,jdbcType=BIGINT}
-      limit 1
-   </select>
-
   <resultMap id="directPerformanceBaseResult" type="com.tata.jiuye.DTO.DirectPerformanceResult">
     <result column="nickname" property="nickname"></result>
     <result column="order_count" property="orderCount"></result>
@@ -345,4 +335,13 @@
           AND oo.pay_amount > 0
           AND oo.`status` NOT IN ( 0, 4, 5 )
    </select>
+
+
+    <select id="getByMemberId" resultType="com.tata.jiuye.model.UmsMemberInviteRelation">
+        SELECT * FROM
+        ums_member_invite_relation
+        WHERE member_id = #{memberId,jdbcType=BIGINT}
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
 </mapper>

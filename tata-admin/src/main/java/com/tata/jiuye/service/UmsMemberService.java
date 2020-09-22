@@ -10,4 +10,12 @@ public interface UmsMemberService extends IService<UmsMember> {
 
 
     Long getSuperiorDistributionCenterMemberId(Long memberId);
+
+
+    /**
+     * 换绑
+     * @param memberId                  换绑人用户ID
+     * @param targetMemberId           换绑目标用户ID
+     */
+    void changeSuperior(Long memberId,Long targetMemberId);
 }
