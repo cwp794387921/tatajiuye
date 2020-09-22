@@ -167,13 +167,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                 result.put("msg","购买 加入VIP 或 升级为配送中心 的商品,购买数量不能大于1");
                 Asserts.fail("购买 加入VIP 或 升级为配送中心 的商品,购买数量不能大于1");
             }
-            if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName)){
+            /*if(StaticConstant.UMS_MEMBER_LEVEL_NAME_ORDINARY_MEMBER.equals(memberLevelName)){
                 //普通会员    不是升级vip商品&&不是升级配送中心商品
                 if(!productId.equals(joinVipProductId) && !productId.equals(upgradeDistributionCenterProductId)){
                     result.put("msg","非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
                     Asserts.fail("非VIP会员用户无法购买该商品,请先购买升级为VIP商品,或购买升级为配送中心商品");
                 }
-            }
+            }*/
             //等级为VIP,不能购买升级为VIP商品
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER.equals(memberLevelName) && joinVipProductId.equals(productId)){
                 result.put("msg","您已升级为VIP会员,无需再次购买升级为VIP会员的商品");

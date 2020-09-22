@@ -62,27 +62,6 @@ rabbitmq:
       cancelOrder: cancelOrderQueue
 
 
-
-aliyun:
-  sms:
-    regionid: "cn-hangzhou"
-    accesskeyid: "LTAI4G5J7xp9V8CTWY63x2ST"
-    secret: "CjWWNZSQR29pDgVynn1SNbEDxiJuZG"
-    signname: "格知教育"
-    templatecode: "SMS_196642878"
-
-  oss:
-    endpoint: oss-cn-zhangjiakou.aliyuncs.com # oss对外服务的访问域名
-    accessKeyId: LTAI4GCrh51knZ4SviLLKZz3 #LTAI4GDtsVifM5rns4rq3Yrr # 访问身份验证中用到用户标识
-    accessKeySecret: 4piBt8TqVFozqL8nd5rGyEWPurJPwl #MVPJwk2VlBf3q5sRV9J5VhBQpXFeGX # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
-    bucketName: cscyimages # oss的存储空间
-    policy:
-      expire: 300 # 签名有效期(S)
-    maxSize: 10 # 上传文件大小(M)
-    callback: http://cyjyt.com:8082/aliyun/oss/callback # 文件上传成功后的回调地址
-    dir:
-      prefix: jiuye/images/ # 上传文件夹路径前缀
-
 umsmemberlevelname:
   vip: "VIP会员"
   deliverycenter: "配送中心"
@@ -92,13 +71,6 @@ pmsproductcategoryname:
   memberrepurchase: "会员复购"
 
 
-  # wechat Auth
-auth:
-  wechat:
-    sessionHost: 'https://api.weixin.qq.com/sns/jscode2session'
-    appId: 'wxdaa9fb4025511958'
-    secret: '56bcec96c36b270da318979e4c41f8fc'
-    grantType: 'authorization_code'
 
 file:
   mac:

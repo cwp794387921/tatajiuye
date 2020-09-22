@@ -6,7 +6,7 @@ import lombok.Setter;
 
 /**
  * 订单查询参数
- * 
+ *
  * @author lewis
  */
 @Getter
@@ -24,4 +24,6 @@ public class OmsOrderQueryParam {
     private Integer sourceType;
     @ApiModelProperty(value = "订单提交时间")
     private String createTime;
+    @ApiModelProperty(value = "下单人ID")
+    private Long memberId;
 }

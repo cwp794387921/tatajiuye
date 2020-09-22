@@ -1,14 +1,14 @@
 server:
   port: 8085
   ssl:
-    key-store: classpath:4424315_cyjyt.com.pfx
-    key-store-password: 0NY3y6m5
+    key-store: classpath:4528684_www.xmzzhy.com.pfx
+    key-store-password: ocX607qq
     key-store-type: PKCS12
 spring:
   datasource:
-    url: jdbc:mysql://db:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: reader
-    password: 123456
+    url: jdbc:mysql://39.101.170.150:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
     druid:
       initial-size: 5 #连接池初始化大小
       min-idle: 10 #最小空闲连接数
@@ -25,19 +25,19 @@ spring:
 #      port: 27017
 #      database: mall-port
 
-redis:
-  host: redis # Redis服务器地址
-  database: 0 # Redis数据库索引（默认为0）
-  port: 6379 # Redis服务器连接端口
-  password: # Redis服务器连接密码（默认为空）
-  timeout: 300ms # 连接超时时间（毫秒）
+  redis:
+    host: 39.101.170.150 # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: # Redis服务器连接密码（默认为空）
+    timeout: 300ms # 连接超时时间（毫秒）
 
-rabbitmq:
-  host: rabbit
-  port: 5672
-  virtual-host: /mall
-  username: mall
-  password: mall
+  rabbitmq:
+    host: 39.101.170.150
+    port: 5672
+    virtual-host: /mall
+    username: admin
+    password: admin
 
 logging:
   file:
@@ -47,5 +47,40 @@ logging:
     com.macro.mall: info
 
 logstash:
-  host: logstash
+  host: 39.101.170.150
 
+
+
+  # wechat Auth
+auth:
+  wxconfig:
+    path: /usr/local/tata-jiuye/tata-portal/prod/apiclient_cert.p12
+  wechat:
+    sessionHost: 'https://api.weixin.qq.com/sns/jscode2session'
+    appId: 'wxd920cb3c36501e46'
+    secret: '5c4953f10adadc5cf6bcee10b27c108c'
+    grantType: 'authorization_code'
+    pay:
+      mchId: '1601954250'
+      secret: 'HYKJxmjdiosajdiosjdoidj545454545'
+      notifyurl: 'https://www.xmzzhy.com:8085/pay/wxNotify'
+
+aliyun:
+  sms:
+    regionid: "cn-hangzhou"
+    accesskeyid: "LTAI4G5J7xp9V8CTWY63x2ST"
+    secret: "CjWWNZSQR29pDgVynn1SNbEDxiJuZG"
+    signname: "格知教育"
+    templatecode: "SMS_196642878"
+
+  oss:
+    endpoint: oss-cn-zhangjiakou.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI4FyMjpYjQTaWUqe1gq8p #LTAI4GDtsVifM5rns4rq3Yrr # 访问身份验证中用到用户标识
+    accessKeySecret: i3tLJpZ4nQlgakk24fxAtUSyF4ntKK #MVPJwk2VlBf3q5sRV9J5VhBQpXFeGX # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: zzjyshop # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 10 # 上传文件大小(M)
+    callback: http://www.xmzzhy.com:8082/aliyun/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: jiuye/images/ # 上传文件夹路径前缀

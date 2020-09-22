@@ -4,13 +4,9 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.google.common.collect.Maps;
 import com.tata.jiuye.common.api.CommonResult;
-import com.tata.jiuye.common.config.PayConfig;
-import com.tata.jiuye.common.enums.ServiceEnum;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
-import com.tata.jiuye.common.utils.*;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -29,7 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.applet.Main;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -77,6 +72,12 @@ public class PayController {
 
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
+    @Value("${auth.wechat.appId}")
+    private String APPID;
+    @Value("${auth.wechat.pay.mchId}")
+    private String MCHID;
+    @Value("${auth.wechat.pay.notifyurl}")
+    private String NOTIFYURL;
 
     @ApiOperation("微信web支付接口")
     @PostMapping("/wxWebRechargePay")
@@ -106,7 +107,7 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                WxConfig wxConfig=new WxConfig();
+                WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();
@@ -125,6 +126,7 @@ public class PayController {
                     map1.put(key,map.get(key));
                 }
                 map.put("sign",createSign("UTF-8",map1));
+                log.info("---------------------------------支付信息 map "+map);
                 Map<String,String> res=wxPay.unifiedOrder(map);
                 System.out.println(res);
                 if(res.get("result_code").equals("FAIL")){

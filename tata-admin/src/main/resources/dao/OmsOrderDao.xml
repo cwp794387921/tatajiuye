@@ -6,32 +6,37 @@
         <collection property="historyList" resultMap="com.tata.jiuye.mapper.OmsOrderOperateHistoryMapper.BaseResultMap" columnPrefix="history_"/>
     </resultMap>
     <select id="getList" resultMap="com.tata.jiuye.mapper.OmsOrderMapper.BaseResultMap">
-        SELECT *
+        SELECT oo.*
         FROM
-        oms_order
+        oms_order oo
+        LEFT JOIN ums_member um ON um.id = oo.member_id
         WHERE
         delete_status = 0
         <if test="queryParam.orderSn!=null and queryParam.orderSn!=''">
-            AND order_sn = #{queryParam.orderSn}
+            AND oo.order_sn = #{queryParam.orderSn}
         </if>
         <if test="queryParam.status!=null">
-            AND `status` = #{queryParam.status}
+            AND oo.`status` = #{queryParam.status}
         </if>
         <if test="queryParam.sourceType!=null">
-            AND source_type = #{queryParam.sourceType}
+            AND oo.source_type = #{queryParam.sourceType}
         </if>
         <if test="queryParam.orderType!=null">
-            AND order_type = #{queryParam.orderType}
+            AND oo.order_type = #{queryParam.orderType}
         </if>
         <if test="queryParam.createTime!=null and queryParam.createTime!=''">
-            AND create_time LIKE concat(#{queryParam.createTime},"%")
+            AND oo.create_time LIKE concat(#{queryParam.createTime},"%")
         </if>
         <if test="queryParam.receiverKeyword!=null and queryParam.receiverKeyword!=''">
             AND (
-            receiver_name LIKE concat("%",#{queryParam.receiverKeyword},"%")
-            OR receiver_phone LIKE concat("%",#{queryParam.receiverKeyword},"%")
+            oo.receiver_name LIKE concat("%",#{queryParam.receiverKeyword},"%")
+            OR oo.receiver_phone LIKE concat("%",#{queryParam.receiverKeyword},"%")
             )
         </if>
+        <if test="queryParam.memberId != null">
+            AND oo.member_id = #{queryParam.memberId}
+        </if>
+        ORDER BY oo.create_time DESC
     </select>
     <update id="delivery">
         UPDATE oms_order
