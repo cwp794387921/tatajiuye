@@ -24,6 +24,10 @@
     <result column="replenishable_id" jdbcType="INTEGER" property="replenishableId" />
     <result column="shipment_id" jdbcType="INTEGER" property="shipmentId" />
   </resultMap>
+
+
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -106,6 +110,69 @@
     from oms_distribution
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <resultMap type="com.tata.jiuye.model.OmsDistribution" id="listMap">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="sub_price" jdbcType="DECIMAL" property="subPrice" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="wms_member_id" jdbcType="INTEGER" property="wmsMemberId" />
+    <result column="ums_member_id" jdbcType="INTEGER" property="umsMemberId" />
+    <result column="profit" jdbcType="DECIMAL" property="profit" />
+    <collection property="itemList" ofType="com.tata.jiuye.model.OmsDistribution">
+      <result column="goods_img" jdbcType="VARCHAR" property="goodsImg" />
+      <result column="goods_title" jdbcType="VARCHAR" property="goodsTitle" />
+      <result column="goods_subtitle" jdbcType="VARCHAR" property="goodsSubtitle" />
+      <result column="product_id" jdbcType="INTEGER" property="productId" />
+      <result column="price" jdbcType="DECIMAL" property="price" />
+      <result column="number" jdbcType="INTEGER" property="number" />
+      <result column="sub_price" jdbcType="DECIMAL" property="subPrice" />
+      <result column="profit" jdbcType="DECIMAL" property="profit" />
+    </collection>
+  </resultMap>
+
+  <select id="queryDistributionDetail" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="listMap">
+    SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
+    i.goods_img,i.goods_title,i.goods_subtitle,i.price,i.number,i.sub_price ,i.product_id,i.profit from oms_distribution d
+    left join oms_distribution_item  i on i.distribution_id=d.id
+    <where>
+      <if test="id !=null">
+        and d.id = #{id}
+      </if>
+      <if test="orderSn !=null">
+        and d.order_sn = #{orderSn}
+      </if>
+      <if test="wmsMemberId !=null">
+        and d.wms_member_id = #{wmsMemberId}
+      </if>
+      <if test="umsMemberId !=null">
+        and d.ums_member_id = #{umsMemberId}
+      </if>
+      <if test="status !=null ">
+        and d.status = #{status}
+      </if>
+      <if test="status ==null">
+        and d.status != 5
+      </if>
+      <if test="type !=null ">
+        and d.type = #{type}
+      </if>
+      <if test="replenishableId !=null ">
+        and d.replenishable_id = #{replenishableId}
+      </if>
+      <if test="shipmentId !=null ">
+        and d.shipment_id = #{shipmentId}
+      </if>
+    </where>
+  </select>
+
+
   <select id="selectByParams" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

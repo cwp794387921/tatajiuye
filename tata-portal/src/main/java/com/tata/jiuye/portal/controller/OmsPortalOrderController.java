@@ -4,6 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
+import com.tata.jiuye.mapper.OmsOrderMapper;
+import com.tata.jiuye.model.OmsDistribution;
+import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.domain.ConfirmOrderResult;
 import com.tata.jiuye.portal.domain.OmsOrderDetail;
@@ -38,6 +42,10 @@ public class OmsPortalOrderController {
     private  OmsPortalOrderService portalOrderService;
     @Resource
     private UmsMemberService umsMemberService;
+    @Resource
+    private OmsOrderMapper orderMapper;
+    @Resource
+    private OmsDistributionMapper distributionMapper;
 
     @ApiOperation("根据购物车信息生成确认单信息")
     @RequestMapping(value = "/generateConfirmOrder", method = RequestMethod.POST)
@@ -112,9 +120,12 @@ public class OmsPortalOrderController {
     @ApiOperation("根据ID获取订单详情")
     @RequestMapping(value = "/detail/{orderId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<OmsOrderDetail> detail(@PathVariable Long orderId) {
-        OmsOrderDetail orderDetail = portalOrderService.detail(orderId);
-        return CommonResult.success(orderDetail);
+    public CommonResult<OmsDistribution> detail(@PathVariable Long orderId) {
+        OmsOrder order=orderMapper.selectByPrimaryKey(orderId);
+        OmsDistribution omsDistribution=new OmsDistribution();
+        omsDistribution.setOrderSn(order.getOrderSn());
+        omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
+        return CommonResult.success(omsDistribution);
     }
 
     @ApiOperation("用户取消订单")

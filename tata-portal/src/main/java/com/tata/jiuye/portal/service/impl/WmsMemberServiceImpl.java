@@ -151,6 +151,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
 
+
+
+
     @Override
     public void cancelReplenishable(Long id,String type){
         OmsDistribution omsDistribution=null;
@@ -196,6 +199,94 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
+    public void confirmOrder(Long orderId){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        OmsDistribution omsDistribution=new OmsDistribution();
+        omsDistribution.setId(orderId);
+        omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        omsDistribution.setStatus(5);//已完成
+        distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
+        //更新订单状态
+        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        order.setStatus(2);
+        order.setModifyTime(new Date());
+        orderMapper.updateByPrimaryKey(order);
+        //添加账户流水
+        AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+        if (acctInfo==null){
+            Asserts.fail("账户不存在");
+        }
+        AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
+        acctSettleInfo.setAcctId(acctInfo.getId());
+        acctSettleInfo.setOrderNo(omsDistribution.getOrderSn());
+        acctSettleInfo.setBeforBal(acctInfo.getBalance());
+        acctSettleInfo.setChangeAmount(omsDistribution.getProfit());
+        //添加账户收益
+        acctInfo.setBalance(acctInfo.getBalance().add(omsDistribution.getProfit()));
+        acctSettleInfo.setAfterBal(acctInfo.getBalance());
+        acctSettleInfo.setInsertTime(new Date());
+        acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
+        acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
+        acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
+        acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
+        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
+    }
+
+    @Override
+    public void  cancelOrder(Long orderId){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        OmsDistribution omsDistribution=new OmsDistribution();
+        omsDistribution.setId(orderId);
+        omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
+        if(omsDistribution==null){
+            Asserts.fail("配送单不存在");
+        }
+        omsDistribution.setStatus(0);//待接单
+        distributionMapper.updateByPrimaryKey(omsDistribution);
+        List<OmsDistributionItem> list=omsDistribution.getItemList();
+        for(OmsDistributionItem item :list){
+            //减少授信额度
+            PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(item.getProductId());
+            if(pmsProduct==null){
+                Asserts.fail("==>找不到商品信息");
+            }
+            switch (wmsMember.getLevel()){
+                case 1:
+                    wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
+                            pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    break;
+                case 2:
+                    wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
+                            pmsProduct.getRegionalProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    break;
+                case 3:
+                    wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
+                            pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    break;
+            }
+            wmsMember.setUpdateTime(new Date());
+            wmsMemberMapper.updateByPrimaryKey(wmsMember);
+        }
+    }
+
+    @Override
     public void  acceptOrder(Long orderId){
         UmsMember currentMember = memberService.getCurrentMember();
         if(currentMember == null){
@@ -205,34 +296,38 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(wmsMember==null){
             Asserts.fail("配送中心不存在");
         }
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=new OmsDistribution();
+        omsDistribution.setId(orderId);
+        omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
-        PmsSkuStock pmsSkuStock=new PmsSkuStock();
-        pmsSkuStock.setProductId(omsDistribution.getProductId());
-        pmsSkuStock.setWmsMemberId(wmsMember.getId());
-         pmsSkuStock=pmsSkuStockMapper.selectByParams(pmsSkuStock);
-        if(pmsSkuStock==null){
-            Asserts.fail("库存不存在");
-        }
-        if(pmsSkuStock.getStock()-pmsSkuStock.getLockStock()<omsDistribution.getNumber()){
-            Asserts.fail("库存不足，无法接单");
-        }
         omsDistribution.setStatus(1);//待配送
         distributionMapper.updateByPrimaryKey(omsDistribution);
-        pmsSkuStock.setLockStock(pmsSkuStock.getLockStock()+omsDistribution.getNumber());//添加锁定库存
-        //更新库存信息
-        pmsSkuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
-        //更新商品配送状态信息
-        Map<String,Object>params=new HashMap<>();
-        params.put("relationDistributionId",omsDistribution.getId());
-        OmsOrderItem orderItem=omsOrderItemMapper.selectByParams(params);
-        if(orderItem==null){
-            Asserts.fail("未找到订单详情");
+        List<OmsDistributionItem> list=omsDistribution.getItemList();
+        for(OmsDistributionItem item :list){
+        //增加授信额度
+        PmsProduct pmsProduct=pmsProductMapper.selectByPrimaryKey(item.getProductId());
+        if(pmsProduct==null){
+            Asserts.fail("==>找不到商品信息");
         }
-        orderItem.setDistributionStatus(1L);//配送中
-        omsOrderItemMapper.updateByPrimaryKey(orderItem);
+        switch (wmsMember.getLevel()){
+            case 1:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(
+                        pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                break;
+            case 2:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(
+                        pmsProduct.getRegionalProductValue().multiply(new BigDecimal(item.getNumber()))));
+                break;
+            case 3:
+                wmsMember.setCreditLine(wmsMember.getCreditLine().add(
+                        pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                break;
+        }
+        wmsMember.setUpdateTime(new Date());
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);
+        }
     }
 
     @Override

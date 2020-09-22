@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.WmsMemberService;
@@ -30,6 +31,8 @@ public class WmsMemberController {
     private WmsMemberService wmsMemberService;
     @Resource
     private OmsPortalOrderService portalOrderService;
+    @Resource
+    private OmsDistributionMapper distributionMapper;
 
     @ApiOperation("获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -79,7 +82,25 @@ public class WmsMemberController {
         return CommonResult.success("操作成功");
     }
 
-    @ApiOperation("配送单送达接口")
+    @ApiOperation("配送单取消接单接口")
+    @RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult cancelOrder(Long orderId) {
+        wmsMemberService.cancelOrder(orderId);
+        return CommonResult.success("操作成功");
+    }
+
+    @ApiOperation("确认收货接口")
+    @RequestMapping(value = "/confirmOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult confirmOrder(Long orderId) {
+        wmsMemberService.confirmOrder(orderId);
+        return CommonResult.success("操作成功");
+    }
+
+
+
+    @ApiOperation("配送单送达接口(废弃)")
     @RequestMapping(value = "/arriveOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult arriveOrder(Long orderId) {

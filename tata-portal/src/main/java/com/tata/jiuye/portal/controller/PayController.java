@@ -62,6 +62,8 @@ public class PayController {
     @Resource
     private OmsDistributionMapper distributionMapper;
     @Resource
+    private OmsDistributionItemMapper distributionItemMapper;
+    @Resource
     private AcctSettleInfoService acctSettleInfoService;
     @Resource
     private PmsProductMapper productMapper;
@@ -225,13 +227,28 @@ public class PayController {
                     Asserts.fail("==>找不到上级配送中心");
                 }
                 String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
+                OmsDistribution distribution=new OmsDistribution();
+                distribution.setOrderSn(omsOrder.getOrderSn());
+                distribution.setStatus(0);//待配送
+                distribution.setPhone(omsOrder.getReceiverPhone());
+                distribution.setName(omsOrder.getReceiverName());
+                distribution.setAddress(address);
+                distribution.setCreateTime(new Date());
+                distribution.setWmsMemberId(wmsMember.getId());
+                distribution.setType(1);
+                distribution.setSubPrice(omsOrder.getPayAmount());
+                distribution.setUmsMemberId(umsMember.getId());
+                distribution.setProfit(BigDecimal.ZERO);
+                distributionMapper.insert(distribution);
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(isWms!=null) {
                         log.info("==》自身是配送中心，不生成配送单");
                         omsOrder.setStatus(2);
                         omsOrderItem.setDistributionStatus(2L);
+                        distribution.setStatus(5);
                         orderMapper.updateByPrimaryKey(omsOrder);
                         omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                        distributionMapper.updateByPrimaryKey(distribution);
                         //增加额度
                         PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
                         if(pmsProduct==null){
@@ -260,9 +277,10 @@ public class PayController {
                             orderMapper.updateByPrimaryKey(omsOrder);
                             omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                         }else {
-                            OmsDistribution distribution=new OmsDistribution();
+                            OmsDistributionItem distributionItem=new OmsDistributionItem();
+                            distributionItem.setDistributionId(distribution.getId());
+                            PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
                             if(omsOrderItem.getIfJoinVipProduct() == 1){
-                                PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
                                 PmsProduct glProduct=null;//关联商品
                                 if(pmsProduct==null){
                                     Asserts.fail("==>找不到商品信息");
@@ -276,39 +294,34 @@ public class PayController {
                                     }
                                 }
                                 log.info("==》升级商品，配送货物id:"+pmsProduct.getRelationProductId());
-                                distribution.setGoodsImg(glProduct.getPic());
-                                distribution.setGoodsTitle(glProduct.getName());
-                                distribution.setGoodsSubtitle(glProduct.getSubTitle());
-                                distribution.setPrice(glProduct.getOriginalPrice());
-                                distribution.setNumber(pmsProduct.getRelationProductNum());
-                                distribution.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
-                                distribution.setProductId(pmsProduct.getRelationProductId());
+                                distributionItem.setGoodsImg(glProduct.getPic());
+                                distributionItem.setGoodsTitle(glProduct.getName());
+                                distributionItem.setGoodsSubtitle(glProduct.getSubTitle());
+                                distributionItem.setPrice(glProduct.getOriginalPrice());
+                                distributionItem.setNumber(pmsProduct.getRelationProductNum());
+                                distributionItem.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                                distributionItem.setProductId(pmsProduct.getRelationProductId());
+                                distributionItem.setProfit(glProduct.getDeliveryAmount().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));//配送收益
                             }else {
-                                distribution.setGoodsImg(omsOrderItem.getProductPic());
-                                distribution.setGoodsTitle(omsOrderItem.getProductName());
-                                distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
-                                distribution.setPrice(omsOrderItem.getProductPrice());
-                                distribution.setNumber(omsOrderItem.getProductQuantity());
-                                distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
-                                distribution.setProductId(omsOrderItem.getProductId());
+                                distributionItem.setGoodsImg(omsOrderItem.getProductPic());
+                                distributionItem.setGoodsTitle(omsOrderItem.getProductName());
+                                distributionItem.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                                distributionItem.setPrice(omsOrderItem.getProductPrice());
+                                distributionItem.setNumber(omsOrderItem.getProductQuantity());
+                                distributionItem.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                                distributionItem.setProductId(omsOrderItem.getProductId());
+                                distributionItem.setProfit(pmsProduct.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));//配送收益
                             }
-                            distribution.setOrderSn(omsOrderItem.getOrderSn());
-                            distribution.setStatus(0);
-                            distribution.setPhone(omsOrder.getReceiverPhone());
-                            distribution.setName(omsOrder.getReceiverName());
-                            distribution.setAddress(address);
-                            distribution.setCreateTime(new Date());
-                            distribution.setWmsMemberId(wmsMember.getId());
-                            distribution.setType(1);
-                            distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
-                            distribution.setUmsMemberId(umsMember.getId());
-                            distributionMapper.insert(distribution);
-                            omsOrderItem.setRelationDistributionId(distribution.getId().longValue());//关联id
+                            distribution.setProfit(distribution.getProfit().add(distributionItem.getProfit()));
+                            distributionItemMapper.insert(distributionItem);
+                            omsOrderItem.setRelationDistributionId(distribution.getId());//关联id
                             omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
                             omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                     }
                     }
+
                 }
+                distributionMapper.updateByPrimaryKey(distribution);//更新配送单收益
                 //插入分佣流水
                 acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 //会员等级提升到VIP用户

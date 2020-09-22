@@ -4,10 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "自增id")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty(value = "关联订单号")
     private String orderSn;
@@ -70,9 +71,18 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "补货单对应出货单id")
     private Long shipmentId;
 
+    List<OmsDistributionItem> itemList;
 
 
     private static final long serialVersionUID = 1L;
+
+    public List<OmsDistributionItem> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<OmsDistributionItem> itemList) {
+        this.itemList = itemList;
+    }
 
     public Long getReplenishableId() {
         return replenishableId;
@@ -154,11 +164,11 @@ public class OmsDistribution implements Serializable {
         this.type = type;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
