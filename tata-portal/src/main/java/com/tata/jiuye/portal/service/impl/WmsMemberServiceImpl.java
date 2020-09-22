@@ -59,7 +59,27 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     @Resource
     private UmsMemberInviteRelationService umsMemberInviteRelationService;
     @Resource
+    private WmsMemberCreditlineChangeMapper creditlineChangeMapper;
+    @Resource
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
+
+
+    @Override
+    public void creditLineChange(Long id,BigDecimal value,String remark){
+        WmsMember wmsMember=wmsMemberMapper.selectByPrimaryKey(id);
+        if (wmsMember==null){
+            Asserts.fail("用户不存在");
+        }
+        WmsMemberCreditlineChange creditlineChange=new WmsMemberCreditlineChange();
+        creditlineChange.setWmsMemberId(wmsMember.getId());
+        creditlineChange.setBeforeValue(wmsMember.getCreditLine());
+        creditlineChange.setChangeValue(value);
+        creditlineChange.setAfterValue(wmsMember.getCreditLine().add(value));
+        creditlineChange.setCreateTime(new Date());
+        creditlineChange.setRemark(remark);
+        creditlineChangeMapper.insert(creditlineChange);
+    }
+
 
     @Override
     public JSONObject selectMerberInfo(){
@@ -267,23 +287,57 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             if(pmsProduct==null){
                 Asserts.fail("==>找不到商品信息");
             }
+            String remark="取消接单减少额度,productId["+pmsProduct.getId()+"],number["+item.getNumber()+"]";
             switch (wmsMember.getLevel()){
                 case 1:
                     wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
                             pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    creditLineChange(wmsMember.getId(),pmsProduct.getDeliveryCenterProductValue().
+                            multiply(new BigDecimal(item.getNumber())).multiply(new BigDecimal(-1)),remark);
                     break;
                 case 2:
                     wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
                             pmsProduct.getRegionalProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    creditLineChange(wmsMember.getId(),pmsProduct.getRegionalProductValue().
+                            multiply(new BigDecimal(item.getNumber())).multiply(new BigDecimal(-1)),remark);
                     break;
                 case 3:
                     wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(
                             pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                    creditLineChange(wmsMember.getId(),pmsProduct.getWebmasterProductValue().
+                            multiply(new BigDecimal(item.getNumber())).multiply(new BigDecimal(-1)),remark);
                     break;
             }
             wmsMember.setUpdateTime(new Date());
             wmsMemberMapper.updateByPrimaryKey(wmsMember);
         }
+    }
+
+    @Override
+    public void  creditLineChange(Long memberId,String value){
+        UmsMember currentMember = memberService.getCurrentMember();
+        if(currentMember == null){
+            Asserts.fail("用户未登录");
+        }
+        WmsMember wmsMember=wmsMemberMapper.selectByUmsId(currentMember.getId());
+        if(wmsMember==null){
+            Asserts.fail("配送中心不存在");
+        }
+        WmsMember changeInfo=wmsMemberMapper.selectByPrimaryKey(memberId);
+        if(changeInfo==null){
+            Asserts.fail("转让配送中心信息不存在");
+        }
+        BigDecimal changeValue=new BigDecimal(value);
+        wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(changeValue));
+        wmsMember.setUpdateTime(new Date());
+        changeInfo.setCreditLine(changeInfo.getCreditLine().add(changeValue));
+        changeInfo.setUpdateTime(new Date());
+        String remark=wmsMember.getId()+"转让额度["+changeValue+"]到"+changeInfo.getId();
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);
+        //插入额度变动明细
+        creditLineChange(wmsMember.getId(),changeValue.multiply(new BigDecimal(-1)),remark);
+        wmsMemberMapper.updateByPrimaryKey(changeInfo);
+        creditLineChange(changeInfo.getId(),changeValue,remark);
     }
 
     @Override
@@ -311,18 +365,22 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(pmsProduct==null){
             Asserts.fail("==>找不到商品信息");
         }
+        String remark="接单增加额度,productId["+pmsProduct.getId()+"],number["+item.getNumber()+"]";
         switch (wmsMember.getLevel()){
             case 1:
                 wmsMember.setCreditLine(wmsMember.getCreditLine().add(
                         pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                creditLineChange(wmsMember.getId(),pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(item.getNumber())),remark);
                 break;
             case 2:
                 wmsMember.setCreditLine(wmsMember.getCreditLine().add(
                         pmsProduct.getRegionalProductValue().multiply(new BigDecimal(item.getNumber()))));
+                creditLineChange(wmsMember.getId(),pmsProduct.getRegionalProductValue().multiply(new BigDecimal(item.getNumber())),remark);
                 break;
             case 3:
                 wmsMember.setCreditLine(wmsMember.getCreditLine().add(
                         pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(item.getNumber()))));
+                creditLineChange(wmsMember.getId(),pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(item.getNumber())),remark);
                 break;
         }
         wmsMember.setUpdateTime(new Date());

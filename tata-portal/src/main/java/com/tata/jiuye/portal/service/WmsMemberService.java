@@ -20,6 +20,10 @@ public interface WmsMemberService {
 
     void acceptOrder(Long orderId);
 
+    void creditLineChange(Long memberId,String value);
+
+    void  creditLineChange(Long id,BigDecimal value,String remark);
+
     void cancelOrder(Long orderId);
 
     void confirmOrder(Long orderId);

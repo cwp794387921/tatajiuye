@@ -82,6 +82,15 @@ public class WmsMemberController {
         return CommonResult.success("操作成功");
     }
 
+    @ApiOperation("额度转让接口")
+    @RequestMapping(value = "/creditLineChange", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult creditLineChange(Long memberId,String value) {
+        wmsMemberService.creditLineChange(memberId,value);
+        return CommonResult.success("操作成功");
+    }
+
+
     @ApiOperation("配送单取消接单接口")
     @RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
     @ResponseBody

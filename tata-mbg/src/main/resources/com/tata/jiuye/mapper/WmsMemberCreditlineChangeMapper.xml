@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tata.jiuye.mapper.WmsMemberCreditlineChangeMapper">
+  <resultMap id="BaseResultMap" type="com.tata.jiuye.model.WmsMemberCreditlineChange">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="wms_member_id" jdbcType="BIGINT" property="wmsMemberId" />
+    <result column="change_value" jdbcType="DECIMAL" property="changeValue" />
+    <result column="before_value" jdbcType="DECIMAL" property="beforeValue" />
+    <result column="after_value" jdbcType="DECIMAL" property="afterValue" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, wms_member_id, change_value, before_value, after_value, remark, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChangeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wms_member_creditline_change
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wms_member_creditline_change
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from wms_member_creditline_change
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChangeExample">
+    delete from wms_member_creditline_change
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChange">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wms_member_creditline_change (wms_member_id, change_value, before_value, 
+      after_value, remark, create_time
+      )
+    values (#{wmsMemberId,jdbcType=BIGINT}, #{changeValue,jdbcType=DECIMAL}, #{beforeValue,jdbcType=DECIMAL}, 
+      #{afterValue,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChange">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into wms_member_creditline_change
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wmsMemberId != null">
+        wms_member_id,
+      </if>
+      <if test="changeValue != null">
+        change_value,
+      </if>
+      <if test="beforeValue != null">
+        before_value,
+      </if>
+      <if test="afterValue != null">
+        after_value,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wmsMemberId != null">
+        #{wmsMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="changeValue != null">
+        #{changeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="beforeValue != null">
+        #{beforeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="afterValue != null">
+        #{afterValue,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChangeExample" resultType="java.lang.Long">
+    select count(*) from wms_member_creditline_change
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wms_member_creditline_change
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.wmsMemberId != null">
+        wms_member_id = #{record.wmsMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="record.changeValue != null">
+        change_value = #{record.changeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.beforeValue != null">
+        before_value = #{record.beforeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.afterValue != null">
+        after_value = #{record.afterValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wms_member_creditline_change
+    set id = #{record.id,jdbcType=BIGINT},
+      wms_member_id = #{record.wmsMemberId,jdbcType=BIGINT},
+      change_value = #{record.changeValue,jdbcType=DECIMAL},
+      before_value = #{record.beforeValue,jdbcType=DECIMAL},
+      after_value = #{record.afterValue,jdbcType=DECIMAL},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChange">
+    update wms_member_creditline_change
+    <set>
+      <if test="wmsMemberId != null">
+        wms_member_id = #{wmsMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="changeValue != null">
+        change_value = #{changeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="beforeValue != null">
+        before_value = #{beforeValue,jdbcType=DECIMAL},
+      </if>
+      <if test="afterValue != null">
+        after_value = #{afterValue,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.WmsMemberCreditlineChange">
+    update wms_member_creditline_change
+    set wms_member_id = #{wmsMemberId,jdbcType=BIGINT},
+      change_value = #{changeValue,jdbcType=DECIMAL},
+      before_value = #{beforeValue,jdbcType=DECIMAL},
+      after_value = #{afterValue,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
