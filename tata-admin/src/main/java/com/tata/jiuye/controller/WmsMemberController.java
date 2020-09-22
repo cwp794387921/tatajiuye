@@ -386,7 +386,7 @@ public class WmsMemberController {
              }
              //查找出货单
             OmsDistribution Shipment=new OmsDistribution();
-            Shipment.setId(distribution.getShipmentId().intValue());
+            Shipment.setId(distribution.getShipmentId());
             Shipment=distributionMapper.selectByParams(Shipment);
             if(Shipment==null){
                 return CommonResult.validateFailed("出货单不存在");
