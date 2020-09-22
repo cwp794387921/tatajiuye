@@ -210,6 +210,9 @@ public class PayController {
                 }
                 //生成配送单
                 WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
+                if(isWms!=null){
+                    log.info("自身是配送中心");
+                }
                 Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
                 log.info("找到的配送中心ID 为"+id);
                 WmsMember wmsMember=null;
@@ -223,64 +226,87 @@ public class PayController {
                 }
                 String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
                 for(OmsOrderItem omsOrderItem : orderItemList){
-                    if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
-                        log.info("==》升级配送中心商品，不生成配送单");
+                    if(isWms!=null) {
+                        log.info("==》自身是配送中心，不生成配送单");
                         omsOrder.setStatus(2);
                         omsOrderItem.setDistributionStatus(2L);
                         orderMapper.updateByPrimaryKey(omsOrder);
                         omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                        //增加额度
+                        PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+                        if(pmsProduct==null){
+                            Asserts.fail("==>找不到商品信息");
+                        }
+                        BigDecimal subPrice=BigDecimal.ZERO;
+                        switch (isWms.getLevel()){
+                            case 1:
+                                subPrice=pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                break;
+                            case 2:
+                                subPrice=pmsProduct.getRegionalProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                break;
+                            case 3:
+                                subPrice=pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                break;
+                        }
+                        isWms.setCreditLine(isWms.getCreditLine().add(subPrice));
+                        isWms.setUpdateTime(new Date());
+                        wmsMemberMapper.updateByPrimaryKey(isWms);
                     }else {
-                        OmsDistribution distribution=new OmsDistribution();
-                        if(omsOrderItem.getIfJoinVipProduct() == 1){
-                            PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
-                            PmsProduct glProduct=null;//关联商品
-                            if(pmsProduct==null){
-                                Asserts.fail("==>找不到商品信息");
+                        if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                            log.info("==》升级配送中心商品，不生成配送单");
+                            omsOrder.setStatus(2);
+                            omsOrderItem.setDistributionStatus(2L);
+                            orderMapper.updateByPrimaryKey(omsOrder);
+                            omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                        }else {
+                            OmsDistribution distribution=new OmsDistribution();
+                            if(omsOrderItem.getIfJoinVipProduct() == 1){
+                                PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+                                PmsProduct glProduct=null;//关联商品
+                                if(pmsProduct==null){
+                                    Asserts.fail("==>找不到商品信息");
+                                }else {
+                                    if(pmsProduct.getRelationProductId()==null||pmsProduct.getRelationProductNum()==null){
+                                        Asserts.fail("==>未配置关联商品信息");
+                                    }
+                                    glProduct=productMapper.selectByPrimaryKey(pmsProduct.getRelationProductId());
+                                    if(glProduct==null){
+                                        Asserts.fail("==>未找到关联商品信息");
+                                    }
+                                }
+                                log.info("==》升级商品，配送货物id:"+pmsProduct.getRelationProductId());
+                                distribution.setGoodsImg(glProduct.getPic());
+                                distribution.setGoodsTitle(glProduct.getName());
+                                distribution.setGoodsSubtitle(glProduct.getSubTitle());
+                                distribution.setPrice(glProduct.getOriginalPrice());
+                                distribution.setNumber(pmsProduct.getRelationProductNum());
+                                distribution.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                                distribution.setProductId(pmsProduct.getRelationProductId());
                             }else {
-                                if(pmsProduct.getRelationProductId()==null||pmsProduct.getRelationProductNum()==null){
-                                    Asserts.fail("==>未配置关联商品信息");
-                                }
-                                glProduct=productMapper.selectByPrimaryKey(pmsProduct.getRelationProductId());
-                                if(glProduct==null){
-                                    Asserts.fail("==>未找到关联商品信息");
-                                }
+                                distribution.setGoodsImg(omsOrderItem.getProductPic());
+                                distribution.setGoodsTitle(omsOrderItem.getProductName());
+                                distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                                distribution.setPrice(omsOrderItem.getProductPrice());
+                                distribution.setNumber(omsOrderItem.getProductQuantity());
+                                distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                                distribution.setProductId(omsOrderItem.getProductId());
                             }
-                            log.info("==》升级商品，配送货物id:"+pmsProduct.getRelationProductId());
-                            distribution.setGoodsImg(glProduct.getPic());
-                            distribution.setGoodsTitle(glProduct.getName());
-                            distribution.setGoodsSubtitle(glProduct.getSubTitle());
-                            distribution.setPrice(glProduct.getOriginalPrice());
-                            distribution.setNumber(pmsProduct.getRelationProductNum());
-                            distribution.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
-                            distribution.setProductId(pmsProduct.getRelationProductId());
-                        }else {
-                            distribution.setGoodsImg(omsOrderItem.getProductPic());
-                            distribution.setGoodsTitle(omsOrderItem.getProductName());
-                            distribution.setGoodsSubtitle(omsOrderItem.getPromotionName());
-                            distribution.setPrice(omsOrderItem.getProductPrice());
-                            distribution.setNumber(omsOrderItem.getProductQuantity());
-                            distribution.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
-                            distribution.setProductId(omsOrderItem.getProductId());
-                        }
-                        distribution.setOrderSn(omsOrderItem.getOrderSn());
-                        distribution.setStatus(0);
-                        distribution.setPhone(omsOrder.getReceiverPhone());
-                        distribution.setName(omsOrder.getReceiverName());
-                        distribution.setAddress(address);
-                        distribution.setCreateTime(new Date());
-                        distribution.setWmsMemberId(wmsMember.getId());
-                        distribution.setType(1);
-                        if(isWms!=null) {
-                            log.info("==》自身是配送中心，沒有配送费");
-                            distribution.setProfit(BigDecimal.ZERO);
-                        }else {
+                            distribution.setOrderSn(omsOrderItem.getOrderSn());
+                            distribution.setStatus(0);
+                            distribution.setPhone(omsOrder.getReceiverPhone());
+                            distribution.setName(omsOrder.getReceiverName());
+                            distribution.setAddress(address);
+                            distribution.setCreateTime(new Date());
+                            distribution.setWmsMemberId(wmsMember.getId());
+                            distribution.setType(1);
                             distribution.setProfit(omsOrderItem.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
-                        }
-                        distribution.setUmsMemberId(umsMember.getId());
-                        distributionMapper.insert(distribution);
-                        omsOrderItem.setRelationDistributionId(distribution.getId().longValue());//关联id
-                        omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
-                        omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                            distribution.setUmsMemberId(umsMember.getId());
+                            distributionMapper.insert(distribution);
+                            omsOrderItem.setRelationDistributionId(distribution.getId().longValue());//关联id
+                            omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
+                            omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                    }
                     }
                 }
                 //插入分佣流水

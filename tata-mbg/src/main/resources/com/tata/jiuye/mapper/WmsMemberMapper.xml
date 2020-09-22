@@ -101,7 +101,7 @@
   <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="memberDetailMap">
         select m.*,a.province ,a.area,a.address from wms_member m
     LEFT JOIN wms_area a on a.wms_member_id=m.id
-    where m.ums_member_id = #{id,jdbcType=BIGINT}
+    where m.ums_member_id = #{id,jdbcType=BIGINT} and status =1
   </select>
 
 
