@@ -10,6 +10,7 @@ public enum ServiceEnum {
     QQPAY("service.business.qq_pay","QQ扫码"),
     WECHAT_H5("service.business.wechat_h5","微信H5"),
     WECHAT_JSAPI("service.business.wechat_jsapi","微信JS支付"),
+    WECHAT_APPLET("service.business.wechat_applet","微信小程序"),
     WECHAT_APP("service.business.wechat_app","微信APP"),
     WECHAT_JD("service.business.jd","京东扫码"),
     WECHAT_BAIDU("service.business.baidu","百度扫码"),

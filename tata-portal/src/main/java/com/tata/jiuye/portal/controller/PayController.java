@@ -6,9 +6,12 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.google.common.collect.Maps;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.enums.ServiceEnum;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
+import com.tata.jiuye.common.utils.*;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -114,7 +117,38 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                WxConfig wxConfig = new WxConfig();
+                Map<String,String> map = Maps.newHashMap();
+                map.put("merchantNo", Config.MERCHANT_NO);
+                map.put("orderAmount",money.toString());
+                map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
+                map.put("orderTitle","塔塔酒业");
+                map.put("notifyUrl",Config.NotifyUrl);
+                JSONObject jsonObject1=new JSONObject();
+                jsonObject1.put("userId",openId);
+                jsonObject1.put("orderType","wechatJs");
+                jsonObject1.put("subAppid",Config.MERCHANT_NO);
+                map.put("attach",jsonObject1.toJSONString());
+                map.put("merchantOrderNo",orderNum);
+                TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
+                String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
+                map.put("sign", Base64Util.encodeByBase64(sign));
+                String content = ChannelUtils.getContent(map);
+                log.info("请求参数："+content);
+                String responseStr = HttpRequestUtils.readContentFromPost(Config.PAY_URL,content);
+                log.info("请求结果:"+responseStr);
+                JSONObject PostResult=JSONObject.parseObject(responseStr);
+                if(PostResult.get("code").toString().equals("1")){
+                    JSONObject result=JSONObject.parseObject(PostResult.get("result").toString());
+                    JSONObject payInfo=JSONObject.parseObject(result.get("payInfo").toString());
+                    jsonObject.put("timeStamp",payInfo.get("timeStamp").toString());
+                    jsonObject.put("nonceStr",payInfo.get("nonceStr").toString());
+                    jsonObject.put("package",payInfo.get("package").toString());
+                    jsonObject.put("signType",payInfo.get("signType").toString());
+                    jsonObject.put("paySign",payInfo.get("paySign").toString());
+                }else {
+                    return   CommonResult.failed(PostResult.get("msg").toString());
+                }
+                /*WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();
@@ -152,7 +186,7 @@ public class PayController {
                 map2.put("nonceStr",jsonObject.get("nonceStr"));
                 map2.put("package",jsonObject.get("package"));
                 map2.put("signType",jsonObject.get("signType"));
-                jsonObject.put("paySign",createSign("UTF-8",map2));
+                jsonObject.put("paySign",createSign("UTF-8",map2));*/
             }catch (Exception e){
                 System.out.println(e.getMessage());
                 return CommonResult.failed(e.getMessage());
