@@ -1,14 +1,9 @@
 package com.tata.jiuye.portal.component;
 
+import com.tata.jiuye.common.enums.FlowTypeEnum;
 import com.tata.jiuye.common.exception.Asserts;
-import com.tata.jiuye.mapper.OmsDistributionMapper;
-import com.tata.jiuye.mapper.OmsOrderMapper;
-import com.tata.jiuye.mapper.UmsMemberMapper;
-import com.tata.jiuye.mapper.WmsMemberMapper;
-import com.tata.jiuye.model.OmsDistribution;
-import com.tata.jiuye.model.OmsOrder;
-import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.mapper.*;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
@@ -45,6 +40,10 @@ public class OrderTimeOutCancelTask {
     private WmsMemberMapper wmsMemberMapper;
     @Resource
     private UmsMemberMapper umsMemberMapper;
+    @Resource
+    private AcctInfoMapper acctInfoMapper;
+    @Resource
+    private AcctSettleInfoMapper acctSettleInfoMapper;
 
     /**
      * cron表达式：Seconds Minutes Hours DayofMonth Month DayofWeek [Year]
@@ -81,7 +80,25 @@ public class OrderTimeOutCancelTask {
                 if(umsMember==null){
                     Asserts.fail("用户信息不存在");
                 }
-                acctSettleInfoService.insertCommissionRecordFlow(umsMember,order.getOrderSn());
+                AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+                if (acctInfo==null){
+                    Asserts.fail("账户不存在");
+                }
+                AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
+                acctSettleInfo.setAcctId(acctInfo.getId());
+                acctSettleInfo.setOmsDistributionNo(omsDistribution.getId());
+                acctSettleInfo.setOrderNo(omsDistribution.getOrderSn());
+                acctSettleInfo.setBeforBal(acctInfo.getBalance());
+                acctSettleInfo.setChangeAmount(omsDistribution.getProfit());
+                //添加账户收益
+                acctInfo.setBalance(acctInfo.getBalance().add(omsDistribution.getProfit()));
+                acctSettleInfo.setAfterBal(acctInfo.getBalance());
+                acctSettleInfo.setInsertTime(new Date());
+                acctSettleInfo.setFlowType(FlowTypeEnum.INCOME.value);
+                acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
+                acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
+                acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
+                acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
             }
         }
     }

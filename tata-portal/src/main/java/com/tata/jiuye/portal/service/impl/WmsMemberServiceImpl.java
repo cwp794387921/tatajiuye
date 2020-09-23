@@ -247,13 +247,14 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
         //添加账户流水
-        acctSettleInfoService.insertCommissionRecordFlow(currentMember,order.getOrderSn());
-        /*AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+        //acctSettleInfoService.insertAcctInfoChangeFlow(currentMember,order.getOrderSn());
+        AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
         if (acctInfo==null){
             Asserts.fail("账户不存在");
         }
         AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
         acctSettleInfo.setAcctId(acctInfo.getId());
+        acctSettleInfo.setOmsDistributionNo(omsDistribution.getId());
         acctSettleInfo.setOrderNo(omsDistribution.getOrderSn());
         acctSettleInfo.setBeforBal(acctInfo.getBalance());
         acctSettleInfo.setChangeAmount(omsDistribution.getProfit());
@@ -265,7 +266,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
         acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
         acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
-        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息*/
+        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
     }
 
     @Override

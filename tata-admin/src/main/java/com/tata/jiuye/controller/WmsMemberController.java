@@ -391,53 +391,53 @@ public class WmsMemberController {
             if(Shipment==null){
                 return CommonResult.validateFailed("出货单不存在");
             }
-            //添加库存
-            PmsSkuStock pmsSkuStock=new PmsSkuStock();
-            pmsSkuStock.setWmsMemberId(distribution.getWmsMemberId());//补货人库存
-            pmsSkuStock.setProductId(pmsProduct.getId());
-            pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
-            if(pmsSkuStock==null){
-                pmsSkuStock=new PmsSkuStock();
-                //查找总仓库存
-                PmsSkuStock centerSkuStock=new PmsSkuStock();
-                centerSkuStock.setWmsMemberId(1L);
-                centerSkuStock.setProductId(pmsProduct.getId());
-                centerSkuStock=skuStockMapper.selectByParams(centerSkuStock);
-                //复制库存信息
-                BeanUtils.copyProperties(centerSkuStock,pmsSkuStock);
-                pmsSkuStock.setStock(examine.getNumber());
-                switch (wmsMember.getLevel()){
-                    case 1:
-                        pmsSkuStock.setPrice(pmsProduct.getDeliveryCenterProductValue());
-                        break;
-                    case 2:
-                        pmsSkuStock.setPrice(pmsProduct.getRegionalProductValue());
-                        break;
-                    case 3:
-                        pmsSkuStock.setPrice(pmsProduct.getWebmasterProductValue());
-                        break;
-                }
-                pmsSkuStock.setLockStock(0);
-                pmsSkuStock.setSale(0);
-                pmsSkuStock.setLowStock(10);
-                pmsSkuStock.setWmsMemberId(wmsMember.getId());
-                pmsSkuStock.setPic(pmsProduct.getPic());
-                skuStockMapper.insert(pmsSkuStock);
-            }else {
-                pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
-                skuStockMapper.updateByPrimaryKey(pmsSkuStock);
-            }
-            //扣减出货仓库存
-            PmsSkuStock ShipmentSkuStock=new PmsSkuStock();
-            ShipmentSkuStock.setWmsMemberId(Shipment.getWmsMemberId());
-            ShipmentSkuStock.setProductId(Shipment.getProductId());
-            ShipmentSkuStock=skuStockMapper.selectByParams(ShipmentSkuStock);
-            if(ShipmentSkuStock==null){
-                return CommonResult.validateFailed("出货库存不存在");
-            }
-            ShipmentSkuStock.setLockStock(ShipmentSkuStock.getLockStock()-examine.getNumber());
-            ShipmentSkuStock.setStock(ShipmentSkuStock.getStock()-examine.getNumber());
-            skuStockMapper.updateByPrimaryKey(ShipmentSkuStock);
+//            //添加库存
+//            PmsSkuStock pmsSkuStock=new PmsSkuStock();
+//            pmsSkuStock.setWmsMemberId(distribution.getWmsMemberId());//补货人库存
+//            pmsSkuStock.setProductId(pmsProduct.getId());
+//            pmsSkuStock=skuStockMapper.selectByParams(pmsSkuStock);
+//            if(pmsSkuStock==null){
+//                pmsSkuStock=new PmsSkuStock();
+//                //查找总仓库存
+//                PmsSkuStock centerSkuStock=new PmsSkuStock();
+//                centerSkuStock.setWmsMemberId(1L);
+//                centerSkuStock.setProductId(pmsProduct.getId());
+//                centerSkuStock=skuStockMapper.selectByParams(centerSkuStock);
+//                //复制库存信息
+//                BeanUtils.copyProperties(centerSkuStock,pmsSkuStock);
+//                pmsSkuStock.setStock(examine.getNumber());
+//                switch (wmsMember.getLevel()){
+//                    case 1:
+//                        pmsSkuStock.setPrice(pmsProduct.getDeliveryCenterProductValue());
+//                        break;
+//                    case 2:
+//                        pmsSkuStock.setPrice(pmsProduct.getRegionalProductValue());
+//                        break;
+//                    case 3:
+//                        pmsSkuStock.setPrice(pmsProduct.getWebmasterProductValue());
+//                        break;
+//                }
+//                pmsSkuStock.setLockStock(0);
+//                pmsSkuStock.setSale(0);
+//                pmsSkuStock.setLowStock(10);
+//                pmsSkuStock.setWmsMemberId(wmsMember.getId());
+//                pmsSkuStock.setPic(pmsProduct.getPic());
+//                skuStockMapper.insert(pmsSkuStock);
+//            }else {
+//                pmsSkuStock.setStock(pmsSkuStock.getStock()+examine.getNumber());
+//                skuStockMapper.updateByPrimaryKey(pmsSkuStock);
+//            }
+//            //扣减出货仓库存
+//            PmsSkuStock ShipmentSkuStock=new PmsSkuStock();
+//            ShipmentSkuStock.setWmsMemberId(Shipment.getWmsMemberId());
+//            ShipmentSkuStock.setProductId(Shipment.getProductId());
+//            ShipmentSkuStock=skuStockMapper.selectByParams(ShipmentSkuStock);
+//            if(ShipmentSkuStock==null){
+//                return CommonResult.validateFailed("出货库存不存在");
+//            }
+//            ShipmentSkuStock.setLockStock(ShipmentSkuStock.getLockStock()-examine.getNumber());
+//            ShipmentSkuStock.setStock(ShipmentSkuStock.getStock()-examine.getNumber());
+//            skuStockMapper.updateByPrimaryKey(ShipmentSkuStock);
             //添加出货仓授信额度 扣减进货仓授信额度
             if(Shipment.getWmsMemberId()!=1L){
                 WmsMember CHmember=memberMapper.selectByPrimaryKey(Shipment.getWmsMemberId());
@@ -468,6 +468,7 @@ public class WmsMemberController {
             //添加补货收益流水
             AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
             if(distribution.getProfit()!=null&&!distribution.getProfit().equals(BigDecimal.ZERO)){
+                acctSettleInfo.setOmsDistributionNo(distribution.getId());
                 acctSettleInfo.setOrderNo(distribution.getOrderSn());
                 acctSettleInfo.setAcctId(BHacctInfo.getId());
                 acctSettleInfo.setBeforBal(BHacctInfo.getBalance());
@@ -484,6 +485,7 @@ public class WmsMemberController {
             //添加出货收益流水
             acctSettleInfo=new AcctSettleInfo();
             if(Shipment.getProfit()!=null&&!Shipment.getProfit().equals(BigDecimal.ZERO)){
+                acctSettleInfo.setOmsDistributionNo(distribution.getId());
                 acctSettleInfo.setOrderNo(Shipment.getOrderSn());
                 acctSettleInfo.setAcctId(CHacctInfo.getId());
                 acctSettleInfo.setBeforBal(CHacctInfo.getBalance());
