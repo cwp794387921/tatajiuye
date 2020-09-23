@@ -13,9 +13,11 @@ import org.springframework.util.StringUtils;
 public class GetWeiXinCode {
     private final static String WECHAT_SESSION_HOST = "https://api.weixin.qq.com/sns/jscode2session";
     //小程序APPID
-    private final static String WECHAT_APP_ID = "wxdaa9fb4025511958";
+    //private final static String WECHAT_APP_ID = "wxdaa9fb4025511958";
+    //private final static String WECHAT_APP_ID = "wxd920cb3c36501e46";
     //小程序秘钥
-    private final static String WECHAT_SECRET = "56bcec96c36b270da318979e4c41f8fc";
+    //private final static String WECHAT_SECRET = "56bcec96c36b270da318979e4c41f8fc";
+    //private final static String WECHAT_SECRET = "5c4953f10adadc5cf6bcee10b27c108c";
     private static RedisService redisUtils;
     public static final String tokenKey = "tata_access_token";
 
@@ -134,9 +136,15 @@ public class GetWeiXinCode {
     }*/
 
     public static JSONObject getOpenId(String code){
+        WxConfig wxConfig = null;
+        try {
+            wxConfig = new WxConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String result = HttpRequest.sendGet(WECHAT_SESSION_HOST,
-                "appid=" + WECHAT_APP_ID +
-                        "&secret="+ WECHAT_SECRET +
+                "appid=" + wxConfig.getAppID() +
+                        "&secret="+ wxConfig.getAppSecret() +
                         "&js_code="+ code + //前端传来的code
                         "&grant_type=authorization_code");
         JSONObject jsonObject = JSONObject.parseObject(result);

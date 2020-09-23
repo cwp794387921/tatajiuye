@@ -289,7 +289,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             Asserts.fail("用户信息为空");
         }
         //没有该用户进行添加操作
-        JSONObject result = GetWeiXinCode.getOpenId(registeredMemberParam.getWxCode());
+        JSONObject result = null;
+        try {
+            result = GetWeiXinCode.getOpenId(registeredMemberParam.getWxCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(result==null){
             Asserts.fail("获取openId失败");
         }

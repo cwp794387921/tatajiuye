@@ -313,7 +313,7 @@ public class UmsMemberController {
     @ApiOperation("微信小程序注册不带验证码")
     @RequestMapping(value = "/registeredMemberNotVerificationCode", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult registeredMemberNotVerificationCode(@RequestBody RegisteredMemberParam registeredMemberParam){
+    public CommonResult registeredMemberNotVerificationCode(@RequestBody RegisteredMemberParam registeredMemberParam) throws Exception{
         String token = memberService.registeredMember(registeredMemberParam);
         return CommonResult.success(token);
     }

@@ -103,9 +103,9 @@
 	        LEFT JOIN wms_member wm ON wm.id = od.wms_member_id
 	        LEFT JOIN ums_member_invite_relation umir ON umir.member_id = o.member_id
             LEFT JOIN acct_info aid ON aid.member_id = umir.father_member_id
-            LEFT JOIN acct_settle_info asid ON asid.order_no = o.order_sn AND asid.acct_id = aid.id
+            LEFT JOIN acct_settle_info asid ON asid.order_no = o.order_sn AND asid.flow_type_detail = 'commission_income_direct'
             LEFT JOIN acct_info aii ON aii.member_id = umir.grandpa_member_id
-            LEFT JOIN acct_settle_info asii ON asii.order_no = o.order_sn AND asii.acct_id = aii.id
+            LEFT JOIN acct_settle_info asii ON asii.order_no = o.order_sn AND asii.flow_type_detail = 'commission_income_indirect'
         WHERE
             o.id = #{id}
         ORDER BY oi.id ASC,oh.create_time DESC
