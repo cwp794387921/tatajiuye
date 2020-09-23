@@ -1,6 +1,6 @@
 package com.tata.jiuye.DTO;
 
-import com.tata.jiuye.model.OmsOrder;
+import com.tata.jiuye.model.OmsDistributionItem;
 import com.tata.jiuye.model.OmsOrderItem;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,4 +28,7 @@ public class OmsOrderDetailDTO {
 
     @ApiModelProperty(value = "订单商品")
     List<OmsOrderItem> orderItems;
+
+    @ApiModelProperty(value = "补货单/配送单商品")
+    List<OmsDistributionItem> distributionItems;
 }

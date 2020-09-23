@@ -110,8 +110,8 @@ public class BalanceFlowController {
     @ApiOperation("流水详情(流水中的订单详情)")
     @RequestMapping(value = "/getDetailedDetails", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult getDetailedDetails(@RequestParam @ApiParam("订单号/配送/补货单号")String orderNo,@RequestParam @ApiParam("查询单据类型 order->订单,配送单,补货单")String type){
-        OmsOrderDetailDTO result =  acctSettleInfoService.getDetailedDetails(orderNo);
+    public CommonResult getDetailedDetails(@RequestParam @ApiParam("订单号/配送/补货单号")String orderNo,@RequestParam @ApiParam("查询单据类型 order->订单,delivery->配送单,补货单")String type){
+        OmsOrderDetailDTO result =  acctSettleInfoService.getDetailedDetails(orderNo,type);
         return CommonResult.success(result);
     }
 }
