@@ -138,7 +138,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------账户变更的金额 为 "+changeAmount);
         if(!changeAmount.equals(BigDecimal.ZERO)){
             //插入传入的Member对应的邀流水表(直邀或间邀)
-            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME);
+            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,null);
         }
         log.info("----------------------插入分佣流水   开始----------------------");
     }
@@ -155,14 +155,17 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
      * @param sourceId                          变更金额来源的ID(用户ID)
      * @param flowType                          流水类型
      * @param flowTypeDetail                    流水类型明细
+     * @param omsDistributionNo                 配送/补货单号
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail){
+    @Override
+    public AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail,Long omsDistributionNo){
         log.info("----------------------插入一条账户变更记录   开始----------------------");
         //插入传入的Member对应的邀流水表(直邀或间邀)
         AcctSettleInfo acctSettleInfo = new AcctSettleInfo();
         acctSettleInfo.setOrderNo(orderSn);
+        acctSettleInfo.setOmsDistributionNo(omsDistributionNo);
         acctSettleInfo.setAcctId(acctId);
         acctSettleInfo.setBeforBal(beforBal);
         acctSettleInfo.setAfterBal(afterBal);
@@ -256,7 +259,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         //1.插入提现申请记录
         if(!withdrawAmount.equals(BigDecimal.ZERO)){
             log.info("----------------------执行账户流水插入");
-            insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW);
+            insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW,null);
         }
         log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   结束----------------------");
     }

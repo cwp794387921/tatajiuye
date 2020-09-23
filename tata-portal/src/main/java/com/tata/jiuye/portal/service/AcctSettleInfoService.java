@@ -27,6 +27,22 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      */
     void insertCommissionRecordFlow(UmsMember umsMember, String orderSn);
 
+
+    /**
+     * 插入账户变更流水
+     * @param orderSn                           订单号
+     * @param acctId                            账户ID
+     * @param beforBal                          账户变更前余额
+     * @param afterBal                          账户变更后余额
+     * @param changeAmount                      账户变更的金额
+     * @param sourceId                          变更金额来源的ID(用户ID)
+     * @param flowType                          流水类型
+     * @param flowTypeDetail                    流水类型明细
+     * @param omsDistributionNo                 配送/补货单号
+     * @return
+     */
+    AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail,Long omsDistributionNo);
+
     /**
      * 获取今日收入
      * @param memberId                      用户ID
