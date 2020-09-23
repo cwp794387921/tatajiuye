@@ -8,6 +8,7 @@ import com.tata.jiuye.DTO.TotalFlowQueryParam;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctSettleInfoMapper;
+import com.tata.jiuye.mapper.OmsDistributionItemMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
@@ -44,6 +45,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private AcctSettleInfoMapper acctSettleInfoMapper;
     @Autowired
     private OmsPortalOrderService omsPortalOrderService;
+    @Autowired
+    private OmsDistributionItemMapper omsDistributionItemMapper;
 
     //上级配送中心分佣金额(当购买的商品为升级配送中心商品时,专用)
     private static BigDecimal DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT = new BigDecimal("1500");
@@ -260,7 +263,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     //获取明细详情
     @Override
-    public OmsOrderDetailDTO getDetailedDetails(String orderNo){
+    public OmsOrderDetailDTO getDetailedDetails(String orderNo,String type){
         if(StringUtils.isEmpty(orderNo)){
             Asserts.fail("订单号为空");
         }
@@ -278,9 +281,18 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             resultDto.setFlowStatus(StaticConstant.TO_BE_CREDITED);
         }
         resultDto.setOrderNo(orderNo);
-        //2.通过订单号获取商品详情
-        List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
-        resultDto.setOrderItems(omsOrderItems);
+        if("order".equals(type)){
+            //2.通过订单号获取商品详情
+            List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
+            resultDto.setOrderItems(omsOrderItems);
+        }
+        else{
+            OmsDistributionItemExample example = new OmsDistributionItemExample();
+            OmsDistributionItemExample.Criteria criteria = example.createCriteria();
+            criteria.andDistributionIdEqualTo(Long.valueOf(orderNo));
+            List<OmsDistributionItem> distributionItems = omsDistributionItemMapper.selectByExample(example);
+            resultDto.setDistributionItems(distributionItems);
+        }
         return  resultDto;
     }
 }
