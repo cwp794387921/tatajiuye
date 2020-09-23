@@ -409,19 +409,19 @@
     FROM
         withdrawal_examine
     WHERE 1=1
-    <if test="applicantMemberId != null">
+    <if test="applicantMemberId != null and applicantMemberId!=''">
       AND applicant_member_id = #{applicantMemberId}
     </if>
-    <if test="applicantMemberName != null">
+    <if test="applicantMemberName != null and applicantMemberName!='' ">
       AND applicant_member_name LIKE CONCAT('%',#{applicantMemberName},'%')
     </if>
-    <if test="approverMemberId != null">
+    <if test="approverMemberId != null and  approverMemberId!='' ">
       AND approver_member_id = #{approverMemberId}
     </if>
-    <if test="approverMemberName != null">
+    <if test="approverMemberName != null and approverMemberName!='' ">
       AND approver_member_name LIKE CONCAT('%',#{approverMemberName},'%')
     </if>
-    <if test="withdrawalAmount != null">
+    <if test="withdrawalAmount != null withdrawalAmount!=''">
       AND withdrawal_amount = #{withdrawalAmount}
     </if>
     <if test="status != null">
