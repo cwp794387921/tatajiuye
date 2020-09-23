@@ -323,7 +323,7 @@ public class PayController {
                 }
                 distributionMapper.updateByPrimaryKey(distribution);//更新配送单收益
                 //插入分佣流水
-                acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
+                //acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(omsOrderItem.getIfJoinVipProduct() == 1){

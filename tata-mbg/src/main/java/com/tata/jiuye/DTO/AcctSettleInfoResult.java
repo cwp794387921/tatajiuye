@@ -7,6 +7,9 @@ import lombok.Data;
 @Data
 public class AcctSettleInfoResult extends AcctSettleInfo {
 
-    @ApiModelProperty(value = "用户头像")
+    @ApiModelProperty(value = "来源用户头像")
     private String icon;
+
+    @ApiModelProperty(value = "来源用户名")
+    private String nickname;
 }
