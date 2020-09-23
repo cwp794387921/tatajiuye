@@ -121,6 +121,12 @@
       <if test="level !=null and level !=''">
         and m.level = #{level}
       </if>
+      <if test="province !=null and province !=''">
+        and a.province = like CONCAT('%',#{province}, '%')
+      </if>
+      <if test="area !=null and area !=''">
+        and a.area = like CONCAT('%',#{area}, '%')
+      </if>
       <if test="minLevel !=null and minLevel !=''">
         and m.level > #{minLevel}
       </if>
