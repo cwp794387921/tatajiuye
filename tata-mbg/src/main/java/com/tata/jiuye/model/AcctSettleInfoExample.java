@@ -795,6 +795,66 @@ public class AcctSettleInfoExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andOmsDistributionNoIsNull() {
+            addCriterion("oms_distribution_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoIsNotNull() {
+            addCriterion("oms_distribution_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoEqualTo(Long value) {
+            addCriterion("oms_distribution_no =", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoNotEqualTo(Long value) {
+            addCriterion("oms_distribution_no <>", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoGreaterThan(Long value) {
+            addCriterion("oms_distribution_no >", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoGreaterThanOrEqualTo(Long value) {
+            addCriterion("oms_distribution_no >=", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoLessThan(Long value) {
+            addCriterion("oms_distribution_no <", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoLessThanOrEqualTo(Long value) {
+            addCriterion("oms_distribution_no <=", value, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoIn(List<Long> values) {
+            addCriterion("oms_distribution_no in", values, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoNotIn(List<Long> values) {
+            addCriterion("oms_distribution_no not in", values, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoBetween(Long value1, Long value2) {
+            addCriterion("oms_distribution_no between", value1, value2, "omsDistributionNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOmsDistributionNoNotBetween(Long value1, Long value2) {
+            addCriterion("oms_distribution_no not between", value1, value2, "omsDistributionNo");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

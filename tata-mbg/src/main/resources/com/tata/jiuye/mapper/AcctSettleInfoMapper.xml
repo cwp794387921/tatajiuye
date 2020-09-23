@@ -13,6 +13,7 @@
     <result column="flow_type_detail" jdbcType="VARCHAR" property="flowTypeDetail" />
     <result column="source_id" jdbcType="BIGINT" property="sourceId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="oms_distribution_no" jdbcType="BIGINT" property="omsDistributionNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, order_no, acct_id, befor_bal, change_amount, after_bal, insert_time, flow_type,
-    flow_type_detail, source_id, update_time
+    flow_type_detail, source_id, update_time, oms_distribution_no
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.AcctSettleInfoExample" resultMap="BaseResultMap">
     select
@@ -113,11 +114,11 @@
     insert into acct_settle_info (order_no, acct_id, befor_bal,
       change_amount, after_bal, insert_time,
       flow_type, flow_type_detail, source_id,
-      update_time)
+      update_time, oms_distribution_no)
     values (#{orderNo,jdbcType=VARCHAR}, #{acctId,jdbcType=BIGINT}, #{beforBal,jdbcType=DECIMAL},
       #{changeAmount,jdbcType=DECIMAL}, #{afterBal,jdbcType=DECIMAL}, #{insertTime,jdbcType=TIMESTAMP},
       #{flowType,jdbcType=VARCHAR}, #{flowTypeDetail,jdbcType=VARCHAR}, #{sourceId,jdbcType=BIGINT},
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{omsDistributionNo,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.AcctSettleInfo">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -155,6 +156,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="omsDistributionNo != null">
+        oms_distribution_no,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderNo != null">
@@ -186,6 +190,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="omsDistributionNo != null">
+        #{omsDistributionNo,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -231,6 +238,9 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.omsDistributionNo != null">
+        oms_distribution_no = #{record.omsDistributionNo,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +258,8 @@
       flow_type = #{record.flowType,jdbcType=VARCHAR},
       flow_type_detail = #{record.flowTypeDetail,jdbcType=VARCHAR},
       source_id = #{record.sourceId,jdbcType=BIGINT},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      oms_distribution_no = #{record.omsDistributionNo,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +297,9 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="omsDistributionNo != null">
+        oms_distribution_no = #{omsDistributionNo,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +314,8 @@
       flow_type = #{flowType,jdbcType=VARCHAR},
       flow_type_detail = #{flowTypeDetail,jdbcType=VARCHAR},
       source_id = #{sourceId,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      oms_distribution_no = #{omsDistributionNo,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

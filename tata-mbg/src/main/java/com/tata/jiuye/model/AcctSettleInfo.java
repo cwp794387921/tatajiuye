@@ -42,6 +42,9 @@ public class AcctSettleInfo implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "配送/补货单号(配送单表的ID)")
+    private Long omsDistributionNo;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -132,6 +135,14 @@ public class AcctSettleInfo implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public Long getOmsDistributionNo() {
+        return omsDistributionNo;
+    }
+
+    public void setOmsDistributionNo(Long omsDistributionNo) {
+        this.omsDistributionNo = omsDistributionNo;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -149,6 +160,7 @@ public class AcctSettleInfo implements Serializable {
         sb.append(", flowTypeDetail=").append(flowTypeDetail);
         sb.append(", sourceId=").append(sourceId);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", omsDistributionNo=").append(omsDistributionNo);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
