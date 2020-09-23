@@ -341,7 +341,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }else{
             log.info("未携带邀请码注册");
             log.info("上级绑定到平台");
-            grandpaMemberId = null;
+            grandpaMemberId = 1L;
             parentMemberId = 1L;
         }
         //生成会员关系表
