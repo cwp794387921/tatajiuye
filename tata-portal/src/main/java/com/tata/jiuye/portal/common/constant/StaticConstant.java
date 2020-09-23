@@ -17,10 +17,14 @@ public class StaticConstant {
 
     /********************************流水类型明细常量***************************************/
     /**
-     * 流水类型明细-收入-分佣收入
+     * 流水类型明细-收入-分佣收入-直邀分佣
      */
-    public static final String FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME = "commission_income";
+    public static final String FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_DIRECT = "commission_income_direct";
 
+    /**
+     * 流水类型明细-收入-分佣收入-间邀分佣
+     */
+    public static final String FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_INDIRECT = "commission_income_indirect";
     /**
      * 流水类型明细-收入-配送费
      */

@@ -91,14 +91,14 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                     //插入上级配送中心分佣
                     if(directSuperiorDistributionCenterMemberId != null){
                         insertFlow(directSuperiorDistributionCenterMemberId,DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
-                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_DIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                         if(!directSuperiorDistributionCenterMemberId.equals(1L)){
                             Long indirectSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberIdNotOwner(directSuperiorDistributionCenterMemberId);
                             log.info("----------------------上上级配送中心的用户ID : "+indirectSuperiorDistributionCenterMemberId);
                             //插入上上级配送中心分佣
                             if(indirectSuperiorDistributionCenterMemberId != null){
                                 insertFlow(indirectSuperiorDistributionCenterMemberId,INDIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
-                                        StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
+                                        StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_INDIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                             }
                         }
                     }
@@ -108,13 +108,13 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                     if(!directPushAmount.equals(BigDecimal.ZERO)){
                         log.info("-----------------执行正常商品直邀分佣 ");
                         insertFlow(parentMemberId,directPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
-                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_DIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                     }
                     //获取间邀账户并增加余额
                     if(!indirectPushAmount.equals(BigDecimal.ZERO)){
                         log.info("-----------------执行正常商品间邀分佣 ");
                         insertFlow(grandpaMemberId,indirectPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
-                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_INDIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                     }
                 }
             }
