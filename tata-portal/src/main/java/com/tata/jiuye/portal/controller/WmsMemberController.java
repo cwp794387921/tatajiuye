@@ -31,6 +31,7 @@ public class WmsMemberController {
     private WmsMemberService wmsMemberService;
     @Resource
     private OmsPortalOrderService portalOrderService;
+
     @Resource
     private OmsDistributionMapper distributionMapper;
 

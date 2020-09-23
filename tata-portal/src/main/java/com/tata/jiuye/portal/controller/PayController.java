@@ -276,6 +276,8 @@ public class PayController {
                             omsOrderItem.setDistributionStatus(2L);
                             orderMapper.updateByPrimaryKey(omsOrder);
                             omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                            //升级配送中心商品 插入账户分佣流水
+                            acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                         }else {
                             OmsDistributionItem distributionItem=new OmsDistributionItem();
                             distributionItem.setDistributionId(distribution.getId());
@@ -323,6 +325,10 @@ public class PayController {
                 }
                 distributionMapper.updateByPrimaryKey(distribution);//更新配送单收益
                 //插入分佣流水
+                if(isWms!=null) {
+                    log.info("==》自身是配送中心，订单结束，开始分佣");
+                    acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
+                }
                 //acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                 //会员等级提升到VIP用户
                 for(OmsOrderItem omsOrderItem : orderItemList){

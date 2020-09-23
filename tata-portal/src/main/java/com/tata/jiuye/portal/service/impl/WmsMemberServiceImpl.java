@@ -8,6 +8,7 @@ import com.tata.jiuye.common.utils.OrderUtil;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.UmsMemberInviteRelationService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMemberService;
@@ -42,6 +43,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private AcctSettleInfoMapper acctSettleInfoMapper;
     @Resource
     private OmsDistributionMapper distributionMapper;
+    @Resource
+    private AcctSettleInfoService acctSettleInfoService;
     @Resource
     private PmsSkuStockMapper pmsSkuStockMapper;
     @Resource
@@ -242,7 +245,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
         //添加账户流水
-        AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
+        acctSettleInfoService.insertCommissionRecordFlow(currentMember,order.getOrderSn());
+        /*AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
         if (acctInfo==null){
             Asserts.fail("账户不存在");
         }
@@ -259,7 +263,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         acctSettleInfo.setFlowTypeDetail(FlowTypeEnum.DELIVERY_FEE.value);
         acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
         acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
-        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
+        acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息*/
     }
 
     @Override
