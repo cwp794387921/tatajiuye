@@ -337,12 +337,12 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             //邀请人角色角色等级(是否配送中心)
             //UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
             parentMemberId = fatherUmsMember.getId();
-            grandpaMemberId=fatherInfo.getFatherMemberId();
+            grandpaMemberId = fatherInfo.getFatherMemberId();
         }else{
             log.info("未携带邀请码注册");
             log.info("上级绑定到平台");
-            grandpaMemberId=1L;
-            parentMemberId=1L;
+            grandpaMemberId = null;
+            parentMemberId = 1L;
         }
         //生成会员关系表
         UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();

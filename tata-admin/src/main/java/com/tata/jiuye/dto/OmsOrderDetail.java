@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,11 +22,17 @@ public class OmsOrderDetail extends OmsOrder {
     @ApiModelProperty("配送单号")
     private Long omsDistributionNo;
 
-    @ApiModelProperty("配送中心ID(接单人)")
-    private Long wmsMemberId;
+    @ApiModelProperty("直邀上级ID")
+    private Long directlyInviteSuperiorsMemberId;
 
-    @ApiModelProperty("配送中心昵称(接单人)")
-    private String wmsMemberNickName;
+    @ApiModelProperty("直邀上级分佣金额")
+    private BigDecimal directlyInviteCommissionAmount;
+
+    @ApiModelProperty("间邀上级ID")
+    private Long indirectlyInviteSuperiorsMemberId;
+
+    @ApiModelProperty("间邀上级分佣金额")
+    private BigDecimal indirectlyInviteCommissionAmount;
 
     @ApiModelProperty("订单商品列表")
     private List<OmsOrderItem> orderItemList;
