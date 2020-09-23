@@ -335,11 +335,14 @@
     <resultMap id="AcctResultMap" type="com.tata.jiuye.DTO.AcctSettleInfoResult" extends="BaseResultMap">
         <result property="icon" column="icon"></result>
         <result property="nickname" column="nickname"></result>
+        <result property="flowDesc" column="flow_desc"></result>
     </resultMap>
 
     <select id="getIncomeFlow" resultMap="AcctResultMap">
     SELECT
-        asi.*,um.icon,um.nickname
+        asi.*,um.icon,um.nickname,
+        CASE asi.flow_type_detail WHEN 'withdraw'
+        THEN '提现' END AS flow_desc
     FROM
         acct_settle_info asi
     LEFT JOIN ums_member um ON um.id = asi.source_id
