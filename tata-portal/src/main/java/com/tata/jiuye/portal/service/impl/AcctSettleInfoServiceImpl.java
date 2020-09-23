@@ -158,7 +158,6 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
      * @param omsDistributionNo                 配送/补货单号
      * @return
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail,Long omsDistributionNo){
         log.info("----------------------插入一条账户变更记录   开始----------------------");

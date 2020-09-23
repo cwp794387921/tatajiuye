@@ -41,6 +41,7 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      * @param omsDistributionNo                 配送/补货单号
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail,Long omsDistributionNo);
 
     /**
