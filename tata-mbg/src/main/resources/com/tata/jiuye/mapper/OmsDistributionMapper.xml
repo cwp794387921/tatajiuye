@@ -130,17 +130,17 @@
       <result column="goods_title" jdbcType="VARCHAR" property="goodsTitle" />
       <result column="goods_subtitle" jdbcType="VARCHAR" property="goodsSubtitle" />
       <result column="product_id" jdbcType="INTEGER" property="productId" />
-      <result column="price" jdbcType="DECIMAL" property="price" />
-      <result column="number" jdbcType="INTEGER" property="number" />
-      <result column="sub_price" jdbcType="DECIMAL" property="subPrice" />
-      <result column="profit" jdbcType="DECIMAL" property="profit" />
+      <result column="price1" jdbcType="DECIMAL" property="price" />
+      <result column="number1" jdbcType="INTEGER" property="number" />
+      <result column="sub1" jdbcType="DECIMAL" property="subPrice" />
+      <result column="profit1" jdbcType="DECIMAL" property="profit" />
     </collection>
   </resultMap>
 
   <select id="queryDistributionDetail" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="listMap">
-    SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
-    i.goods_img,i.goods_title,i.goods_subtitle,i.price,i.number,i.sub_price ,i.product_id,i.profit from oms_distribution d
-    left join oms_distribution_item  i on i.distribution_id=d.id
+      SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
+      i.goods_img,i.goods_title,i.goods_subtitle,i.price as price1,i.number as number1,i.sub_price as sub1 ,i.product_id,i.profit as profit1 from oms_distribution d
+      left join oms_distribution_item  i on i.distribution_id=d.id
     <where>
       <if test="id !=null">
         and d.id = #{id}
@@ -574,26 +574,65 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.OmsDistribution">
     update oms_distribution
-    set order_sn = #{orderSn,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      goods_img = #{goodsImg,jdbcType=VARCHAR},
-      goods_title = #{goodsTitle,jdbcType=VARCHAR},
-      goods_subtitle = #{goodsSubtitle,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      number = #{number,jdbcType=INTEGER},
-      sub_price = #{subPrice,jdbcType=DECIMAL},
-      name = #{name,jdbcType=VARCHAR},
-      head_img = #{headImg,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
+    <set>
+      <if test="orderSn !=null and orderSn !=''">
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="status !=null ">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="goodsImg !=null and goodsImg !=''">
+        goods_img = #{goodsImg,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTitle !=null and goodsTitle !=''">
+        goods_title = #{goodsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="price !=null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="number !=null ">
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="subPrice !=null ">
+        sub_price = #{subPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="name !=null and name !=''">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg !=null and headImg !=''">
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="address !=null and address !=''">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime !=null ">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wmsMemberId !=null and wmsMemberId !=''">
       wms_member_id = #{wmsMemberId,jdbcType=INTEGER},
-       ums_member_id = #{umsMemberId,jdbcType=INTEGER},
-       type = #{type,jdbcType=INTEGER},
-        phone = #{phone,jdbcType=VARCHAR},
+    </if>
+      <if test="umsMemberId !=null and umsMemberId !=''">
+      ums_member_id = #{umsMemberId,jdbcType=INTEGER},
+    </if>
+      <if test="type !=null ">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone !=null and phone !=''">
+      phone = #{phone,jdbcType=VARCHAR},
+    </if>
+      <if test="profit !=null ">
         profit = #{profit,jdbcType=DECIMAL},
+      </if>
+      <if test="replenishableId !=null">
         replenishable_id = #{replenishableId,jdbcType=INTEGER},
-         shipment_id = #{shipmentId,jdbcType=INTEGER},
-        product_id = #{productId,jdbcType=INTEGER}
+      </if>
+      <if test="shipmentId !=null">
+        shipment_id = #{shipmentId,jdbcType=INTEGER},
+      </if>
+      <if test="productId !=null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+    </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
