@@ -125,7 +125,7 @@
     <result column="wms_member_id" jdbcType="INTEGER" property="wmsMemberId" />
     <result column="ums_member_id" jdbcType="INTEGER" property="umsMemberId" />
     <result column="profit" jdbcType="DECIMAL" property="profit" />
-    <collection property="itemList" ofType="com.tata.jiuye.model.OmsDistribution">
+    <collection property="itemList" ofType="com.tata.jiuye.model.OmsDistributionItem">
       <result column="goods_img" jdbcType="VARCHAR" property="goodsImg" />
       <result column="goods_title" jdbcType="VARCHAR" property="goodsTitle" />
       <result column="goods_subtitle" jdbcType="VARCHAR" property="goodsSubtitle" />
