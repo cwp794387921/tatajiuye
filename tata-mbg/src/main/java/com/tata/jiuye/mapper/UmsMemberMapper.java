@@ -19,7 +19,7 @@ public interface UmsMemberMapper extends BaseMapper<UmsMember> {
 
     int deleteByPrimaryKey(Long id);
 
-    UmsMember selectById(String openid);
+    UmsMember selectByOpenId(String openid);
 
     UmsMember selectByUsername(String username);
 

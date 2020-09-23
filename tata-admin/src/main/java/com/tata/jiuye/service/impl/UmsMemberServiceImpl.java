@@ -148,10 +148,15 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         if(memberId == null){
             Asserts.fail("待降级用户ID不能为空");
         }
+        log.info("-------------参数 memberId : "+memberId);
         //1.将用户等级下降为3
-        UmsMember member = memberMapper.selectById(memberId);
+        UmsMember member = memberMapper.selectByPrimaryKey(memberId);
+        log.info("-------------member : "+member);
         if(member == null){
             Asserts.fail("找不到该用户ID对应的用户");
+        }
+        if(!member.getMemberLevelId().equals(2L)){
+            Asserts.fail("非配送中心不可降级");
         }
         member.setMemberLevelId(3L);
         updateMember(member);

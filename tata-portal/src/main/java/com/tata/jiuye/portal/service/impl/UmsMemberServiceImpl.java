@@ -243,7 +243,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             String openId = result.get("openid").toString();
             log.info("openId为 "+openId);
             //查询是否已有该用户
-            UmsMember umsMember = memberMapper.selectById(openId);
+            UmsMember umsMember = memberMapper.selectByOpenId(openId);
             if(umsMember!=null){
                 //已注册 直接登陆
                 log.info("===》用户已存在，直接登录");
