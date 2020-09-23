@@ -1,5 +1,7 @@
 package com.tata.jiuye.portal.controller;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
@@ -246,6 +248,7 @@ public class PayController {
                         omsOrder.setStatus(2);
                         omsOrderItem.setDistributionStatus(2L);
                         distribution.setStatus(5);
+                        omsOrder.setReceiveTime(new Date());
                         orderMapper.updateByPrimaryKey(omsOrder);
                         omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                         distributionMapper.updateByPrimaryKey(distribution);
@@ -274,6 +277,7 @@ public class PayController {
                             log.info("==》升级配送中心商品，不生成配送单");
                             omsOrder.setStatus(2);
                             omsOrderItem.setDistributionStatus(2L);
+                            omsOrder.setReceiveTime(new Date());
                             orderMapper.updateByPrimaryKey(omsOrder);
                             omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
                             //升级配送中心商品 插入账户分佣流水

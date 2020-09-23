@@ -1,5 +1,7 @@
 package com.tata.jiuye.portal.service.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
@@ -114,7 +116,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         distribution.setWmsMemberId(wmsMember.getId());
         List<OmsDistribution> BhList=distributionMapper.queryList(distribution);
         result.put("bh",BhList);
-        //查找借货单
+        //查找出货单
         distribution.setType(3);
         List<OmsDistribution> JhList=distributionMapper.queryList(distribution);
         result.put("jh",JhList);
@@ -282,6 +284,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
+        //更新订单确认收货时间
+        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        order.setReceiveTime(null);
+        orderMapper.updateByPrimaryKey(order);
         omsDistribution.setStatus(0);//待接单
         distributionMapper.updateByPrimaryKey(omsDistribution);
         List<OmsDistributionItem> list=omsDistribution.getItemList();
@@ -360,6 +366,11 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
+        //更新订单确认收货时间
+        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        order.setReceiveTime(DateUtil.offset(new Date(), DateField.DAY_OF_MONTH, 3));
+        orderMapper.updateByPrimaryKey(order);
+
         omsDistribution.setStatus(1);//待配送
         distributionMapper.updateByPrimaryKey(omsDistribution);
         List<OmsDistributionItem> list=omsDistribution.getItemList();

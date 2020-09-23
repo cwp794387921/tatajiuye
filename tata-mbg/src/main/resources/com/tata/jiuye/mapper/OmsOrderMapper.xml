@@ -114,6 +114,21 @@
     receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, 
     use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time
   </sql>
+
+
+  <select id="queryList"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from oms_order
+    where 1=1
+    <if test="id != null">
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="receiveTime != null">
+      and receive_time &lt; #{receiveTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsOrderExample" resultMap="BaseResultMap">
     select
     <if test="distinct">

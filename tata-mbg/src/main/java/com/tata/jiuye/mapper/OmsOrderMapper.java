@@ -22,6 +22,8 @@ public interface OmsOrderMapper extends BaseMapper<OmsOrder> {
 
     List<OmsOrder> selectByExample(OmsOrderExample example);
 
+    List<OmsOrder> queryList(Map<String,Object> params);
+
     Map<String,Object> queryOrderCount(Long id);
 
     OmsOrder selectByPrimaryKey(Long id);

@@ -1,21 +1,50 @@
 package com.tata.jiuye.portal.component;
 
+import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
+import com.tata.jiuye.mapper.OmsOrderMapper;
+import com.tata.jiuye.mapper.UmsMemberMapper;
+import com.tata.jiuye.mapper.WmsMemberMapper;
+import com.tata.jiuye.model.OmsDistribution;
+import com.tata.jiuye.model.OmsOrder;
+import com.tata.jiuye.model.UmsMember;
+import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.portal.service.AcctSettleInfoService;
+import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by macro on 2018/8/24.
  * 订单超时取消并解锁库存的定时器
  */
 @Component
+@Transactional(rollbackFor = Exception.class)
 public class OrderTimeOutCancelTask {
     private Logger LOGGER =LoggerFactory.getLogger(OrderTimeOutCancelTask.class);
     @Autowired
     private OmsPortalOrderService portalOrderService;
+    @Resource
+    private OmsOrderMapper orderMapper;
+    @Resource
+    private OmsDistributionMapper distributionMapper;
+    @Resource
+    private AcctSettleInfoService acctSettleInfoService;
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
+    @Resource
+    private UmsMemberMapper umsMemberMapper;
 
     /**
      * cron表达式：Seconds Minutes Hours DayofMonth Month DayofWeek [Year]
@@ -25,5 +54,35 @@ public class OrderTimeOutCancelTask {
     private void cancelTimeOutOrder(){
         Integer count = portalOrderService.cancelTimeOutOrder();
         LOGGER.info("取消订单，并根据sku编号释放锁定库存，取消订单数量：{}",count);
+        Map<String,Object>params=new HashMap<>();
+        params.put("receiveTime",new Date().getTime());
+        List<OmsOrder> orderList=orderMapper.queryList(params);
+        if(!orderList.isEmpty()){
+            LOGGER.info("订单超过收货时间，自动收货，数量：{}",orderList.size());
+            for (OmsOrder order:orderList){
+                //更新订单状态
+                order.setStatus(2);
+                order.setModifyTime(new Date());
+                orderMapper.updateByPrimaryKey(order);
+                OmsDistribution omsDistribution=new OmsDistribution();
+                omsDistribution.setOrderSn(order.getOrderSn());
+                omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
+                if(omsDistribution==null){
+                    Asserts.fail("配送单不存在");
+                }
+                WmsMember wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
+                if(wmsMember==null){
+                    Asserts.fail("配送中心不存在");
+                }
+                omsDistribution.setStatus(5);//已完成
+                distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
+                //添加账户流水
+                UmsMember umsMember=umsMemberMapper.selectByPrimaryKey(omsDistribution.getUmsMemberId());
+                if(umsMember==null){
+                    Asserts.fail("用户信息不存在");
+                }
+                acctSettleInfoService.insertCommissionRecordFlow(umsMember,order.getOrderSn());
+            }
+        }
     }
 }
