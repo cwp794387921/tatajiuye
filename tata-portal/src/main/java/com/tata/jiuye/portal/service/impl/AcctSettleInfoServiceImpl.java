@@ -9,7 +9,6 @@ import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctSettleInfoMapper;
 import com.tata.jiuye.model.*;
-import com.tata.jiuye.portal.DTO.BalanceFlowResult;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.rmi.MarshalException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -91,13 +87,15 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                     log.info("----------------------上级配送中心的用户ID : "+directSuperiorDistributionCenterMemberId);
                     //插入上级配送中心分佣
                     if(directSuperiorDistributionCenterMemberId != null){
-                        insertCommissionFlow(directSuperiorDistributionCenterMemberId,DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId());
+                        insertFlow(directSuperiorDistributionCenterMemberId,DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                         if(!directSuperiorDistributionCenterMemberId.equals(1L)){
                             Long indirectSuperiorDistributionCenterMemberId = umsMemberService.getSuperiorDistributionCenterMemberIdNotOwner(directSuperiorDistributionCenterMemberId);
                             log.info("----------------------上上级配送中心的用户ID : "+indirectSuperiorDistributionCenterMemberId);
                             //插入上上级配送中心分佣
                             if(indirectSuperiorDistributionCenterMemberId != null){
-                                insertCommissionFlow(indirectSuperiorDistributionCenterMemberId,INDIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId());
+                                insertFlow(indirectSuperiorDistributionCenterMemberId,INDIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
+                                        StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                             }
                         }
                     }
@@ -106,12 +104,14 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
                     //获取直邀账户并增加余额
                     if(!directPushAmount.equals(BigDecimal.ZERO)){
                         log.info("-----------------执行正常商品直邀分佣 ");
-                        insertCommissionFlow(parentMemberId,directPushAmount,orderSn,umsMember.getId());
+                        insertFlow(parentMemberId,directPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                     }
                     //获取间邀账户并增加余额
                     if(!indirectPushAmount.equals(BigDecimal.ZERO)){
                         log.info("-----------------执行正常商品间邀分佣 ");
-                        insertCommissionFlow(grandpaMemberId,indirectPushAmount,orderSn,umsMember.getId());
+                        insertFlow(grandpaMemberId,indirectPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
+                                StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                     }
                 }
             }
@@ -119,16 +119,10 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------执行分佣流水   结束----------------------");
     }
 
-    /**
-     * 插入分佣流水
-     * @param directPushMemberId                用户ID
-     * @param changeAmount                       账户变更金额
-     * @param orderSn                             订单号
-     * @param sourceId                            变更金额来源ID(用户ID)
-     */
-    public void insertCommissionFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId){
-        log.info("----------------------插入分佣流水   开始----------------------");
-        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.ACCOUNT_TYPE_ORDINARY);
+    @Override
+    public void insertFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId,String flowType,String flowTypeDetail,String accountType,Long omsDistributionNo){
+        log.info("----------------------插入资金变动流水   开始----------------------");
+        AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(directPushMemberId,changeAmount,flowType,accountType);
         Long acctId = acctSettleInfo.getAcctId();
         log.info("----------------------账户ID 为 "+acctId);
         BigDecimal beforBal = acctSettleInfo.getBeforBal();
@@ -138,9 +132,9 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         log.info("----------------------账户变更的金额 为 "+changeAmount);
         if(!changeAmount.equals(BigDecimal.ZERO)){
             //插入传入的Member对应的邀流水表(直邀或间邀)
-            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,StaticConstant.FLOW_TYPE_INCOME,StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME,null);
+            insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,flowType,flowTypeDetail,omsDistributionNo);
         }
-        log.info("----------------------插入分佣流水   开始----------------------");
+        log.info("----------------------插入资金变动流水   开始----------------------");
     }
 
 
@@ -158,7 +152,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
      * @param omsDistributionNo                 配送/补货单号
      * @return
      */
-    @Override
+    @Transactional(rollbackFor = Exception.class)
     public AcctSettleInfo insertAcctInfoChangeFlow(String orderSn,Long acctId,BigDecimal beforBal,BigDecimal afterBal,BigDecimal changeAmount,Long sourceId,String flowType,String flowTypeDetail,Long omsDistributionNo){
         log.info("----------------------插入一条账户变更记录   开始----------------------");
         //插入传入的Member对应的邀流水表(直邀或间邀)
