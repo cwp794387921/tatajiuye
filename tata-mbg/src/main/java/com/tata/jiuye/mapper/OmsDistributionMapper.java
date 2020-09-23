@@ -25,6 +25,8 @@ public interface OmsDistributionMapper {
 
     List<OmsDistribution> queryCHList(Map<String,Object> params);
 
+    List<OmsDistribution> queryPSList(Map<String,Object> params);
+
     OmsDistribution selectByPrimaryKey(Long id);
 
     OmsDistribution queryDistributionDetail(OmsDistribution distribution);

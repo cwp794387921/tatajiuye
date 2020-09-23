@@ -234,6 +234,40 @@
     order by id desc
   </select>
 
+  <select id="queryPSList"  resultType="com.tata.jiuye.model.OmsDistribution">
+    SELECT
+    d.id,d.order_sn,d.`name`,d.phone,d.address,d.wms_member_id,m.phone AS wmsPhone,d.`status`
+    FROM
+    oms_distribution d
+    LEFT JOIN wms_member m on m.id=d.wms_member_id
+    <where>
+      <if test="type !=null">
+        and d.type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="status !=null ">
+        and d.status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="orderSn !=null ">
+        and d.order_sn = #{orderSn}
+      </if>
+      <if test="phone !=null ">
+        and d.phone = #{phone}
+      </if>
+      <if test="wmsPhone !=null ">
+        and m.phone = #{wmsPhone}
+      </if>
+      <if test="wmsMemberId !=null ">
+        and d.wms_member_id = #{wmsMemberId,jdbcType=INTEGER}
+      </if>
+      <if test="umsMemberId !=null ">
+        and d.ums_member_id = #{umsMemberId,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by id desc
+  </select>
+
+
+
   <select id="queryCHList"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

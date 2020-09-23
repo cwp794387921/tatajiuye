@@ -61,13 +61,24 @@ public class WmsMemberController {
     @Resource
     private ChangeDistributionMapper changeDistributionMapper;
 
+    @ApiOperation("获取所有配送单列表")
+    @RequestMapping(value = "/allDistributionList", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult allDistributionList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
+        PageHelper.startPage(pageNum, pageSize);
+        params.put("type",1);//配送单
+        List<OmsDistribution> List= distributionMapper.queryPSList(params);
+        return CommonResult.success(CommonPage.restPage(List));
+    }
+
     @ApiOperation("获取平台配送单列表")
     @RequestMapping(value = "/distributionList", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult distributionList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
-        params.put("type",1);//出货单
+        params.put("type",1);//配送单
         params.put("wmsMemberId",1L);
         List<OmsDistribution> List= distributionMapper.queryCHList(params);
         return CommonResult.success(CommonPage.restPage(List));
@@ -84,6 +95,9 @@ public class WmsMemberController {
         OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
+        }
+        if(!omsDistribution.getStatus().equals(0)){
+            Asserts.fail("配送单已接单");
         }
         //插入转配送记录表
         ChangeDistribution changeDistribution=new ChangeDistribution();

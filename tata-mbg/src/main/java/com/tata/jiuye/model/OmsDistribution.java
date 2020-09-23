@@ -71,6 +71,8 @@ public class OmsDistribution implements Serializable {
     @ApiModelProperty(value = "补货单对应出货单id")
     private Long shipmentId;
 
+    private String wmsPhone;
+
     List<OmsDistributionItem> itemList;
 
 
@@ -78,6 +80,14 @@ public class OmsDistribution implements Serializable {
 
     public List<OmsDistributionItem> getItemList() {
         return itemList;
+    }
+
+    public String getWmsPhone() {
+        return wmsPhone;
+    }
+
+    public void setWmsPhone(String wmsPhone) {
+        this.wmsPhone = wmsPhone;
     }
 
     public void setItemList(List<OmsDistributionItem> itemList) {
