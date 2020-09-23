@@ -96,7 +96,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Asserts.fail("账户信息不存在");
         }
         JSONObject result=new JSONObject();
-        result.put("level",wmsMember.getLevel());
+        result.put("wmsMemberInfo",wmsMember);
         result.put("bal",acctInfo.getBalance());
         result.put("lockBal",acctInfo.getLockAmount());
         result.put("creditLine",wmsMember.getCreditLine());
