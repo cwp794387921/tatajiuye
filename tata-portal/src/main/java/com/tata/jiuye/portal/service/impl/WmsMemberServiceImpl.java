@@ -638,9 +638,12 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             //设置关联id
             distribution.setShipmentId(Shipment.getId().longValue());
             distributionMapper.insert(distribution);
-            wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(subPrice));
-            wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
         }
+        log.info("==>总货值["+subPrice+"]");
+        String remark=wmsMember.getId()+"补货扣减额度["+subPrice+"]";
+        wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(subPrice));
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
+        creditLineChange(wmsMember.getId(),subPrice.multiply(new BigDecimal(-1)),remark);
     }
 
 

@@ -96,6 +96,7 @@
     <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="area" jdbcType="VARCHAR" property="area" />
     <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="citys" jdbcType="VARCHAR" property="citys" />
   </resultMap>
 
   <select id="selectByUmsId" parameterType="java.lang.Long" resultMap="memberDetailMap">
@@ -106,7 +107,7 @@
 
 
   <select id="queryMemberDetail"  resultMap="memberDetailMap">
-        select m.*,a.province ,a.area,a.address from wms_member m
+        select m.*,a.province ,a.area,a.address,a.city as citys from wms_member m
     LEFT JOIN wms_area a on a.wms_member_id=m.id
     <where>
       <if test="id !=null and id !=''">
@@ -123,6 +124,9 @@
       </if>
       <if test="province !=null and province !=''">
         and a.province = like CONCAT('%',#{province}, '%')
+      </if>
+      <if test="citys !=null and citys !=''">
+        and a.city = like CONCAT('%',#{citys}, '%')
       </if>
       <if test="area !=null and area !=''">
         and a.area = like CONCAT('%',#{area}, '%')

@@ -6,7 +6,7 @@ public class WmsMemberAreaDetail extends WmsMember {
 
     private String province;
 
-    private String city;
+    private String citys;
 
     private String area;
 
@@ -22,14 +22,12 @@ public class WmsMemberAreaDetail extends WmsMember {
         this.province = province;
     }
 
-    @Override
-    public String getCity() {
-        return city;
+    public String getCitys() {
+        return citys;
     }
 
-    @Override
-    public void setCity(String city) {
-        this.city = city;
+    public void setCitys(String citys) {
+        this.citys = citys;
     }
 
     public String getArea() {
