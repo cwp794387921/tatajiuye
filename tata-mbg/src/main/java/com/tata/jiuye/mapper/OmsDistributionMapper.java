@@ -13,7 +13,7 @@ public interface OmsDistributionMapper {
     int deleteByExample(OmsDistributionExample example);
 
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(OmsDistribution record);
 
@@ -25,7 +25,7 @@ public interface OmsDistributionMapper {
 
     List<OmsDistribution> queryCHList(Map<String,Object> params);
 
-    OmsDistribution selectByPrimaryKey(Integer id);
+    OmsDistribution selectByPrimaryKey(Long id);
 
     OmsDistribution queryDistributionDetail(OmsDistribution distribution);
 

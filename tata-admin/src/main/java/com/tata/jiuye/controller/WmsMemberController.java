@@ -81,7 +81,7 @@ public class WmsMemberController {
         if(changeWmsMember==null){
             Asserts.fail("所选配送中心不存在");
         }
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
@@ -103,7 +103,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/acceptOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult acceptOrder(Long orderId) {
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
@@ -135,7 +135,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/arriveOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult arriveOrder(Long orderId) {
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
@@ -226,7 +226,7 @@ public class WmsMemberController {
     @RequestMapping(value = "/shipment", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult shipment(Long id) {
-        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id);
         if(shipment==null){
             Asserts.fail("出货单不存在");
         }

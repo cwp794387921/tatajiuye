@@ -154,7 +154,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(changeWmsMember==null){
             Asserts.fail("所选配送中心不存在");
         }
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
@@ -180,7 +180,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         OmsDistribution shipment=null;
         WmsMember wmsMember=null;
         if(type.equals("1")){
-            omsDistribution=distributionMapper.selectByPrimaryKey(id.intValue());
+            omsDistribution=distributionMapper.selectByPrimaryKey(id);
             wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
             if(omsDistribution==null){
                 Asserts.fail("补货单不存在");
@@ -189,12 +189,12 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                 Asserts.fail("已被接单不可取消");
             }
             //查找对应出货单
-            shipment=distributionMapper.selectByPrimaryKey(omsDistribution.getShipmentId().intValue());
+            shipment=distributionMapper.selectByPrimaryKey(omsDistribution.getShipmentId());
             if(shipment==null){
                 Asserts.fail("出货单不存在");
             }
         }else if(type.equals("2")){
-            shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+            shipment=distributionMapper.selectByPrimaryKey(id);
             if(shipment==null){
                 Asserts.fail("出货单不存在");
             }
@@ -398,7 +398,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(wmsMember==null){
             Asserts.fail("配送中心不存在");
         }
-        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId.intValue());
+        OmsDistribution omsDistribution=distributionMapper.selectByPrimaryKey(orderId);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
         }
@@ -490,7 +490,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(wmsMember==null){
             Asserts.fail("配送中心不存在");
         }
-        OmsDistribution distribution=distributionMapper.selectByPrimaryKey(id.intValue());
+        OmsDistribution distribution=distributionMapper.selectByPrimaryKey(id);
         if(distribution==null){
             Asserts.fail("补货单记录不存在");
         }
@@ -640,7 +640,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(wmsMember==null){
             Asserts.fail("配送中心不存在");
         }
-        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id.intValue());
+        OmsDistribution shipment=distributionMapper.selectByPrimaryKey(id);
         if(shipment==null){
             Asserts.fail("出货单不存在");
         }
