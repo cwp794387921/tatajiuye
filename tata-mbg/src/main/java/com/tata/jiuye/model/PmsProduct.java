@@ -136,10 +136,10 @@ public class PmsProduct implements Serializable {
     @ApiModelProperty(value = "配送中心价")
     private BigDecimal deliveryCenterPrice;
 
-    @ApiModelProperty(value = "区域仓补")
+    @ApiModelProperty(value = "区域仓补 3级")
     private BigDecimal regionalWarehouseReplenishment;
 
-    @ApiModelProperty(value = "站长仓补")
+    @ApiModelProperty(value = "站长仓补 2级")
     private BigDecimal webmasterWarehouseReplenishment;
 
     @ApiModelProperty(value = "区域货值(进货价)")

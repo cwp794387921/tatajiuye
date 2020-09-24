@@ -247,7 +247,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
         //添加账户流水
-        //acctSettleInfoService.insertAcctInfoChangeFlow(currentMember,order.getOrderSn());
+        acctSettleInfoService.insertCommissionRecordFlow(currentMember,order.getOrderSn());
         AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
         if (acctInfo==null){
             Asserts.fail("账户不存在");
@@ -578,28 +578,28 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                     price=pmsProduct.getDeliveryCenterProductValue();
                     break;
                 case 2:
-                    profit=pmsProduct.getRegionalWarehouseReplenishment();
-                    price=pmsProduct.getRegionalProductValue();
-                    break;
-                case 3:
                     profit=pmsProduct.getWebmasterWarehouseReplenishment();
                     price=pmsProduct.getWebmasterProductValue();
                     break;
+                case 3:
+                    profit=pmsProduct.getRegionalWarehouseReplenishment();
+                    price=pmsProduct.getRegionalProductValue();
+                    break;
             }
-            switch (parent.getLevel()){
+            /*switch (parent.getLevel()){
                 case 1:
                     CHprofit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
                     CHprice=pmsProduct.getDeliveryCenterProductValue();
                     break;
                 case 2:
-                    CHprofit=pmsProduct.getRegionalWarehouseReplenishment();
-                    CHprice=pmsProduct.getRegionalProductValue();
-                    break;
-                case 3:
                     CHprofit=pmsProduct.getWebmasterWarehouseReplenishment();
                     CHprice=pmsProduct.getWebmasterProductValue();
                     break;
-            }
+                case 3:
+                    CHprofit=pmsProduct.getRegionalWarehouseReplenishment();
+                    CHprice=pmsProduct.getRegionalProductValue();
+                    break;
+            }*/
             subPrice=subPrice.add(new BigDecimal(num).multiply(price));
             if(subPrice.compareTo(wmsMember.getCreditLine())==1){
                 Asserts.fail("补货总价超过授信额度");
@@ -639,7 +639,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Shipment.setCreateTime(new Date());
             Shipment.setWmsMemberId(parent.getId());
             Shipment.setType(3);//出货单
-            Shipment.setProfit(CHprofit.multiply(new BigDecimal(num)));//出货收益
+            Shipment.setProfit(BigDecimal.ZERO);//出货收益
             Shipment.setPhone(wmsMember.getPhone());
             Shipment.setProductId(pmsProduct.getId());
             Integer ShipmentId= distributionMapper.insert(Shipment);
