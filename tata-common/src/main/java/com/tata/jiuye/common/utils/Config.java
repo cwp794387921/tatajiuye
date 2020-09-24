@@ -8,7 +8,7 @@ public class Config {
 
     public static final String APPID = "wxd920cb3c36501e46";
 
-    public static final String NotifyUrl = "https://www.xmzzhy.com:8085/pay/wxNotify";
+    public static final String NotifyUrl = "https://www.xmzzhy.com:8085/pay/Notify";
 
 //    交易商户号
     public static final String MERCHANT_NO = "M2020092217000910000336";

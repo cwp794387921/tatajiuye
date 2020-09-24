@@ -12,6 +12,7 @@ import com.tata.jiuye.common.enums.ServiceEnum;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.common.utils.*;
+import com.tata.jiuye.common.utils.Base64;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -40,6 +41,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 @Api("支付接口")
@@ -197,6 +202,224 @@ public class PayController {
         return CommonResult.success(jsonObject);
     }
 
+    private static boolean checkSign(String content, String sign, String publicKey) {
+        try	{
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            byte[] encodedKey = Base64.decode2(publicKey);
+            PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+
+
+            Signature signature = Signature
+                    .getInstance("SHA1WithRSA");
+
+            signature.initVerify(pubKey);
+            signature.update( content.getBytes("utf-8") );
+
+            boolean bverify = signature.verify( Base64.decode2(sign) );
+            return bverify;
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        return false;
+    }
+
+    @PostMapping("/Notify")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public void Notify(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("==>进入随行付支付回调");
+        try {
+            String resXml = "";
+            InputStream inStream = request.getInputStream();
+            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inStream.read(buffer)) != -1) {
+                outSteam.write(buffer, 0, len);
+            }
+            outSteam.close();
+            inStream.close();
+            String result = new String(outSteam.toByteArray(), "utf-8");// 获取返回信息
+            System.out.println(result);
+            JSONObject resultJson=JSONObject.parseObject(result);
+            if(resultJson.get("code").toString().equals("1")){
+                System.out.println("交易成功");
+                result=resultJson.get("result").toString();
+                resultJson=JSONObject.parseObject(result);
+                if(resultJson.get("tradeStatus").toString().equals("PAY_SUCCESS")){
+                    //业务处理开始
+                    String sign=resultJson.get("sign").toString();
+                    String orderSn=resultJson.get("merchantOrderNo").toString();
+                    String wxOrderNum=resultJson.get("platformOrderNo").toString();
+                    OmsOrder omsOrder = orderMapper.selectByOrderNum(orderSn);
+                    if(omsOrder!=null & !omsOrder.getStatus().equals("0")){
+                        //更新交易记录
+                        omsOrder.setChannelOrderNum(wxOrderNum);//微信订单号
+                        omsOrder.setModifyTime(new Date());
+                        omsOrder.setStatus(1);
+                        orderMapper.updateByPrimaryKey(omsOrder);
+                    }else {
+                        Asserts.fail("==>订单不存在或订单状态异常");
+                    }
+                    UmsMember umsMember = umsMemberMapper.selectByPrimaryKey(omsOrder.getMemberId());
+                    if(umsMember == null){
+                        Asserts.fail("==>找不到用户信息");
+                    }
+                    List<OmsOrderItem> orderItemList = omsOrderItemService.getItemForOrderSn(orderSn);
+                    if(CollectionUtils.isEmpty(orderItemList)){
+                        Asserts.fail("==>找不到订单号 :"+orderSn +"的订单商品信息");
+                    }
+                    //生成配送单
+                    WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
+                    if(isWms!=null){
+                        log.info("自身是配送中心");
+                    }
+                    Long  id= umsMemberService.getSuperiorDistributionCenterMemberId(umsMember.getId());
+                    log.info("找到的配送中心ID 为"+id);
+                    WmsMember wmsMember=null;
+                    if(id!=null){
+                        wmsMember=wmsMemberMapper.selectByUmsId(id);
+                        if (wmsMember==null){
+                            Asserts.fail("==>找不到对应配送中心信息");
+                        }
+                    }else {
+                        Asserts.fail("==>找不到上级配送中心");
+                    }
+                    String address=omsOrder.getReceiverProvince()+omsOrder.getReceiverCity()+omsOrder.getReceiverRegion()+omsOrder.getReceiverDetailAddress();
+                    OmsDistribution distribution=new OmsDistribution();
+                    distribution.setOrderSn(omsOrder.getOrderSn());
+                    distribution.setStatus(0);//待配送
+                    distribution.setPhone(omsOrder.getReceiverPhone());
+                    distribution.setName(omsOrder.getReceiverName());
+                    distribution.setAddress(address);
+                    distribution.setCreateTime(new Date());
+                    distribution.setWmsMemberId(wmsMember.getId());
+                    distribution.setType(1);
+                    distribution.setSubPrice(omsOrder.getPayAmount());
+                    distribution.setUmsMemberId(umsMember.getId());
+                    distribution.setProfit(BigDecimal.ZERO);
+                    distributionMapper.insert(distribution);
+                    for(OmsOrderItem omsOrderItem : orderItemList){
+                        if(isWms!=null) {
+                            log.info("==》自身是配送中心，不生成配送单");
+                            omsOrder.setStatus(3);//完成
+                            omsOrderItem.setDistributionStatus(2L);
+                            distribution.setStatus(5);
+                            omsOrder.setReceiveTime(new Date());
+                            orderMapper.updateByPrimaryKey(omsOrder);
+                            omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                            distributionMapper.updateByPrimaryKey(distribution);
+                            //增加额度
+                            PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+                            if(pmsProduct==null){
+                                Asserts.fail("==>找不到商品信息");
+                            }
+                            BigDecimal subPrice=BigDecimal.ZERO;
+                            switch (isWms.getLevel()){
+                                case 1:
+                                    subPrice=pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                    break;
+                                case 2:
+                                    subPrice=pmsProduct.getRegionalProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                    break;
+                                case 3:
+                                    subPrice=pmsProduct.getWebmasterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                                    break;
+                            }
+                            isWms.setCreditLine(isWms.getCreditLine().add(subPrice));
+                            isWms.setUpdateTime(new Date());
+                            wmsMemberMapper.updateByPrimaryKey(isWms);
+                        }else {
+                            if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                                log.info("==》升级配送中心商品，不生成配送单");
+                                omsOrder.setStatus(3);
+                                omsOrderItem.setDistributionStatus(2L);
+                                omsOrder.setReceiveTime(new Date());
+                                orderMapper.updateByPrimaryKey(omsOrder);
+                                omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                                //升级配送中心商品 插入账户分佣流水
+                                acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
+                            }else {
+                                OmsDistributionItem distributionItem=new OmsDistributionItem();
+                                distributionItem.setDistributionId(distribution.getId());
+                                PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+                                if(omsOrderItem.getIfJoinVipProduct() == 1){
+                                    PmsProduct glProduct=null;//关联商品
+                                    if(pmsProduct==null){
+                                        Asserts.fail("==>找不到商品信息");
+                                    }else {
+                                        if(pmsProduct.getRelationProductId()==null||pmsProduct.getRelationProductNum()==null){
+                                            Asserts.fail("==>未配置关联商品信息");
+                                        }
+                                        glProduct=productMapper.selectByPrimaryKey(pmsProduct.getRelationProductId());
+                                        if(glProduct==null){
+                                            Asserts.fail("==>未找到关联商品信息");
+                                        }
+                                    }
+                                    log.info("==》升级商品，配送货物id:"+pmsProduct.getRelationProductId());
+                                    distributionItem.setGoodsImg(glProduct.getPic());
+                                    distributionItem.setGoodsTitle(glProduct.getName());
+                                    distributionItem.setGoodsSubtitle(glProduct.getSubTitle());
+                                    distributionItem.setPrice(glProduct.getOriginalPrice());
+                                    distributionItem.setNumber(pmsProduct.getRelationProductNum());
+                                    distributionItem.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                                    distributionItem.setProductId(pmsProduct.getRelationProductId());
+                                    distributionItem.setProfit(glProduct.getDeliveryAmount().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));//配送收益
+                                }else {
+                                    distributionItem.setGoodsImg(omsOrderItem.getProductPic());
+                                    distributionItem.setGoodsTitle(omsOrderItem.getProductName());
+                                    distributionItem.setGoodsSubtitle(omsOrderItem.getPromotionName());
+                                    distributionItem.setPrice(omsOrderItem.getProductPrice());
+                                    distributionItem.setNumber(omsOrderItem.getProductQuantity());
+                                    distributionItem.setSubPrice(omsOrderItem.getProductPrice().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));
+                                    distributionItem.setProductId(omsOrderItem.getProductId());
+                                    distributionItem.setProfit(pmsProduct.getDeliveryAmount().multiply(new BigDecimal(omsOrderItem.getProductQuantity())));//配送收益
+                                }
+                                distribution.setProfit(distribution.getProfit().add(distributionItem.getProfit()));
+                                distributionItemMapper.insert(distributionItem);
+                                omsOrderItem.setRelationDistributionId(distribution.getId());//关联id
+                                omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
+                                omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                            }
+                        }
+
+                    }
+                    distributionMapper.updateByPrimaryKey(distribution);//更新配送单收益
+                    //插入分佣流水
+                    if(isWms!=null) {
+                        log.info("==》自身是配送中心，订单结束，开始分佣");
+                        acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
+                    }
+                    //acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
+                    //会员等级提升到VIP用户
+                    for(OmsOrderItem omsOrderItem : orderItemList){
+                        if(omsOrderItem.getIfJoinVipProduct() == 1){
+                            umsMemberService.updateUmsMemberLevel(umsMember,StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER,omsOrderItem);
+                        }
+                        if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
+                            umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER,omsOrderItem);
+                        }
+                    }
+                    //业务处理结束
+                    resXml="success";
+                }
+            }
+            BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+            out.write(resXml.getBytes());
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+
+    }
+
 
     @PostMapping("/wxNotify")
     @ResponseBody
@@ -207,7 +430,6 @@ public class PayController {
             String resXml = "";
             WxConfig wxConfig = new WxConfig();
             WXPay wxPay = new WXPay(wxConfig);
-
             InputStream inStream = request.getInputStream();
             ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
@@ -218,6 +440,7 @@ public class PayController {
             outSteam.close();
             inStream.close();
             String result = new String(outSteam.toByteArray(), "utf-8");// 获取微信调用我们notify_url的返回信息
+            System.out.println(result);
             Map<String, String> map = WXPayUtil.xmlToMap(result);
             if (wxPay.isPayResultNotifySignatureValid(map)) {
                 System.out.println("微信支付-签名验证成功");
@@ -389,6 +612,14 @@ public class PayController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException();
+        }
+    }
+
+    public static void main(String []args){
+     String str="{\"code\":1,\"msg\":\"交易成功\",\"result\":{\"merchantNo\":\"M2020092217000910000336\",\"merchantOrderNo\":\"16009194338190102000001\",\"notifyTime\":\"2020-09-24 11:50:39\",\"orderAmount\":0.01,\"platformOrderNo\":\"PO20200924115034100338087\",\"sign\":\"cEpyTk1McExvR0R3aW13QWYwV3BUaUt2UHZFblU1aDhrM2tTeHVoc3AyQ0JySlQ2U25vTmw3TEkw\\nTUFOMVNHOGcwaTR4Wi9zd3pTZkJLNXo0akNraDJPVW5GWTc3b2RjSmVEWmNYNkZMKzJmYmVhUksv\\ndE8rVVU1VEdmOTNpcDRIZWNxVVJvMlEzMS9uU3RCRnJ2OEdMSjV1VVJERm9TV3Y4RFRwdkZRR0pn\\nPQ==\",\"tradeStatus\":\"PAY_SUCCESS\"}}";
+        Map maps = (Map)JSONObject.parse(str);
+        for (Object map : maps.entrySet()){
+            System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
         }
     }
 
