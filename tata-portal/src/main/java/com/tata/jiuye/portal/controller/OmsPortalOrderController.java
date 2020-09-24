@@ -120,12 +120,9 @@ public class OmsPortalOrderController {
     @ApiOperation("根据ID获取订单详情")
     @RequestMapping(value = "/detail/{orderId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<OmsDistribution> detail(@PathVariable Long orderId) {
-        OmsOrder order=orderMapper.selectByPrimaryKey(orderId);
-        OmsDistribution omsDistribution=new OmsDistribution();
-        omsDistribution.setOrderSn(order.getOrderSn());
-        omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
-        return CommonResult.success(omsDistribution);
+    public CommonResult<OmsOrderDetail> detail(@PathVariable Long orderId) {
+        OmsOrderDetail orderDetail = portalOrderService.detail(orderId);
+        return CommonResult.success(orderDetail);
     }
 
     @ApiOperation("用户取消订单")
