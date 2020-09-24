@@ -9,6 +9,7 @@ import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctSettleInfoMapper;
 import com.tata.jiuye.mapper.OmsDistributionItemMapper;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
@@ -47,6 +48,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private OmsPortalOrderService omsPortalOrderService;
     @Autowired
     private OmsDistributionItemMapper omsDistributionItemMapper;
+    @Autowired
+    private OmsDistributionMapper omsDistributionMapper;
 
     //上级配送中心分佣金额(当购买的商品为升级配送中心商品时,专用)
     private static BigDecimal DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT = new BigDecimal("1500");
@@ -263,17 +266,25 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     //获取明细详情
     @Override
-    public OmsOrderDetailDTO getDetailedDetails(String orderNo,String type){
+    public OmsOrderDetailDTO getDetailedDetails(String orderNo,String type,Long acctSettleInfoId){
         if(StringUtils.isEmpty(orderNo)){
             Asserts.fail("订单号为空");
         }
         OmsOrderDetailDTO resultDto = new OmsOrderDetailDTO();
+
+        if(acctSettleInfoId == null){
+            Asserts.fail("流水ID为空");
+        }
+        AcctSettleInfo acctSettleInfo = acctSettleInfoMapper.selectByPrimaryKey(acctSettleInfoId);
+        if(acctSettleInfo == null){
+            Asserts.fail("流水ID :"+acctSettleInfoId+" 找不到对应的流水记录");
+        }
+        resultDto.setOrderAmount(acctSettleInfo.getChangeAmount());
         //1.通过订单号获取订单信息
         OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
         if(omsOrder == null){
             Asserts.fail("查询不到订单号 "+orderNo+" 对应的订单信息");
         }
-        resultDto.setOrderAmount(omsOrder.getPayAmount());
         if(3 == omsOrder.getStatus()){
             resultDto.setFlowStatus(StaticConstant.CREDITED);
         }
@@ -284,14 +295,20 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         if("order".equals(type)){
             //2.通过订单号获取商品详情
             List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
+            resultDto.setOrderStatus(omsOrder.getStatus().toString());
             resultDto.setOrderItems(omsOrderItems);
         }
         else{
+            OmsDistribution omsDistribution = omsDistributionMapper.selectByPrimaryKey(Long.valueOf(orderNo));
+            if(omsDistribution != null){
+                Asserts.fail("查询不到配送单号 "+orderNo+" 对应的配送单信息");
+            }
             OmsDistributionItemExample example = new OmsDistributionItemExample();
             OmsDistributionItemExample.Criteria criteria = example.createCriteria();
             criteria.andDistributionIdEqualTo(Long.valueOf(orderNo));
             List<OmsDistributionItem> distributionItems = omsDistributionItemMapper.selectByExample(example);
             resultDto.setDistributionItems(distributionItems);
+            resultDto.setOrderStatus(omsDistribution.getStatus().toString());
         }
         return  resultDto;
     }
