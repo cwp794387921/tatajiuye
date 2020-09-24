@@ -240,7 +240,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
         //更新订单状态
         OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
-        order.setStatus(2);
+        order.setStatus(3);//已完成
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
         //添加账户流水
@@ -285,6 +285,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //更新订单确认收货时间
         OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
         order.setReceiveTime(null);
+        order.setStatus(1);//已付款 待接单
         orderMapper.updateByPrimaryKey(order);
         omsDistribution.setStatus(0);//待接单
         distributionMapper.updateByPrimaryKey(omsDistribution);
@@ -367,6 +368,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //更新订单确认收货时间
         OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
         order.setReceiveTime(DateUtil.offset(new Date(), DateField.DAY_OF_MONTH, 3));
+        order.setStatus(2);//配送中
         orderMapper.updateByPrimaryKey(order);
 
         omsDistribution.setStatus(1);//待配送

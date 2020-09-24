@@ -60,7 +60,7 @@ public class OrderTimeOutCancelTask {
             LOGGER.info("订单超过收货时间，自动收货，数量：{}",orderList.size());
             for (OmsOrder order:orderList){
                 //更新订单状态
-                order.setStatus(2);
+                order.setStatus(3);//完成
                 order.setModifyTime(new Date());
                 orderMapper.updateByPrimaryKey(order);
                 OmsDistribution omsDistribution=new OmsDistribution();

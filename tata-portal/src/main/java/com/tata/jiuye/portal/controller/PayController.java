@@ -279,7 +279,7 @@ public class PayController {
                 for(OmsOrderItem omsOrderItem : orderItemList){
                     if(isWms!=null) {
                         log.info("==》自身是配送中心，不生成配送单");
-                        omsOrder.setStatus(2);
+                        omsOrder.setStatus(3);//完成
                         omsOrderItem.setDistributionStatus(2L);
                         distribution.setStatus(5);
                         omsOrder.setReceiveTime(new Date());
@@ -309,7 +309,7 @@ public class PayController {
                     }else {
                         if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
                             log.info("==》升级配送中心商品，不生成配送单");
-                            omsOrder.setStatus(2);
+                            omsOrder.setStatus(3);
                             omsOrderItem.setDistributionStatus(2L);
                             omsOrder.setReceiveTime(new Date());
                             orderMapper.updateByPrimaryKey(omsOrder);
