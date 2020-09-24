@@ -280,19 +280,19 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             Asserts.fail("流水ID :"+acctSettleInfoId+" 找不到对应的流水记录");
         }
         resultDto.setOrderAmount(acctSettleInfo.getChangeAmount());
-        //1.通过订单号获取订单信息
-        OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
-        if(omsOrder == null){
-            Asserts.fail("查询不到订单号 "+orderNo+" 对应的订单信息");
-        }
-        if(3 == omsOrder.getStatus()){
-            resultDto.setFlowStatus(StaticConstant.CREDITED);
-        }
-        else{
-            resultDto.setFlowStatus(StaticConstant.TO_BE_CREDITED);
-        }
         resultDto.setOrderNo(orderNo);
         if("order".equals(type)){
+            //1.通过订单号获取订单信息
+            OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
+            if(omsOrder == null){
+                Asserts.fail("查询不到订单号 "+orderNo+" 对应的订单信息");
+            }
+            if(3 == omsOrder.getStatus()){
+                resultDto.setFlowStatus(StaticConstant.CREDITED);
+            }
+            else{
+                resultDto.setFlowStatus(StaticConstant.TO_BE_CREDITED);
+            }
             //2.通过订单号获取商品详情
             List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
             resultDto.setOrderStatus(omsOrder.getStatus().toString());
@@ -300,7 +300,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         }
         else{
             OmsDistribution omsDistribution = omsDistributionMapper.selectByPrimaryKey(Long.valueOf(orderNo));
-            if(omsDistribution != null){
+            if(omsDistribution == null){
                 Asserts.fail("查询不到配送单号 "+orderNo+" 对应的配送单信息");
             }
             OmsDistributionItemExample example = new OmsDistributionItemExample();
