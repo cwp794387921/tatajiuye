@@ -84,3 +84,5 @@ aliyun:
     callback: http://www.xmzzhy.com:8082/aliyun/oss/callback # 文件上传成功后的回调地址
     dir:
       prefix: jiuye/images/ # 上传文件夹路径前缀
+
+requestimgurl: 'https://www.xmzzhy.com:8085/file/img/'
