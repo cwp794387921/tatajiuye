@@ -1,6 +1,7 @@
 package com.tata.jiuye.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
@@ -307,6 +308,20 @@ public class WmsMemberController {
         wmsMember.setUpdateTime(new Date());
         memberMapper.updateByPrimaryKey(wmsMember);
         return CommonResult.success("更改成功");
+    }
+
+    @ApiOperation("获取省市区列表")
+    @RequestMapping(value = "/queryAreaList", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult queryAreaList() {
+        List<WmsArea> queryProvince=areaMapper.queryProvince();
+        List<WmsArea> queryArea=areaMapper.queryArea();
+        List<WmsArea> queryCity=areaMapper.queryCity();
+        JSONObject result=new JSONObject();
+        result.put("cityList",queryCity);
+        result.put("areaList",queryArea);
+        result.put("provinceList",queryProvince);
+        return CommonResult.success(result);
     }
 
 

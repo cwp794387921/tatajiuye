@@ -101,6 +101,12 @@ public class PayController {
         params.put("orderNum",orderNum);
         OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
         if(omsOrder!=null) {
+            if(omsOrder.getStatus()==2){
+                return CommonResult.failed("订单配送中不可退款");
+            }
+            if(omsOrder.getStatus()==3){
+                return CommonResult.failed("订单已完成不可退款");
+            }
             BigDecimal money = null;
             if (omsOrder.getPayAmount() == null) {
                 return CommonResult.failed("订单金额不存在");
@@ -170,6 +176,18 @@ public class PayController {
                 params.put("channelOrderNum",orderNum);
                 OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
                 if(omsOrder!=null){
+                    if(omsOrder.getStatus()==1){
+                        log.info("==》更改订单状态，配送单状态");
+                        OmsDistribution distribution=new OmsDistribution();
+                        distribution.setOrderSn(omsOrder.getOrderSn());
+                         distribution=distributionMapper.selectByParams(distribution);
+                         if(distribution==null){
+                             log.info("==》配送单不存在");
+                         }else {
+                             distribution.setStatus(5);
+                             distributionMapper.updateByPrimaryKey(distribution);
+                         }
+                    }
                     omsOrder.setStatus(6);//已退款
                     orderMapper.updateByPrimaryKey(omsOrder);
                 }else {
@@ -182,7 +200,7 @@ public class PayController {
             out.flush();
             out.close();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

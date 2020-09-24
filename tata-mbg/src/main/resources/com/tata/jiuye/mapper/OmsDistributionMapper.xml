@@ -181,6 +181,9 @@
       <if test="id !=null">
         and id = #{id}
       </if>
+      <if test="orderSn !=null">
+        and order_sn = #{orderSn}
+      </if>
       <if test="wmsMemberId !=null">
         and wms_member_id = #{wmsMemberId}
       </if>

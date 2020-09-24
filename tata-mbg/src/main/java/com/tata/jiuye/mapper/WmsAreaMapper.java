@@ -20,6 +20,12 @@ public interface WmsAreaMapper extends BaseMapper<WmsArea> {
 
     List<WmsArea> queryList(WmsArea area);
 
+    List<WmsArea> queryProvince();
+
+    List<WmsArea> queryCity();
+
+    List<WmsArea> queryArea();
+
     List<WmsArea> selectByExample(WmsAreaExample example);
 
     WmsArea selectByPrimaryKey(Integer id);

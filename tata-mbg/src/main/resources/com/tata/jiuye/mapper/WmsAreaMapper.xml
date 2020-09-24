@@ -71,6 +71,26 @@
   <sql id="Base_Column_List">
     id, wms_member_id, province, city, area, status, address
   </sql>
+
+  <select id="queryProvince"  resultType="com.tata.jiuye.model.WmsArea">
+    select distinct province
+    from wms_area
+    order by province desc
+  </select>
+
+  <select id="queryCity" resultType="com.tata.jiuye.model.WmsArea">
+    select distinct city
+    from wms_area
+    order by city desc
+  </select>
+
+  <select id="queryArea" resultType="com.tata.jiuye.model.WmsArea">
+    select distinct area
+    from wms_area
+    order by area desc
+  </select>
+
+
   <select id="queryList" parameterType="com.tata.jiuye.model.WmsArea" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

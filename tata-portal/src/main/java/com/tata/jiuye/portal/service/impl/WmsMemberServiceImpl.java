@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service.impl;
 
 import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -58,6 +59,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private OmsOrderItemMapper omsOrderItemMapper;
     @Resource
     private OmsOrderMapper orderMapper;
+    @Resource
+    private OmsOrderSettingMapper settingMapper;
     @Resource
     private UmsMemberInviteRelationService umsMemberInviteRelationService;
     @Resource
@@ -322,6 +325,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                             multiply(new BigDecimal(item.getNumber())).multiply(new BigDecimal(-1)),remark);
                     break;
             }
+            if(wmsMember.getCreditLine().compareTo(BigDecimal.ZERO)==-1){
+                Asserts.fail("授信额度不足，无法取消");
+            }
             wmsMember.setUpdateTime(new Date());
             wmsMemberMapper.updateByPrimaryKey(wmsMember);
         }
@@ -374,7 +380,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         Map<String,Object> queryParam = new HashMap<>();
         queryParam.put("orderNum",omsDistribution.getOrderSn());
         OmsOrder order=orderMapper.selectByOrderNum(queryParam);
-        order.setReceiveTime(DateUtil.offset(new Date(), DateField.DAY_OF_MONTH, 3));
+        OmsOrderSetting setting=settingMapper.selectByPrimaryKey(1L);
+        Integer Receiveday=setting.getConfirmOvertime();//自动收货天数
+        order.setReceiveTime(DateUtil.offset(new Date(), DateField.MINUTE, 5));
         order.setStatus(2);//配送中
         orderMapper.updateByPrimaryKey(order);
 
