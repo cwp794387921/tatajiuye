@@ -216,7 +216,7 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                Map<String,String> map = Maps.newHashMap();
+                /*Map<String,String> map = Maps.newHashMap();
                 map.put("merchantNo", Config.MERCHANT_NO);
                 map.put("orderAmount",money.toString());
                 map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
@@ -247,8 +247,8 @@ public class PayController {
                     jsonObject.put("paySign",payInfo.get("paySign").toString());
                 }else {
                     return   CommonResult.failed(PostResult.get("msg").toString());
-                }
-               /* WxConfig wxConfig = new WxConfig();
+                }*/
+                WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();
@@ -286,7 +286,7 @@ public class PayController {
                 map2.put("nonceStr",jsonObject.get("nonceStr"));
                 map2.put("package",jsonObject.get("package"));
                 map2.put("signType",jsonObject.get("signType"));
-                jsonObject.put("paySign",createSign("UTF-8",map2));*/
+                jsonObject.put("paySign",createSign("UTF-8",map2));
             }catch (Exception e){
                 System.out.println(e.getMessage());
                 return CommonResult.failed(e.getMessage());

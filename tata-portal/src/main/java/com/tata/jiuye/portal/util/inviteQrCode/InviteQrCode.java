@@ -29,6 +29,12 @@ import java.util.Map;
 @Component
 public class InviteQrCode {
 
+
+    private static String REQUESTIMGURL;
+
+    @Value("${requestimgurl}")
+    public void setRequestImgUrl(String imgUrl){REQUESTIMGURL = imgUrl;}
+
     private static String APIKEY;
 
     @Value("${auth.wechat.appId}")
@@ -290,7 +296,7 @@ public class InviteQrCode {
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, filePath+type+File.separator);
-        String resultUrl = "https://www.cyjyt.com:8085/file/img/"+file.getName();
+        String resultUrl = REQUESTIMGURL+file.getName();
         return resultUrl;
     }
 
