@@ -91,6 +91,86 @@ public class PayController {
     @Value("${auth.wechat.pay.notifyurl}")
     private String NOTIFYURL;
 
+
+    @ApiOperation("第三方退款接口")
+    @PostMapping("/refundApply")
+    @ResponseBody
+    public CommonResult refundApply(@RequestParam @ApiParam("订单编号")String orderNum,String refundMoney, HttpServletRequest httpRequest,
+                                         HttpServletResponse httpResponse)throws ServletException, IOException {
+        OmsOrder omsOrder = orderMapper.selectByOrderNum(orderNum);
+        if(omsOrder!=null) {
+            BigDecimal money = null;
+            if (omsOrder.getPayAmount() == null) {
+                return CommonResult.failed("订单金额不存在");
+            } else {
+                money = omsOrder.getPayAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            BigDecimal refund=new BigDecimal(refundMoney);
+            if(money.compareTo(refund)==-1){
+
+            }else {
+                return CommonResult.failed("退款金额不能大于付款金额");
+            }
+            try {
+                Map<String,String> map = Maps.newHashMap();
+                map.put("merchantNo", Config.MERCHANT_NO);
+                map.put("refundAmount",refund.toString());
+                map.put("merchantOrderNo", omsOrder.getOrderSn());
+                map.put("merchantRefundNo","TK"+omsOrder.getOrderSn());
+                map.put("notifyUrl",Config.RefundNotifyUrl);
+                map.put("refundReason","退款");
+                /*JSONObject jsonObject1=new JSONObject();
+                jsonObject1.put("sceneInfo","小程序");
+                jsonObject1.put("is_phone","1");
+                map.put("attach",jsonObject1.toJSONString());*/
+                TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
+                String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
+                map.put("sign", Base64Util.encodeByBase64(sign));
+                String content = ChannelUtils.getContent(map);
+                log.info("请求参数："+content);
+                String responseStr = HttpRequestUtils.readContentFromPost(Config.Refund_URL,content);
+                log.info("请求结果:"+responseStr);
+                JSONObject response=JSONObject.parseObject(responseStr);
+                if(response.get("code").toString().equals("1")){
+                    //成功
+                }else {
+                    return CommonResult.failed(response.get("msg").toString());
+                }
+            }catch (Exception e){
+
+            }
+        }
+        return CommonResult.success("操作成功");
+    }
+
+    @PostMapping("/RefundNotify")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public void RefundNotify(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("==>进入随行付退款回调");
+        try {
+            String resXml = "";
+            InputStream inStream = request.getInputStream();
+            ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inStream.read(buffer)) != -1) {
+                outSteam.write(buffer, 0, len);
+            }
+            outSteam.close();
+            inStream.close();
+            String result = new String(outSteam.toByteArray(), "utf-8");// 获取返回信息
+            System.out.println(result);
+            resXml="success";
+            BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+            out.write(resXml.getBytes());
+            out.flush();
+            out.close();
+        }catch (Exception e){
+
+        }
+    }
+
     @ApiOperation("微信web支付接口")
     @PostMapping("/wxWebRechargePay")
     @ResponseBody
@@ -98,9 +178,6 @@ public class PayController {
                                          HttpServletResponse httpResponse)throws ServletException, IOException {
         log.info("===========微信web支付:进入============");
         log.info("===========用户请求IP:{}============",getIp(httpRequest));
-        log.info("APPID : "+APPID);
-        log.info("MCHID : "+MCHID);
-        log.info("NOTIFYURL : "+NOTIFYURL);
         if(StrUtil.isEmpty(orderNum)){
             return CommonResult.validateFailed("参数错误");
         }
@@ -224,6 +301,9 @@ public class PayController {
 
         return false;
     }
+
+
+
 
     @PostMapping("/Notify")
     @ResponseBody
@@ -616,10 +696,27 @@ public class PayController {
     }
 
     public static void main(String []args){
-     String str="{\"code\":1,\"msg\":\"交易成功\",\"result\":{\"merchantNo\":\"M2020092217000910000336\",\"merchantOrderNo\":\"16009194338190102000001\",\"notifyTime\":\"2020-09-24 11:50:39\",\"orderAmount\":0.01,\"platformOrderNo\":\"PO20200924115034100338087\",\"sign\":\"cEpyTk1McExvR0R3aW13QWYwV3BUaUt2UHZFblU1aDhrM2tTeHVoc3AyQ0JySlQ2U25vTmw3TEkw\\nTUFOMVNHOGcwaTR4Wi9zd3pTZkJLNXo0akNraDJPVW5GWTc3b2RjSmVEWmNYNkZMKzJmYmVhUksv\\ndE8rVVU1VEdmOTNpcDRIZWNxVVJvMlEzMS9uU3RCRnJ2OEdMSjV1VVJERm9TV3Y4RFRwdkZRR0pn\\nPQ==\",\"tradeStatus\":\"PAY_SUCCESS\"}}";
-        Map maps = (Map)JSONObject.parse(str);
-        for (Object map : maps.entrySet()){
-            System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
+        try {
+            Map<String,String> map = Maps.newHashMap();
+            map.put("merchantNo", Config.MERCHANT_NO);
+            map.put("refundAmount","0.01");
+            map.put("merchantOrderNo", "16009262997520102000001");
+            map.put("merchantRefundNo","TK16009262997520102000001");
+            map.put("notifyUrl",Config.RefundNotifyUrl);
+            map.put("refundReason","test");
+            /*JSONObject jsonObject1=new JSONObject();
+            jsonObject1.put("sceneInfo","小程序");
+            jsonObject1.put("is_phone","1");
+            map.put("attach",jsonObject1.toJSONString());*/
+            TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
+            String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
+            map.put("sign", Base64Util.encodeByBase64(sign));
+            String content = ChannelUtils.getContent(map);
+            log.info("请求参数："+content);
+            String responseStr = HttpRequestUtils.readContentFromPost(Config.Refund_URL,content);
+            log.info("请求结果:"+responseStr);
+        }catch (Exception e){
+
         }
     }
 

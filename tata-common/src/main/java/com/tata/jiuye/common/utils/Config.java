@@ -10,6 +10,8 @@ public class Config {
 
     public static final String NotifyUrl = "https://www.xmzzhy.com:8085/pay/Notify";
 
+    public static final String RefundNotifyUrl = "https://www.xmzzhy.com:8085/pay/RefundNotify";
+
 //    交易商户号
     public static final String MERCHANT_NO = "M2020092217000910000336";
 //    交易商户私钥
@@ -18,6 +20,8 @@ public class Config {
     public static final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDGiR3BJL/iRq/ljfOLG+KHW6uWLkmlll2z0fmQtMgL4ug3yMsEAPRcn7IJ83gcBX5CvLqQ7pi2yVEbz72Q/9QcjNq+9OnWabr6DNa4LpdrmrtpLrr3XldGqDSneQLpvl0RhiuWkM+3kNYPL5FTA35TVudxPTff8HApp96YwxS9nQIDAQAB";
 //    交易请求地址
     public static final String PAY_URL = "https://pts.rtw.xiuxiuyang.com/v1/yumpay/trade/tradePayment";
+
+    public static final String Refund_URL = "https://pts.rtw.xiuxiuyang.com/v1/yumpay/order/refundApply";
 
 
 

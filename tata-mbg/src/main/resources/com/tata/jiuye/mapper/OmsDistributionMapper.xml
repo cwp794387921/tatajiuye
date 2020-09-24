@@ -247,13 +247,13 @@
       <if test="status !=null ">
         and d.status = #{status,jdbcType=INTEGER}
       </if>
-      <if test="orderSn !=null ">
+      <if test="orderSn !=null and orderSn!=''">
         and d.order_sn = #{orderSn}
       </if>
-      <if test="phone !=null ">
+      <if test="phone !=null and phone!=''">
         and d.phone = #{phone}
       </if>
-      <if test="wmsPhone !=null ">
+      <if test="wmsPhone !=null and  wmsPhone!=''">
         and m.phone = #{wmsPhone}
       </if>
       <if test="wmsMemberId !=null ">
