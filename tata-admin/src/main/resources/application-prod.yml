@@ -27,7 +27,7 @@ logging:
     com.tata.jiuye: info
 
 logstash:
-  host: logstash
+  host: 39.101.170.150
 
 requestempleurl: https://www.xmzzhy.com:8085/
 
