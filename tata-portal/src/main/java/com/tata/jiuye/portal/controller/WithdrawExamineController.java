@@ -89,7 +89,9 @@ public class WithdrawExamineController {
         return CommonResult.success("提现审批成功");
     }
 
-
+    @ApiOperation("通过流水ID获取提现流水详情")
+    @RequestMapping(value = "/getWithDrawlDetalByacctSettleInfoId", method = RequestMethod.POST)
+    @ResponseBody
     public CommonResult getWithDrawlDetalByacctSettleInfoId(@RequestParam @ApiParam("流水号ID") Long acctSettleInfoId){
         WithDrawDetailAcctSettleInfoResult result = withdrawalExamineService.getWithDrawlDetalByacctSettleInfoId(acctSettleInfoId);
         return CommonResult.success(result);
