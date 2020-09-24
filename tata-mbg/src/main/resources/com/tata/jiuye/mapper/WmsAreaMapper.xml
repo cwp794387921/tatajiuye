@@ -76,10 +76,10 @@
     <include refid="Base_Column_List" />
     from wms_area
     <where>
-      <if test="status !=null and status !=''">
+      <if test="status !=null ">
         and status = #{status}
       </if>
-      <if test="id !=null and id !=''">
+      <if test="id !=null ">
         and id = #{id}
       </if>
       <if test="wmsMemberId !=null and wmsMemberId !=''">
