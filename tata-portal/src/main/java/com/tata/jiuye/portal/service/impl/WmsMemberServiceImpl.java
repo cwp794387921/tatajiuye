@@ -226,8 +226,12 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(currentMember == null){
             Asserts.fail("用户未登录");
         }
+        OmsOrder order=orderMapper.selectByPrimaryKey(orderId);
+        if(order==null){
+            Asserts.fail("订单不存在");
+        }
         OmsDistribution omsDistribution=new OmsDistribution();
-        omsDistribution.setId(orderId);
+        omsDistribution.setOrderSn(order.getOrderSn());
         omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
         if(omsDistribution==null){
             Asserts.fail("配送单不存在");
@@ -239,9 +243,6 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         omsDistribution.setStatus(5);//已完成
         distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
         //更新订单状态
-        Map<String,Object>params=new HashMap<>();
-        params.put("orderNum",omsDistribution.getOrderSn());
-        OmsOrder order=orderMapper.selectByOrderNum(params);
         order.setStatus(3);//已完成
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
