@@ -26,6 +26,9 @@ public class OmsOrderDetailDTO {
     @ApiModelProperty(value = "订单状态")
     private String orderStatus;
 
+    @ApiModelProperty(value = "订单类型 ")
+    private String orderType;
+
     @ApiModelProperty(value = "订单商品")
     List<OmsOrderItem> orderItems;
 

@@ -3,13 +3,16 @@ package com.tata.jiuye.portal.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.DTO.WithDrawDetailAcctSettleInfoResult;
 import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
 import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctInfoMapper;
+import com.tata.jiuye.mapper.AcctSettleInfoMapper;
 import com.tata.jiuye.mapper.WithdrawalExamineMapper;
 import com.tata.jiuye.model.AcctInfo;
+import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.model.WithdrawalExamine;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
@@ -44,6 +47,8 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
     private AcctSettleInfoService acctSettleInfoService;
     @Resource
     private AcctInfoMapper acctInfoMapper;
+    @Resource
+    private AcctSettleInfoMapper acctSettleInfoMapper;
     @Override
     public void insertWithdrawalExamine(UmsMember umsMember, BigDecimal withdrawAmount,String accountType,String type,String name,String accountId,String bank){
         log.info("----------------------插入提现申请 开始----------------------");
@@ -109,11 +114,12 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         withdrawalExamine.setApproverMemberId(umsAdminMemberId);
         withdrawalExamine.setApproverMemberName(umsAdminNickName);
         withdrawalExamine.setUpdateTime(new Date());
-        this.saveOrUpdate(withdrawalExamine);
         //如果操作类型为通过,插入提现流水
         if(StaticConstant.APPROVAL_OPERATION_PASS.equals(operateType)){
-            acctSettleInfoService.insertWithdrawExamineAcctSettleInfo(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getWithdrawalAmount(),withdrawalExamine.getAcctType());
+           AcctSettleInfo acctSettleInfo = acctSettleInfoService.insertWithdrawExamineAcctSettleInfo(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getWithdrawalAmount(),withdrawalExamine.getAcctType());
+           withdrawalExamine.setAcctSettleInfoId(acctSettleInfo.getId());
         }
+        this.saveOrUpdate(withdrawalExamine);
         log.info("----------------------执行结果为 : "+withdrawalExamine);
         log.info("----------------------通过/拒绝提现申请 结束----------------------");
     }
@@ -155,5 +161,14 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         CommonPage<WithdrawExamineQueryResult> resultPage = CommonPage.restPage(results);
         log.info("----------------------根据查询条件获取提现申请 开始----------------------");
         return resultPage;
+    }
+
+
+    @Override
+    public WithDrawDetailAcctSettleInfoResult getWithDrawlDetalByacctSettleInfoId(Long acctSettleInfoId){
+        if(acctSettleInfoId == null){
+            Asserts.fail("流水ID不能为空");
+        }
+        return acctSettleInfoMapper.getWithDrawlDetalByacctSettleInfoId(acctSettleInfoId);
     }
 }

@@ -86,7 +86,7 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      * @param memberId                      用户ID
      * @param withdrawAmount               提现金额
      */
-    void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType);
+    AcctSettleInfo insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType);
 
 
     /**

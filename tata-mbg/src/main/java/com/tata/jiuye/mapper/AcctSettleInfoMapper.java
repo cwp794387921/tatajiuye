@@ -3,6 +3,7 @@ package com.tata.jiuye.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tata.jiuye.DTO.AcctSettleInfoResult;
 import com.tata.jiuye.DTO.TotalFlowQueryParam;
+import com.tata.jiuye.DTO.WithDrawDetailAcctSettleInfoResult;
 import com.tata.jiuye.model.AcctSettleInfo;
 import com.tata.jiuye.model.AcctSettleInfoExample;
 import org.apache.ibatis.annotations.Param;
@@ -47,4 +48,12 @@ public interface AcctSettleInfoMapper extends BaseMapper<AcctSettleInfo> {
      * @return
      */
     List<AcctSettleInfoResult> getIncomeFlow(@Param("acctId")Long acctId, @Param("year") String year, @Param("month") String month, @Param("flowType") String flowType);
+
+
+    /**
+     * 通过流水ID,获取指定提现
+     * @param acctSettleInfoId
+     * @return
+     */
+    WithDrawDetailAcctSettleInfoResult getWithDrawlDetalByacctSettleInfoId(@Param("acctSettleInfoId")Long acctSettleInfoId);
 }

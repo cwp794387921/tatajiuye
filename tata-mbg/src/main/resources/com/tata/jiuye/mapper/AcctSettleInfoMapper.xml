@@ -355,4 +355,24 @@
         and asi.change_amount!=0
     </if>
   </select>
+
+
+  <select id="getWithDrawlDetalByacctSettleInfoId" resultType="com.tata.jiuye.DTO.WithDrawDetailAcctSettleInfoResult">
+    SELECT
+        asi.id AS flow_no,
+        asi.change_amount AS withdrawl_amount,
+        we.create_time AS withdrawl_date,
+        '已打款' AS flow_status,
+        we.update_time AS make_money_date
+    FROM
+        acct_settle_info asi
+        LEFT JOIN withdrawal_examine we ON we.acct_settle_info_id = asi.id
+    WHERE
+        asi.id = #{acctSettleInfoId}
+        AND we.`status` = 1
+        AND	asi.flow_type_detail = 'withdraw'
+    ORDER BY
+        we.update_time DESC
+    LIMIT 1
+  </select>
 </mapper>

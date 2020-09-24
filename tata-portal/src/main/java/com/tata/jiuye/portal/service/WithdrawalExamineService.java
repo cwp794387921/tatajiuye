@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tata.jiuye.DTO.WithDrawDetailAcctSettleInfoResult;
 import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
 import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.common.api.CommonPage;
@@ -49,4 +50,12 @@ public interface WithdrawalExamineService extends IService<WithdrawalExamine> {
      * @return
      */
     CommonPage<WithdrawExamineQueryResult> getAllWithdrawalExaminePageByQueryParam(WithdrawExamineQueryParam withdrawExamineQueryParam);
+
+
+    /**
+     * 通过流水ID,获取指定提现
+     * @param acctSettleInfoId             流水ID
+     * @return
+     */
+    WithDrawDetailAcctSettleInfoResult getWithDrawlDetalByacctSettleInfoId(Long acctSettleInfoId);
 }

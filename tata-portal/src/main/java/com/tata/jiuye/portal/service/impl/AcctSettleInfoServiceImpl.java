@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -233,12 +234,15 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     }
 
     @Override
-    public void insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType){
+    public AcctSettleInfo insertWithdrawExamineAcctSettleInfo(Long memberId,BigDecimal withdrawAmount,String accountType){
         log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   开始----------------------");
         log.info("----------------------参数 用户ID "+memberId);
         log.info("----------------------参数 提现金额 "+withdrawAmount);
         //1.获取账户信息
         AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(memberId,accountType);
+        if(acctInfo == null){
+            Asserts.fail("该用户ID无法找到对应的账户信息");
+        }
         BigDecimal lockAmount = acctInfo.getLockAmount();
         if(lockAmount == null){
             lockAmount = BigDecimal.ZERO;
@@ -246,9 +250,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         BigDecimal actBalance = acctInfo.getBalance().subtract(lockAmount);
         log.info("----------------------参数 账户信息 "+acctInfo);
         AcctSettleInfo acctSettleInfo = acctInfoService.updateAcctInfoByAmount(memberId,withdrawAmount,StaticConstant.FLOW_TYPE_EXPENDITURE,accountType);
-        if(acctInfo == null){
-            Asserts.fail("该用户ID无法找到对应的账户信息");
-        }
+        AcctSettleInfo result = new AcctSettleInfo();
         Long acctId = acctSettleInfo.getAcctId();
         log.info("----------------------账户ID 为 "+acctId);
         BigDecimal beforBal = acctSettleInfo.getBeforBal();
@@ -258,9 +260,10 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
         //1.插入提现申请记录
         if(!withdrawAmount.equals(BigDecimal.ZERO)){
             log.info("----------------------执行账户流水插入");
-            insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW,null);
+            result = insertAcctInfoChangeFlow("",acctId,beforBal,afterBal,withdrawAmount,null,StaticConstant.FLOW_TYPE_EXPENDITURE,StaticConstant.FLOW_TYPE_DETAIL_EXPENDITURE_WITHDRAW,null);
         }
         log.info("----------------------插入提现流水,同时更新账户余额(审批通过时调用)   结束----------------------");
+        return result;
     }
 
 
@@ -297,6 +300,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
             resultDto.setOrderStatus(omsOrder.getStatus().toString());
             resultDto.setOrderItems(omsOrderItems);
+            resultDto.setOrderType("0");
         }
         else{
             OmsDistribution omsDistribution = omsDistributionMapper.selectByPrimaryKey(Long.valueOf(orderNo));
@@ -309,6 +313,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             List<OmsDistributionItem> distributionItems = omsDistributionItemMapper.selectByExample(example);
             resultDto.setDistributionItems(distributionItems);
             resultDto.setOrderStatus(omsDistribution.getStatus().toString());
+            resultDto.setOrderType(omsDistribution.getType().toString());
         }
         return  resultDto;
     }

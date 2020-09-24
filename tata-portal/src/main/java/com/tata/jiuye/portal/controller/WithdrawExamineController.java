@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.tata.jiuye.DTO.WithDrawDetailAcctSettleInfoResult;
 import com.tata.jiuye.DTO.WithdrawExamineQueryParam;
 import com.tata.jiuye.DTO.WithdrawExamineQueryResult;
 import com.tata.jiuye.common.api.CommonPage;
@@ -9,6 +10,7 @@ import com.tata.jiuye.model.UmsMember;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WithdrawalExamineService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -85,5 +87,11 @@ public class WithdrawExamineController {
                                 @RequestParam @ApiParam("提现申请表ID")Long withdrExamineId,@RequestParam @ApiParam("操作编码:PASS->通过,REFUSE->拒绝") String operateType) {
         withdrawalExamineService.passOrRejectWithdrawalExamine(umsAdminMemberId,umsAdminNickName,withdrExamineId,operateType);
         return CommonResult.success("提现审批成功");
+    }
+
+
+    public CommonResult getWithDrawlDetalByacctSettleInfoId(@RequestParam @ApiParam("流水号ID") Long acctSettleInfoId){
+        WithDrawDetailAcctSettleInfoResult result = withdrawalExamineService.getWithDrawlDetalByacctSettleInfoId(acctSettleInfoId);
+        return CommonResult.success(result);
     }
 }
