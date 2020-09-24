@@ -239,7 +239,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         omsDistribution.setStatus(5);//已完成
         distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
         //更新订单状态
-        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        Map<String,Object>params=new HashMap<>();
+        params.put("orderNum",omsDistribution.getOrderSn());
+        OmsOrder order=orderMapper.selectByOrderNum(params);
         order.setStatus(3);//已完成
         order.setModifyTime(new Date());
         orderMapper.updateByPrimaryKey(order);
@@ -283,7 +285,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Asserts.fail("配送单不存在");
         }
         //更新订单确认收货时间
-        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        Map<String,Object>params=new HashMap<>();
+        params.put("orderNum",omsDistribution.getOrderSn());
+        OmsOrder order=orderMapper.selectByOrderNum(params);
         order.setReceiveTime(null);
         order.setStatus(1);//已付款 待接单
         orderMapper.updateByPrimaryKey(order);
@@ -366,7 +370,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             Asserts.fail("配送单不存在");
         }
         //更新订单确认收货时间
-        OmsOrder order=orderMapper.selectByOrderNum(omsDistribution.getOrderSn());
+        Map<String,Object> queryParam = new HashMap<>();
+        queryParam.put("orderNum",omsDistribution.getOrderSn());
+        OmsOrder order=orderMapper.selectByOrderNum(queryParam);
         order.setReceiveTime(DateUtil.offset(new Date(), DateField.DAY_OF_MONTH, 3));
         order.setStatus(2);//配送中
         orderMapper.updateByPrimaryKey(order);

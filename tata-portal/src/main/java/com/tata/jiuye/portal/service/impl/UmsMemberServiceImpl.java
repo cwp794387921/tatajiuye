@@ -79,6 +79,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private OmsPortalOrderService omsPortalOrderService;
     @Resource
     private AcctInfoService acctInfoService;
+    @Resource
+    private WmsMemberMapper wmsMemberMapper;
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -392,8 +394,17 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
+            WmsMember wmsMember;
             PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
-            WmsMember wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
+            WmsMember oldWmsMember = wmsMemberMapper.getNotAvailableByMemberId(member.getId());
+            if(oldWmsMember != null){
+                oldWmsMember.setStatus(1);
+                wmsMemberMapper.updateByPrimaryKeySelective(oldWmsMember);
+                wmsMember = oldWmsMember;
+            }
+            else{
+                 wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
+            }
             wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
             //插入新的账户
             AcctInfo acctInfo = new AcctInfo();

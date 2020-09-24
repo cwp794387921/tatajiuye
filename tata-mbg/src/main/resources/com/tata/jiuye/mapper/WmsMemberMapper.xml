@@ -611,4 +611,16 @@
       ORDER BY create_time DESC
       LIMIT 1
   </select>
+
+  <select id="getNotAvailableByMemberId" resultType="com.tata.jiuye.model.WmsMember">
+      SELECT
+          *
+      FROM
+          wms_member
+      WHERE
+      `status` = 0  AND
+      ums_member_id = #{memberId,jdbcType=BIGINT}
+      ORDER BY create_time DESC
+      LIMIT 1
+  </select>
 </mapper>
