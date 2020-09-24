@@ -6,6 +6,7 @@
     <result column="member_id" jdbcType="BIGINT" property="memberId" />
     <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
     <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="channel_order_num" jdbcType="VARCHAR" property="channelOrderNum" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="member_username" jdbcType="VARCHAR" property="memberUsername" />
     <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
@@ -112,7 +113,7 @@
     integration, growth, promotion_info, bill_type, bill_header, bill_content, bill_receiver_phone, 
     bill_receiver_email, receiver_name, receiver_phone, receiver_post_code, receiver_province, 
     receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, 
-    use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time
+    use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time,channel_order_num
   </sql>
 
 
@@ -163,11 +164,17 @@
     o.member_id  = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="selectByOrderNum" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByOrderNum"  resultMap="BaseResultMap">
     select
     *
     from oms_order
-    where order_sn = #{orderNum,jdbcType=VARCHAR}
+    where 1=1
+    <if test="orderNum != null and orderNum!='' ">
+      and order_sn = #{orderNum,jdbcType=VARCHAR}
+    </if>
+    <if test="channelOrderNum != null and channelOrderNum">
+      and channel_order_num = #{channelOrderNum,jdbcType=TIMESTAMP}
+    </if>
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -198,7 +205,7 @@
       receiver_detail_address, note, confirm_status, 
       delete_status, use_integration, payment_time, 
       delivery_time, receive_time, comment_time, 
-      modify_time)
+      modify_time,channel_order_num)
     values (#{memberId,jdbcType=BIGINT}, #{couponId,jdbcType=BIGINT}, #{orderSn,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{memberUsername,jdbcType=VARCHAR}, #{totalAmount,jdbcType=DECIMAL}, 
       #{payAmount,jdbcType=DECIMAL}, #{freightAmount,jdbcType=DECIMAL}, #{promotionAmount,jdbcType=DECIMAL}, 
@@ -213,7 +220,7 @@
       #{receiverDetailAddress,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{confirmStatus,jdbcType=INTEGER}, 
       #{deleteStatus,jdbcType=INTEGER}, #{useIntegration,jdbcType=INTEGER}, #{paymentTime,jdbcType=TIMESTAMP}, 
       #{deliveryTime,jdbcType=TIMESTAMP}, #{receiveTime,jdbcType=TIMESTAMP}, #{commentTime,jdbcType=TIMESTAMP}, 
-      #{modifyTime,jdbcType=TIMESTAMP})
+      #{modifyTime,jdbcType=TIMESTAMP},#{channelOrderNum,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tata.jiuye.model.OmsOrder">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -350,6 +357,9 @@
       <if test="modifyTime != null">
         modify_time,
       </if>
+      <if test="channelOrderNum != null">
+        channel_order_num,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="memberId != null">
@@ -480,6 +490,9 @@
       </if>
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="channelOrderNum != null">
+        #{channel_order_num,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -624,6 +637,9 @@
       <if test="record.modifyTime != null">
         modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.channelOrderNum != null">
+        channel_order_num = #{record.channelOrderNum,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -674,7 +690,8 @@
       delivery_time = #{record.deliveryTime,jdbcType=TIMESTAMP},
       receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
       comment_time = #{record.commentTime,jdbcType=TIMESTAMP},
-      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+    channel_order_num = #{record.channelOrderNum,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -811,12 +828,16 @@
       <if test="modifyTime != null">
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="channelOrderNum != null">
+        channel_order_num = #{channelOrderNum,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tata.jiuye.model.OmsOrder">
     update oms_order
     set member_id = #{memberId,jdbcType=BIGINT},
+    channel_order_num = #{channelOrderNum,jdbcType=VARCHAR},
       coupon_id = #{couponId,jdbcType=BIGINT},
       order_sn = #{orderSn,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},

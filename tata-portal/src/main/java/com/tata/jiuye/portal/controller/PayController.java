@@ -97,7 +97,9 @@ public class PayController {
     @ResponseBody
     public CommonResult refundApply(@RequestParam @ApiParam("订单编号")String orderNum,String refundMoney, HttpServletRequest httpRequest,
                                          HttpServletResponse httpResponse)throws ServletException, IOException {
-        OmsOrder omsOrder = orderMapper.selectByOrderNum(orderNum);
+        Map<String,Object>params=new HashMap<>();
+        params.put("orderNum",orderNum);
+        OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
         if(omsOrder!=null) {
             BigDecimal money = null;
             if (omsOrder.getPayAmount() == null) {
@@ -119,10 +121,6 @@ public class PayController {
                 map.put("merchantRefundNo","TK"+omsOrder.getOrderSn());
                 map.put("notifyUrl",Config.RefundNotifyUrl);
                 map.put("refundReason","退款");
-                /*JSONObject jsonObject1=new JSONObject();
-                jsonObject1.put("sceneInfo","小程序");
-                jsonObject1.put("is_phone","1");
-                map.put("attach",jsonObject1.toJSONString());*/
                 TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
                 String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
                 map.put("sign", Base64Util.encodeByBase64(sign));
@@ -161,6 +159,23 @@ public class PayController {
             inStream.close();
             String result = new String(outSteam.toByteArray(), "utf-8");// 获取返回信息
             System.out.println(result);
+            JSONObject resultJSON=JSONObject.parseObject(result);
+            if(!resultJSON.get("code").toString().equals("1")){
+                log.info(resultJSON.get("msg").toString());
+            }else {
+                result=resultJSON.get("result").toString();
+                resultJSON=JSONObject.parseObject(result);
+                String orderNum=resultJSON.get("platformOrderNo").toString();
+                Map<String,Object>params=new HashMap<>();
+                params.put("channelOrderNum",orderNum);
+                OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
+                if(omsOrder!=null){
+                    omsOrder.setStatus(6);//已退款
+                    orderMapper.updateByPrimaryKey(omsOrder);
+                }else {
+                    log.info("==》订单号不存在");
+                }
+            }
             resXml="success";
             BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
             out.write(resXml.getBytes());
@@ -187,7 +202,9 @@ public class PayController {
         if (openId==null){
             return CommonResult.failed("获取openid失败");
         }
-        OmsOrder omsOrder = orderMapper.selectByOrderNum(orderNum);
+        Map<String,Object>params=new HashMap<>();
+        params.put("orderNum",orderNum);
+        OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
         JSONObject jsonObject=new JSONObject();
         if(omsOrder!=null) {
             BigDecimal money = null;
@@ -211,6 +228,7 @@ public class PayController {
                 jsonObject1.put("subAppid",Config.APPID);
                 map.put("attach",jsonObject1.toJSONString());
                 map.put("merchantOrderNo",orderNum);
+                map.put("whetherSeparate","00");//00分账  01不分账
                 TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
                 String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
                 map.put("sign", Base64Util.encodeByBase64(sign));
@@ -333,10 +351,12 @@ public class PayController {
                     String sign=resultJson.get("sign").toString();
                     String orderSn=resultJson.get("merchantOrderNo").toString();
                     String wxOrderNum=resultJson.get("platformOrderNo").toString();
-                    OmsOrder omsOrder = orderMapper.selectByOrderNum(orderSn);
+                    Map<String,Object>params=new HashMap<>();
+                    params.put("orderNum",orderSn);
+                    OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
                     if(omsOrder!=null & !omsOrder.getStatus().equals("0")){
                         //更新交易记录
-                        omsOrder.setChannelOrderNum(wxOrderNum);//微信订单号
+                        omsOrder.setChannelOrderNum(wxOrderNum);//渠道订单号
                         omsOrder.setModifyTime(new Date());
                         omsOrder.setStatus(1);
                         orderMapper.updateByPrimaryKey(omsOrder);
@@ -531,7 +551,9 @@ public class PayController {
                 String orderSn=map.get("out_trade_no");
                 String wxOrderNum=map.get("transaction_id");
                 String openId = map.get("openid");
-                OmsOrder omsOrder = orderMapper.selectByOrderNum(orderSn);
+                Map<String,Object>params=new HashMap<>();
+                params.put("orderNum",orderSn);
+                OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
                 if(omsOrder!=null & !omsOrder.getStatus().equals("0")){
                     //更新交易记录
                     omsOrder.setChannelOrderNum(wxOrderNum);//微信订单号
@@ -700,8 +722,8 @@ public class PayController {
             Map<String,String> map = Maps.newHashMap();
             map.put("merchantNo", Config.MERCHANT_NO);
             map.put("refundAmount","0.01");
-            map.put("merchantOrderNo", "16009262997520102000001");
-            map.put("merchantRefundNo","TK16009262997520102000001");
+            map.put("merchantOrderNo", "16009343938860102000001");
+            map.put("merchantRefundNo","TK16009171851920102000001");
             map.put("notifyUrl",Config.RefundNotifyUrl);
             map.put("refundReason","test");
             /*JSONObject jsonObject1=new JSONObject();
