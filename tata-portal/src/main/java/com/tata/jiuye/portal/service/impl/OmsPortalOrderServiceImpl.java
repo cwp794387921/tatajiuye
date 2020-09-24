@@ -545,13 +545,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             return null;
         }
         JSONObject result=new JSONObject();
-        OmsDistribution distribution=new OmsDistribution();
-        distribution.setWmsMemberId(wmsMember.getId());
-        distribution.setStatusNo1(2);//不查找已完成
-        distribution.setStatusNo2(5);//不查找已完成
-        distribution.setStatusNo3(4);
-        distribution.setType(1);//配送单
-        List<OmsDistribution> list= DistributionMapper.queryList(distribution);
+        Map<String,Object>params=new HashMap<>();
+        params.put("statusNo1",2);
+        params.put("statusNo2",5);
+        params.put("statusNo3",4);
+        params.put("type",1);
+        List<OmsDistribution> list= DistributionMapper.queryDistributionDetailList(params);
         if(list!=null){
             result.put("list",list);
         }

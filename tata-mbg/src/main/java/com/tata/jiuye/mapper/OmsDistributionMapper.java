@@ -31,6 +31,8 @@ public interface OmsDistributionMapper {
 
     OmsDistribution queryDistributionDetail(OmsDistribution distribution);
 
+    List<OmsDistribution> queryDistributionDetailList(Map<String,Object> params);
+
     OmsDistribution selectByParams(OmsDistribution distribution);
 
     int updateByExampleSelective(@Param("record") OmsDistribution record, @Param("example") OmsDistributionExample example);

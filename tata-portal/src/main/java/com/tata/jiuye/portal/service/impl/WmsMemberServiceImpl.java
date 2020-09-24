@@ -124,7 +124,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
-    public List<WmsMemberAreaDetail> queryAllUser(Map<String,Object> params){
+    public List<WmsMemberAreaDetail> queryAllUser(String params){
         UmsMember currentMember = memberService.getCurrentMember();
         if(currentMember == null){
             Asserts.fail("用户未登录");
@@ -133,8 +133,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(wmsMember==null){
             Asserts.fail("配送中心不存在");
         }
-        params.put("id",wmsMember.getId());
-        List<WmsMemberAreaDetail> memberAreaDetails=wmsMemberMapper.queryAllWmsUser(params);
+        Map<String,Object>param=new HashMap<>();
+        param.put("id",wmsMember.getId());
+        param.put("params",params);
+        List<WmsMemberAreaDetail> memberAreaDetails=wmsMemberMapper.queryAllWmsUser(param);
         return memberAreaDetails;
     }
 
