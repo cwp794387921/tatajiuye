@@ -266,11 +266,20 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     //获取明细详情
     @Override
-    public OmsOrderDetailDTO getDetailedDetails(String orderNo,String type){
+    public OmsOrderDetailDTO getDetailedDetails(String orderNo,String type,Long acctSettleInfoId){
         if(StringUtils.isEmpty(orderNo)){
             Asserts.fail("订单号为空");
         }
         OmsOrderDetailDTO resultDto = new OmsOrderDetailDTO();
+
+        if(acctSettleInfoId == null){
+            Asserts.fail("流水ID为空");
+        }
+        AcctSettleInfo acctSettleInfo = acctSettleInfoMapper.selectByPrimaryKey(acctSettleInfoId);
+        if(acctSettleInfo == null){
+            Asserts.fail("流水ID :"+acctSettleInfoId+" 找不到对应的流水记录");
+        }
+        resultDto.setOrderAmount(acctSettleInfo.getChangeAmount());
         //1.通过订单号获取订单信息
         OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
         if(omsOrder == null){
@@ -288,7 +297,6 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             List<OmsOrderItem> omsOrderItems = omsOrderItemService.getItemForOrderSn(orderNo);
             resultDto.setOrderStatus(omsOrder.getStatus().toString());
             resultDto.setOrderItems(omsOrderItems);
-            resultDto.setOrderAmount(omsOrder.getPayAmount());
         }
         else{
             OmsDistribution omsDistribution = omsDistributionMapper.selectByPrimaryKey(Long.valueOf(orderNo));
@@ -300,7 +308,6 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             criteria.andDistributionIdEqualTo(Long.valueOf(orderNo));
             List<OmsDistributionItem> distributionItems = omsDistributionItemMapper.selectByExample(example);
             resultDto.setDistributionItems(distributionItems);
-            resultDto.setOrderAmount(omsDistribution.getProfit());
             resultDto.setOrderStatus(omsDistribution.getStatus().toString());
         }
         return  resultDto;
