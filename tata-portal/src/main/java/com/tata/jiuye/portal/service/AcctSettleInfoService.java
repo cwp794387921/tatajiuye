@@ -94,5 +94,5 @@ public interface AcctSettleInfoService extends IService<AcctSettleInfo> {
      * @param orderNo
      * @return
      */
-    OmsOrderDetailDTO getDetailedDetails(String orderNo,String type);
+    OmsOrderDetailDTO getDetailedDetails(String orderNo,String type,Long acctSettleInfoId);
 }
