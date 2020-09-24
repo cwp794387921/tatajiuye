@@ -2,6 +2,7 @@ package com.tata.jiuye.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tata.jiuye.DTO.UmsMemberInfoByMemberIdResult;
+import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
@@ -11,12 +12,15 @@ import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.model.WmsMember;
 import com.tata.jiuye.service.UmsMemberLevelService;
 import com.tata.jiuye.service.UmsMemberService;
+import com.tata.jiuye.utils.HttpTools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -37,6 +41,8 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
     @Value("${umsmemberlevelname.ordinarymember}")
     private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
+    @Value("${requestempleurl}")
+    private String REQUEST_TEMPLATE_URL;
 
     @Override
     public UmsMemberInfoByMemberIdResult getUmsInfoByMemberId(Long memberId) {
@@ -161,6 +167,11 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         }
         member.setMemberLevelId(3L);
         updateMember(member);
+        //清除缓存
+        String url = "sso/delUmsCash";
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        param.add("memberId", memberId);
+        CommonResult commonResult = HttpTools.sendPostRequest(REQUEST_TEMPLATE_URL + url, param);
         //2.将wms_member账户状态置为不可用
         WmsMember wmsMember = wmsMemberMapper.getAvailableByMemberId(memberId);
         if(wmsMember != null){
