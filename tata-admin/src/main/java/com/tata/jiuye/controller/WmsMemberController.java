@@ -496,7 +496,7 @@ public class WmsMemberController {
             }
             //添加补货收益流水
             AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
-            if(distribution.getProfit()!=null&&!distribution.getProfit().equals(BigDecimal.ZERO)){
+            if(distribution.getProfit()!=null&&!(distribution.getProfit().compareTo(BigDecimal.ZERO)==0)){
                 acctSettleInfo.setOmsDistributionNo(distribution.getId());
                 acctSettleInfo.setOrderNo(distribution.getOrderSn());
                 acctSettleInfo.setAcctId(BHacctInfo.getId());
