@@ -394,16 +394,21 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
-            WmsMember wmsMember;
             PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
             WmsMember oldWmsMember = wmsMemberMapper.getNotAvailableByMemberId(member.getId());
             if(oldWmsMember != null){
+                BigDecimal oldCreditLine = oldWmsMember.getCreditLine();
+                if(oldCreditLine == null){
+                    oldCreditLine = BigDecimal.ZERO;
+                }
+                BigDecimal incrideLine = pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                BigDecimal creditLine = oldCreditLine.add(incrideLine);
                 oldWmsMember.setStatus(1);
+                oldWmsMember.setCreditLine(creditLine);
                 wmsMemberMapper.updateByPrimaryKeySelective(oldWmsMember);
-                wmsMember = oldWmsMember;
             }
             else{
-                 wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
+                WmsMember wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
                 //插入新的账户
                 AcctInfo acctInfo = new AcctInfo();
                 acctInfo.setLockAmount(BigDecimal.ZERO);
