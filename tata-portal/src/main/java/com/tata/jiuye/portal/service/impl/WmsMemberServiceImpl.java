@@ -250,6 +250,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         //更新订单状态
         order.setStatus(3);//已完成
         order.setModifyTime(new Date());
+        order.setReceiveTime(null);
         orderMapper.updateByPrimaryKey(order);
         //添加账户流水
         acctSettleInfoService.insertCommissionRecordFlow(currentMember,order.getOrderSn());
