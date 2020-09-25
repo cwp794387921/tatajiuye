@@ -3,6 +3,7 @@ package com.tata.jiuye.portal.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
@@ -34,6 +35,8 @@ public class WmsMemberController {
 
     @Resource
     private OmsDistributionMapper distributionMapper;
+
+
 
     @ApiOperation("获取用户信息")
     @RequestMapping(value = "/info", method = RequestMethod.GET)

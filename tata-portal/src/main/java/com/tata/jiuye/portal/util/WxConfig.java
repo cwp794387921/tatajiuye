@@ -48,7 +48,7 @@ public class WxConfig implements WXPayConfig {
     }
 
     public String getAppSecret() {
-        //return "56bcec96c36b270da318979e4c41f8fc";
+       // return "56bcec96c36b270da318979e4c41f8fc";
         return "5c4953f10adadc5cf6bcee10b27c108c";
     }
     @Override

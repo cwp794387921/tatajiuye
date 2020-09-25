@@ -54,7 +54,7 @@ public class OrderTimeOutCancelTask {
         Integer count = portalOrderService.cancelTimeOutOrder();
         LOGGER.info("取消订单，并根据sku编号释放锁定库存，取消订单数量：{}",count);
         Map<String,Object>params=new HashMap<>();
-        params.put("receiveTime",new Date().getTime());
+        params.put("receiveTime",new Date());
         List<OmsOrder> orderList=orderMapper.queryList(params);
         if(!orderList.isEmpty()){
             LOGGER.info("订单超过收货时间，自动收货，数量：{}",orderList.size());
@@ -67,22 +67,26 @@ public class OrderTimeOutCancelTask {
                 omsDistribution.setOrderSn(order.getOrderSn());
                 omsDistribution=distributionMapper.queryDistributionDetail(omsDistribution);
                 if(omsDistribution==null){
-                    Asserts.fail("配送单不存在");
+                    LOGGER.info("配送单不存在");
+                    continue;
                 }
                 WmsMember wmsMember=wmsMemberMapper.selectByPrimaryKey(omsDistribution.getWmsMemberId());
                 if(wmsMember==null){
-                    Asserts.fail("配送中心不存在");
+                    LOGGER.info("配送中心不存在");
+                    continue;
                 }
                 omsDistribution.setStatus(5);//已完成
                 distributionMapper.updateByPrimaryKey(omsDistribution);//更新配送单
                 //添加账户流水
                 UmsMember umsMember=umsMemberMapper.selectByPrimaryKey(omsDistribution.getUmsMemberId());
                 if(umsMember==null){
-                    Asserts.fail("用户信息不存在");
+                    LOGGER.info("用户信息不存在");
+                    continue;
                 }
                 AcctInfo acctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());
                 if (acctInfo==null){
-                    Asserts.fail("账户不存在");
+                    LOGGER.info("账户不存在");
+                    continue;
                 }
                 AcctSettleInfo acctSettleInfo=new AcctSettleInfo();
                 acctSettleInfo.setAcctId(acctInfo.getId());

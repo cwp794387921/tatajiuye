@@ -265,7 +265,7 @@ public class PayController {
                 }else {
                     return   CommonResult.failed(PostResult.get("msg").toString());
                 }
-               /* WxConfig wxConfig = new WxConfig();
+                /*WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();

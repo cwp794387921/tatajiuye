@@ -44,7 +44,6 @@ secure:
       - /pay/**
       - /withdrawExamine/allWithdrawApplicationPage
       - /withdrawExamine/approve
-      - /wms/**
 # 自定义redis key
 redis:
   database: mall
