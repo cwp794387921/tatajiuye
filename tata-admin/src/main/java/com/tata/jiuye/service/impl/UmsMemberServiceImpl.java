@@ -176,6 +176,7 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
             Asserts.fail("存在待审核或者配送中的补货单/出货单,无法降级");
         }
         //查找待配送的单子,转到平台
+        omsDistributionExample = new OmsDistributionExample();
         criteria = omsDistributionExample.createCriteria();
         criteria.andWmsMemberIdEqualTo(wmsMember.getId().intValue()).andStatusEqualTo(0);
         List<OmsDistribution> waitingDistributions = omsDistributionMapper.selectByExample(omsDistributionExample);
