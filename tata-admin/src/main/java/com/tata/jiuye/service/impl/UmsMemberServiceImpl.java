@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tata.jiuye.DTO.UmsMemberInfoByMemberIdResult;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
+import com.tata.jiuye.mapper.OmsDistributionMapper;
 import com.tata.jiuye.mapper.UmsMemberInviteRelationMapper;
 import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.mapper.WmsMemberMapper;
-import com.tata.jiuye.model.UmsMember;
-import com.tata.jiuye.model.UmsMemberInviteRelation;
-import com.tata.jiuye.model.WmsMember;
+import com.tata.jiuye.model.*;
 import com.tata.jiuye.service.UmsMemberLevelService;
 import com.tata.jiuye.service.UmsMemberService;
 import com.tata.jiuye.utils.HttpTools;
@@ -19,11 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -34,6 +37,8 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     private UmsMemberMapper memberMapper;
     @Autowired
     private WmsMemberMapper wmsMemberMapper;
+    @Autowired
+    private OmsDistributionMapper omsDistributionMapper;
 
     @Autowired
     private UmsMemberLevelService umsMemberLevelService;
@@ -156,6 +161,30 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
             Asserts.fail("待降级用户ID不能为空");
         }
         log.info("-------------参数 memberId : "+memberId);
+        WmsMember wmsMember = wmsMemberMapper.getAvailableByMemberId(memberId);
+        if(wmsMember == null){
+            Asserts.fail("该用户没有配送中心用户,无法降级");
+        }
+        //配送中,待审核
+        List<Integer> statusList = Arrays.asList(1,2);
+        //判断配送单,补货单,出货单 状态均不为 未完成 方可降级
+        OmsDistributionExample omsDistributionExample = new OmsDistributionExample();
+        OmsDistributionExample.Criteria criteria = omsDistributionExample.createCriteria();
+        criteria.andWmsMemberIdEqualTo(wmsMember.getId().intValue()).andStatusIn(statusList);
+        List<OmsDistribution> omsDistributions = omsDistributionMapper.selectByExample(omsDistributionExample);
+        if(!CollectionUtils.isEmpty(omsDistributions)){
+            Asserts.fail("存在待审核或者配送中的补货单/出货单,无法降级");
+        }
+        //查找待配送的单子,转到平台
+        criteria = omsDistributionExample.createCriteria();
+        criteria.andWmsMemberIdEqualTo(wmsMember.getId().intValue()).andStatusEqualTo(0);
+        List<OmsDistribution> waitingDistributions = omsDistributionMapper.selectByExample(omsDistributionExample);
+        if(!CollectionUtils.isEmpty(waitingDistributions)){
+            for(OmsDistribution omsDistribution : waitingDistributions){
+                omsDistribution.setWmsMemberId(1L);
+                updateDistribution(omsDistribution);
+            }
+        }
         //1.将用户等级下降为3
         UmsMember member = memberMapper.selectByPrimaryKey(memberId);
         log.info("-------------member : "+member);
@@ -168,13 +197,10 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         member.setMemberLevelId(3L);
         updateMember(member);
         //2.将wms_member账户状态置为不可用
-        WmsMember wmsMember = wmsMemberMapper.getAvailableByMemberId(memberId);
-        if(wmsMember != null){
-            wmsMember.setUpdateTime(new Date());
-            wmsMember.setStatus(0);
-            wmsMember.setCreditLine(BigDecimal.ZERO);
-            updateWmsMember(wmsMember);
-        }
+        wmsMember.setUpdateTime(new Date());
+        wmsMember.setStatus(0);
+        wmsMember.setCreditLine(BigDecimal.ZERO);
+        updateWmsMember(wmsMember);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -182,7 +208,10 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         wmsMemberMapper.updateByPrimaryKeySelective(wmsMember);
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
+    public void updateDistribution(OmsDistribution omsDistribution){
+        omsDistributionMapper.updateByPrimaryKeySelective(omsDistribution);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateMember(UmsMember umsMember){
