@@ -383,6 +383,9 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if(StringUtils.isEmpty(orderNo)){
             Asserts.fail("订单号为空");
         }
+        log.info("-------------------------------参数 member : "+member);
+        log.info("-------------------------------参数 umsMemberLevelName : "+umsMemberLevelName);
+        log.info("-------------------------------参数 omsOrderItem : "+omsOrderItem);
         OmsOrder omsOrder = omsPortalOrderService.getOmsOrderByOrderSn(orderNo);
         //判断购买的订单商品是否为升级VIP需购买的商品,是则升级会员等级为VIP(且要VIP才能继续购买别的商品)
         UmsMemberLevelExample umsMemberLevelExample = new UmsMemberLevelExample();
@@ -394,21 +397,28 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         }
         //如果升级配送中心,增加插入配送中心账号
         if(StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER.equals(umsMemberLevelName)){
+            log.info("-------------------------------本次为升级为配送中心");
             PmsProduct pmsProduct=productMapper.selectByPrimaryKey(omsOrderItem.getProductId());
+            log.info("-------------------------------商品 : "+pmsProduct);
             WmsMember oldWmsMember = wmsMemberMapper.getNotAvailableByMemberId(member.getId());
+            log.info("-------------------------------原先 oldWmsMember : "+oldWmsMember);
             if(oldWmsMember != null){
                 BigDecimal oldCreditLine = oldWmsMember.getCreditLine();
+                log.info("-------------------------------原先 oldCreditLine : "+oldCreditLine);
                 if(oldCreditLine == null){
                     oldCreditLine = BigDecimal.ZERO;
                 }
-                BigDecimal incrideLine = pmsProduct.getDeliveryCenterProductValue().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                BigDecimal incrideLine = pmsProduct.getWmsCreditLine().multiply(new BigDecimal(omsOrderItem.getProductQuantity()));
+                log.info("-------------------------------原先 incrideLine : "+incrideLine);
                 BigDecimal creditLine = oldCreditLine.add(incrideLine);
                 oldWmsMember.setStatus(1);
                 oldWmsMember.setCreditLine(creditLine);
                 wmsMemberMapper.updateByPrimaryKeySelective(oldWmsMember);
+                log.info("-------------------------------更新后 oldWmsMember : "+oldWmsMember);
             }
             else{
                 WmsMember wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
+                log.info("-------------------------------wmsMember : "+wmsMember);
                 //插入新的账户
                 AcctInfo acctInfo = new AcctInfo();
                 acctInfo.setLockAmount(BigDecimal.ZERO);
@@ -419,12 +429,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 acctInfo.setUpdateTime(new Date());
                 acctInfo.setStatus(1);
                 acctInfoService.saveOrUpdateAcctInfo(acctInfo);
+                log.info("-------------------------------acctInfo : "+acctInfo);
                 wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
             }
         }
         UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
         member.setMemberLevelId(umsMemberLevel.getId());
         memberMapper.updateByPrimaryKeySelective(member);
+        log.info("-------------------------------member : "+member);
         memberCacheService.delMember(member.getId());
         log.info("------------------------提升用户等级  结束------------------------");
     }
