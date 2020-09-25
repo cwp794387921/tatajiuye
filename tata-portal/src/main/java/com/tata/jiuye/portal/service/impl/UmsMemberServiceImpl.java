@@ -404,18 +404,18 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             }
             else{
                  wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());
+                //插入新的账户
+                AcctInfo acctInfo = new AcctInfo();
+                acctInfo.setLockAmount(BigDecimal.ZERO);
+                acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_DELIVERYCENTER);
+                acctInfo.setBalance(BigDecimal.ZERO);
+                acctInfo.setBranchId(wmsMember.getId());
+                acctInfo.setInsertTime(new Date());
+                acctInfo.setUpdateTime(new Date());
+                acctInfo.setStatus(1);
+                acctInfoService.saveOrUpdateAcctInfo(acctInfo);
             }
             wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
-            //插入新的账户
-            AcctInfo acctInfo = new AcctInfo();
-            acctInfo.setLockAmount(BigDecimal.ZERO);
-            acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_DELIVERYCENTER);
-            acctInfo.setBalance(BigDecimal.ZERO);
-            acctInfo.setBranchId(wmsMember.getId());
-            acctInfo.setInsertTime(new Date());
-            acctInfo.setUpdateTime(new Date());
-            acctInfo.setStatus(1);
-            acctInfoService.saveOrUpdateAcctInfo(acctInfo);
         }
         UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
         member.setMemberLevelId(umsMemberLevel.getId());

@@ -41,8 +41,6 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
     @Value("${umsmemberlevelname.ordinarymember}")
     private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
-    @Value("${requestempleurl}")
-    private String REQUEST_TEMPLATE_URL;
 
     @Override
     public UmsMemberInfoByMemberIdResult getUmsInfoByMemberId(Long memberId) {
@@ -167,11 +165,6 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
         }
         member.setMemberLevelId(3L);
         updateMember(member);
-        //清除缓存
-        String url = "sso/delUmsCash";
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-        param.add("memberId", memberId);
-        CommonResult commonResult = HttpTools.sendPostRequest(REQUEST_TEMPLATE_URL + url, param);
         //2.将wms_member账户状态置为不可用
         WmsMember wmsMember = wmsMemberMapper.getAvailableByMemberId(memberId);
         if(wmsMember != null){

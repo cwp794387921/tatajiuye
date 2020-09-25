@@ -105,6 +105,11 @@ public class UmsMemberController {
     @ResponseBody
     public CommonResult downgrade(@RequestParam @ApiParam("待降级用户ID") Long memberId){
         umsMemberService.downgrade(memberId);
+        //清除缓存
+        String url = "sso/delUmsCash";
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        param.add("memberId", memberId);
+        CommonResult commonResult = HttpTools.sendPostRequest(REQUEST_TEMPLATE_URL + url, param);
         return CommonResult.success("降级成功");
     }
 }
