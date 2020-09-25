@@ -157,7 +157,8 @@
 	count(1) AS ALLCOUNT,
 	count( CASE WHEN o.`status` = '0' THEN o.id END ) AS NOPAY,
 	count( CASE WHEN o.`status` = '1' THEN o.id END ) AS PAY,
-	count( CASE WHEN o.`status` = '2' THEN o.id END ) AS FINISH
+	count( CASE WHEN o.`status` = '2' THEN o.id END ) AS PS,
+	count( CASE WHEN o.`status` = '3' THEN o.id END ) AS FINISH
     FROM
 	oms_order o
     WHERE
