@@ -550,6 +550,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         params.put("statusNo2",5);
         params.put("statusNo3",4);
         params.put("type",1);
+        params.put("wmsMemberId",wmsMember.getId());
         List<OmsDistribution> list= DistributionMapper.queryDistributionDetailList(params);
         if(list!=null){
             result.put("list",list);
