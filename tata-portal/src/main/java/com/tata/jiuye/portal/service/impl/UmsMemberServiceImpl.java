@@ -414,8 +414,8 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 acctInfo.setUpdateTime(new Date());
                 acctInfo.setStatus(1);
                 acctInfoService.saveOrUpdateAcctInfo(acctInfo);
+                wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
             }
-            wmsAreaService.insertWmsArea(omsOrder,wmsMember.getId());
         }
         UmsMemberLevel umsMemberLevel = umsMemberLevels.get(0);
         member.setMemberLevelId(umsMemberLevel.getId());
