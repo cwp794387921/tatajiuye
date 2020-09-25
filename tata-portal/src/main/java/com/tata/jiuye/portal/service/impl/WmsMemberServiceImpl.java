@@ -687,21 +687,6 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if(distribution==null){
             Asserts.fail("未找到对应补货单");
         }
-        int number=distribution.getNumber();//补货数量
-        //判断库存是否充足
-        PmsSkuStock skuStock=new PmsSkuStock();
-        skuStock.setProductId(distribution.getProductId());
-        skuStock.setWmsMemberId(wmsMember.getId());
-        skuStock=pmsSkuStockMapper.selectByParams(skuStock);
-        if(skuStock==null){
-            Asserts.fail("未找到库存");
-        }
-        if((skuStock.getStock()-number)<0){
-            Asserts.fail("库存不足，无法出货");
-        }
-        //添加锁定库存
-        skuStock.setLockStock(skuStock.getLockStock()+number);
-        pmsSkuStockMapper.updateByPrimaryKey(skuStock);
         //更新补货单状态
         distribution.setStatus(1);//待收货
         //更新出货单状态
