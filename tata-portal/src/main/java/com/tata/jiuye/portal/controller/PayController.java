@@ -656,6 +656,9 @@ public class PayController {
                             omsOrder.setReceiveTime(new Date());
                             orderMapper.updateByPrimaryKey(omsOrder);
                             omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                            distribution.setStatus(5);
+
+
                             //升级配送中心商品 插入账户分佣流水
                             acctSettleInfoService.insertCommissionRecordFlow(umsMember,orderSn);
                         }else {
