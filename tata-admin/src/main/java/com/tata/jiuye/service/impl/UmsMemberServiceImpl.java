@@ -41,6 +41,8 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     private String UMS_MEMBER_LEVEL_NAME_DELIVERYCENTER;
     @Value("${umsmemberlevelname.ordinarymember}")
     private String UMS_MEMBER_LEVEL_NAME_ORDINARYMEMBER;
+    @Value("${requestempleurl}")
+    private String REQUEST_TEMPLATE_URL;
 
     @Override
     public UmsMemberInfoByMemberIdResult getUmsInfoByMemberId(Long memberId) {
@@ -185,6 +187,13 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     @Transactional(rollbackFor = Exception.class)
     public void updateMember(UmsMember umsMember){
         memberMapper.updateByPrimaryKeySelective(umsMember);
+        //清除缓存
+        String url = "sso/delCash";
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        param.add("memberId", umsMember.getId());
+        log.info("--------------参数 memberId : "+umsMember.getId());
+        log.info("--------------REQUEST_TEMPLATE_URL : "+REQUEST_TEMPLATE_URL);
+        CommonResult commonResult = HttpTools.sendPostRequest(REQUEST_TEMPLATE_URL + url, param);
     }
 
 
