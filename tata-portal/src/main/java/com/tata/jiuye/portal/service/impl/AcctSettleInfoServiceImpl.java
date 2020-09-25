@@ -15,6 +15,7 @@ import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -311,9 +312,11 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             OmsDistributionItemExample.Criteria criteria = example.createCriteria();
             criteria.andDistributionIdEqualTo(Long.valueOf(orderNo));
             List<OmsDistributionItem> distributionItems = omsDistributionItemMapper.selectByExample(example);
+            BeanUtils.copyProperties(omsDistribution,resultDto);
             resultDto.setDistributionItems(distributionItems);
             resultDto.setOrderStatus(omsDistribution.getStatus().toString());
             resultDto.setOrderType(omsDistribution.getType().toString());
+            log.info("----------------resultDto : "+resultDto);
         }
         return  resultDto;
     }
