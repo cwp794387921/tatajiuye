@@ -479,9 +479,9 @@ public class PayController {
                                     distributionItem.setGoodsImg(glProduct.getPic());
                                     distributionItem.setGoodsTitle(glProduct.getName());
                                     distributionItem.setGoodsSubtitle(glProduct.getSubTitle());
-                                    distributionItem.setPrice(glProduct.getOriginalPrice());
+                                    distributionItem.setPrice(glProduct.getPrice());
                                     distributionItem.setNumber(pmsProduct.getRelationProductNum());
-                                    distributionItem.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                                    distributionItem.setSubPrice(glProduct.getPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
                                     distributionItem.setProductId(pmsProduct.getRelationProductId());
                                     distributionItem.setProfit(glProduct.getDeliveryAmount().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));//配送收益
                                 }else {
@@ -679,9 +679,9 @@ public class PayController {
                                 distributionItem.setGoodsImg(glProduct.getPic());
                                 distributionItem.setGoodsTitle(glProduct.getName());
                                 distributionItem.setGoodsSubtitle(glProduct.getSubTitle());
-                                distributionItem.setPrice(glProduct.getOriginalPrice());
+                                distributionItem.setPrice(glProduct.getPrice());
                                 distributionItem.setNumber(pmsProduct.getRelationProductNum());
-                                distributionItem.setSubPrice(glProduct.getOriginalPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
+                                distributionItem.setSubPrice(glProduct.getPrice().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));
                                 distributionItem.setProductId(pmsProduct.getRelationProductId());
                                 distributionItem.setProfit(glProduct.getDeliveryAmount().multiply(new BigDecimal(pmsProduct.getRelationProductNum())));//配送收益
                             }else {
