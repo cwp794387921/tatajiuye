@@ -511,7 +511,7 @@ public class WmsMemberController {
                 BHacctInfo.setUpdateTime(new Date());
                 acctInfoMapper.updateByPrimaryKey(BHacctInfo);
             }
-            //添加出货收益流水
+            //添加出货收益流水111
             acctSettleInfo=new AcctSettleInfo();
             if(Shipment.getProfit()!=null&&!Shipment.getProfit().equals(BigDecimal.ZERO)){
                 acctSettleInfo.setOmsDistributionNo(distribution.getId());
