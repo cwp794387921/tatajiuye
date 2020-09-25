@@ -119,6 +119,8 @@
     <result column="number" jdbcType="INTEGER" property="number" />
     <result column="sub_price" jdbcType="DECIMAL" property="subPrice" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="wmsPhone" jdbcType="VARCHAR" property="wmsPhone" />
     <result column="head_img" jdbcType="VARCHAR" property="headImg" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -138,9 +140,10 @@
   </resultMap>
 
     <select id="queryDistributionDetailList"  resultMap="listMap">
-        SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
-        i.goods_img,i.goods_title,i.goods_subtitle,i.price as price1,i.number as number1,i.sub_price as sub1 ,i.product_id,i.profit as profit1 from oms_distribution d
+        SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.phone,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
+      m.phone as wmsPhone,i.goods_img,i.goods_title,i.goods_subtitle,i.price as price1,i.number as number1,i.sub_price as sub1 ,i.product_id,i.profit as profit1 from oms_distribution d
         left join oms_distribution_item  i on i.distribution_id=d.id
+      LEFT JOIN wms_member m on m.id=d.wms_member_id
         <where>
             <if test="id !=null">
                 and d.id = #{id}
@@ -157,6 +160,15 @@
             <if test="status !=null ">
                 and d.status = #{status}
             </if>
+          <if test="statusNo1 !=null ">
+            and d.status != #{statusNo1}
+          </if>
+          <if test="statusNo2 !=null ">
+            and d.status != #{statusNo2}
+          </if>
+          <if test="statusNo1 !=null ">
+            and d.status != #{statusNo3}
+          </if>
             <if test="status ==null">
                 and d.status != 5
             </if>
@@ -173,9 +185,10 @@
     </select>
 
   <select id="queryDistributionDetail" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="listMap">
-      SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
-      i.goods_img,i.goods_title,i.goods_subtitle,i.price as price1,i.number as number1,i.sub_price as sub1 ,i.product_id,i.profit as profit1 from oms_distribution d
+      SELECT distinct d.id,d.order_sn,d.`status`,d.price,d.number,d.phone,d.sub_price,d.profit,d.`name`,d.head_img,d.address,d.wms_member_id,d.ums_member_id,d.create_time,
+    m.phone as wmsPhone,i.goods_img,i.goods_title,i.goods_subtitle,i.price as price1,i.number as number1,i.sub_price as sub1 ,i.product_id,i.profit as profit1 from oms_distribution d
       left join oms_distribution_item  i on i.distribution_id=d.id
+    LEFT JOIN wms_member m on m.id=d.wms_member_id
     <where>
       <if test="id !=null">
         and d.id = #{id}
@@ -191,6 +204,15 @@
       </if>
       <if test="status !=null ">
         and d.status = #{status}
+      </if>
+      <if test="statusNo1 !=null ">
+        and d.status != #{statusNo1}
+      </if>
+      <if test="statusNo2 !=null ">
+        and d.status != #{statusNo2}
+      </if>
+      <if test="statusNo1 !=null ">
+        and d.status != #{statusNo3}
       </if>
       <if test="status ==null">
         and d.status != 5

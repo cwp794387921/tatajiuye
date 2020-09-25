@@ -114,9 +114,8 @@ public class PayController {
                 money = omsOrder.getPayAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
             }
             BigDecimal refund=new BigDecimal(refundMoney);
+            log.info("付款金额："+money+",退款金额："+refund);
             if(money.compareTo(refund)==-1){
-
-            }else {
                 return CommonResult.failed("退款金额不能大于付款金额");
             }
             try {
@@ -234,7 +233,7 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                /*Map<String,String> map = Maps.newHashMap();
+                Map<String,String> map = Maps.newHashMap();
                 map.put("merchantNo", Config.MERCHANT_NO);
                 map.put("orderAmount",money.toString());
                 map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
@@ -265,8 +264,8 @@ public class PayController {
                     jsonObject.put("paySign",payInfo.get("paySign").toString());
                 }else {
                     return   CommonResult.failed(PostResult.get("msg").toString());
-                }*/
-                WxConfig wxConfig = new WxConfig();
+                }
+               /* WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();
@@ -304,7 +303,7 @@ public class PayController {
                 map2.put("nonceStr",jsonObject.get("nonceStr"));
                 map2.put("package",jsonObject.get("package"));
                 map2.put("signType",jsonObject.get("signType"));
-                jsonObject.put("paySign",createSign("UTF-8",map2));
+                jsonObject.put("paySign",createSign("UTF-8",map2));*/
             }catch (Exception e){
                 System.out.println(e.getMessage());
                 return CommonResult.failed(e.getMessage());
@@ -736,7 +735,10 @@ public class PayController {
     }
 
     public static void main(String []args){
-        try {
+        BigDecimal a=new BigDecimal(0.01);
+        BigDecimal b= new BigDecimal(0.01);
+        System.out.println(a.compareTo(b));
+        /*try {
             Map<String,String> map = Maps.newHashMap();
             map.put("merchantNo", Config.MERCHANT_NO);
             map.put("refundAmount","0.01");
@@ -744,10 +746,10 @@ public class PayController {
             map.put("merchantRefundNo","TK16009171851920102000001");
             map.put("notifyUrl",Config.RefundNotifyUrl);
             map.put("refundReason","test");
-            /*JSONObject jsonObject1=new JSONObject();
+            *//*JSONObject jsonObject1=new JSONObject();
             jsonObject1.put("sceneInfo","小程序");
             jsonObject1.put("is_phone","1");
-            map.put("attach",jsonObject1.toJSONString());*/
+            map.put("attach",jsonObject1.toJSONString());*//*
             TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
             String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
             map.put("sign", Base64Util.encodeByBase64(sign));
@@ -757,7 +759,7 @@ public class PayController {
             log.info("请求结果:"+responseStr);
         }catch (Exception e){
 
-        }
+        }*/
     }
 
 

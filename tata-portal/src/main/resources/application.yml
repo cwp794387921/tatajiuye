@@ -2,7 +2,7 @@ spring:
   application:
     name: tata-portal
   profiles:
-    active: dev #默认为开发环境
+    active: prod #默认为开发环境
   servlet:
     multipart:
       max-file-size: 10MB   #上传文件大小

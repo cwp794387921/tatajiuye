@@ -20,18 +20,18 @@ spring:
         login-password: druid
 
   redis:
-    host: r-uf6c885d8a389d04pd.redis.rds.aliyuncs.com # Redis服务器地址
+    host: 39.101.170.150 # Redis服务器地址
     database: 0 # Redis数据库索引（默认为0）
     port: 6379 # Redis服务器连接端口
-    password: Cwp@1234 # Redis服务器连接密码（默认为空）
+    password: # Redis服务器连接密码（默认为空）
     timeout: 300ms # 连接超时时间（毫秒）
 
   rabbitmq:
-    host: 47.101.209.225
+    host: 39.101.170.150
     port: 5672
     virtual-host: /mall
-    username: mall
-    password: mall
+    username: admin
+    password: admin
 
 logstash:
   host: localhost
@@ -59,11 +59,11 @@ auth:
 
 aliyun:
   sms:
-    regionid: "cn-hangzhou"
-    accesskeyid: "LTAI4G5J7xp9V8CTWY63x2ST"
-    secret: "CjWWNZSQR29pDgVynn1SNbEDxiJuZG"
-    signname: "格知教育"
-    templatecode: "SMS_196642878"
+    regionid: "cn-zhangjiakou"
+    accesskeyid: "LTAI4FyMjpYjQTaWUqe1gq8p"
+    secret: "i3tLJpZ4nQlgakk24fxAtUSyF4ntKK"
+    signname: "合耀酒业"
+    templatecode: "SMS_201145260"
 
   oss:
     endpoint: oss-cn-zhangjiakou.aliyuncs.com # oss对外服务的访问域名
