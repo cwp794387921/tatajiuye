@@ -582,7 +582,6 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             BigDecimal price=BigDecimal.ZERO;//补货货值
             BigDecimal CHprice=BigDecimal.ZERO;//出货货值
             BigDecimal profit=BigDecimal.ZERO;//仓补收益
-            BigDecimal CHprofit=BigDecimal.ZERO;//出货收益
             switch (wmsMember.getLevel()){
                 case 1:
                     profit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
@@ -597,20 +596,17 @@ public class WmsMemberServiceImpl implements WmsMemberService {
                     price=pmsProduct.getRegionalProductValue();
                     break;
             }
-            /*switch (parent.getLevel()){
+            switch (parent.getLevel()){
                 case 1:
-                    CHprofit=pmsProduct.getDeliveryCenterWarehouseReplenishment();
                     CHprice=pmsProduct.getDeliveryCenterProductValue();
                     break;
                 case 2:
-                    CHprofit=pmsProduct.getWebmasterWarehouseReplenishment();
                     CHprice=pmsProduct.getWebmasterProductValue();
                     break;
                 case 3:
-                    CHprofit=pmsProduct.getRegionalWarehouseReplenishment();
                     CHprice=pmsProduct.getRegionalProductValue();
                     break;
-            }*/
+            }
             subPrice=subPrice.add(new BigDecimal(num).multiply(price));
             if(subPrice.compareTo(wmsMember.getCreditLine())==1){
                 Asserts.fail("补货总价超过授信额度");
