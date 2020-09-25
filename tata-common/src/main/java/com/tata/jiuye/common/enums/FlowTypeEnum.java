@@ -4,7 +4,7 @@ public enum FlowTypeEnum {
 
     COMMISSION_INCOME("commission_income","分佣收入"),
     DELIVERY_FEE("delivery_fee","配送费"),
-    STORAGE_ALLOWANCE("storage _allowance","仓储补助"),
+    STORAGE_ALLOWANCE("storage_allowance","仓储补助"),
     WITHDRWA("withdraw","提现"),
     INCOME("income","收入"),
     EXPENDITURE("expenditure","支出");

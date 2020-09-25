@@ -32,7 +32,7 @@ public class AcctSettleInfo implements Serializable {
     @ApiModelProperty(value = "流水类型(收入-> income,支出-> expenditure)")
     private String flowType;
 
-    @ApiModelProperty(value = "流水类型明细(收入->(分佣收入 -> commission_income,配送费 -> delivery_fee,仓储补助->storage _allowance),支出->(提现->withdraw))")
+    @ApiModelProperty(value = "流水类型明细(收入->(分佣收入 -> commission_income,配送费 -> delivery_fee,仓储补助->storage_allowance),支出->(提现->withdraw))")
     private String flowTypeDetail;
 
     @ApiModelProperty(value = "流水来源ID(收入专用)")
