@@ -55,6 +55,7 @@ public class OrderTimeOutCancelTask {
         LOGGER.info("取消订单，并根据sku编号释放锁定库存，取消订单数量：{}",count);
         Map<String,Object>params=new HashMap<>();
         params.put("receiveTime",new Date());
+        params.put("status",2);
         List<OmsOrder> orderList=orderMapper.queryList(params);
         if(!orderList.isEmpty()){
             LOGGER.info("订单超过收货时间，自动收货，数量：{}",orderList.size());

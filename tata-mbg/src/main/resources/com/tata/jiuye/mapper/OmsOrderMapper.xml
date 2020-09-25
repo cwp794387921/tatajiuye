@@ -125,6 +125,9 @@
     <if test="id != null">
       and id = #{id,jdbcType=BIGINT}
     </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=BIGINT}
+    </if>
     <if test="receiveTime != null">
       and receive_time &lt; #{receiveTime,jdbcType=TIMESTAMP}
     </if>
