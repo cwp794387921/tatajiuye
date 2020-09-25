@@ -169,6 +169,7 @@
           a.`status` = 1 and m.id != #{id}
     <if test="params !=null">
       and m.id like CONCAT('%',#{params}, '%') or m.phone like CONCAT('%',#{params}, '%') or m.nickname like CONCAT('%',#{params}, '%') or a.address like CONCAT('%',#{params}, '%')
+        or a.province like CONCAT('%',#{params}, '%') or a.city like CONCAT('%',#{params}, '%') or a.area like CONCAT('%',#{params}, '%')
     </if>
       ORDER BY
           m.id desc
