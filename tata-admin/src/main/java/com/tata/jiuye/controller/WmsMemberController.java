@@ -468,7 +468,6 @@ public class WmsMemberController {
 //            ShipmentSkuStock.setStock(ShipmentSkuStock.getStock()-examine.getNumber());
 //            skuStockMapper.updateByPrimaryKey(ShipmentSkuStock);
             //添加出货仓授信额度 扣减进货仓授信额度
-            if(Shipment.getWmsMemberId()!=1L){
                 WmsMember CHmember=memberMapper.selectByPrimaryKey(Shipment.getWmsMemberId());
                 BigDecimal chhz=new BigDecimal(0);//货值
                 switch (CHmember.getLevel()){
@@ -484,7 +483,6 @@ public class WmsMemberController {
                 }
                 CHmember.setCreditLine(CHmember.getCreditLine().add(chhz.multiply(new BigDecimal(examine.getNumber()))));
                 memberMapper.updateByPrimaryKey(CHmember);
-            }
             //查找账户信息
             AcctInfo BHacctInfo=acctInfoMapper.selectByWmsId(wmsMember.getId());//补货账户
             if(BHacctInfo==null){
