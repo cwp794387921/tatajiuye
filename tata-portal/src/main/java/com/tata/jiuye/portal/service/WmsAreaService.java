@@ -16,4 +16,13 @@ public interface WmsAreaService extends IService<WmsArea> {
      */
     @Transactional
     void insertWmsArea(OmsOrder omsOrder,Long wmsMemberId);
+
+
+    WmsArea getByMemberId(Long wmsMemberId);
+
+    @Transactional
+    void updateWmsArea(WmsArea wmsArea);
+
+    @Transactional
+    void delByWmsMemberId(Long wmsMemberId);
 }

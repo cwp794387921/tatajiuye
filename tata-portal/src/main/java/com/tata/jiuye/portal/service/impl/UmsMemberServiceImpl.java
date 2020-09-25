@@ -415,6 +415,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
                 oldWmsMember.setCreditLine(creditLine);
                 wmsMemberMapper.updateByPrimaryKeySelective(oldWmsMember);
                 log.info("-------------------------------更新后 oldWmsMember : "+oldWmsMember);
+                WmsArea wmsArea = wmsAreaService.getByMemberId(oldWmsMember.getId());
+                if(wmsArea == null){
+                    wmsAreaService.insertWmsArea(omsOrder,oldWmsMember.getId());
+                }
+                else{
+                    wmsAreaService.delByWmsMemberId(oldWmsMember.getId());
+                    wmsAreaService.insertWmsArea(omsOrder,oldWmsMember.getId());
+                }
             }
             else{
                 WmsMember wmsMember = wmsMemberService.insertWmsMember(member,pmsProduct.getWmsCreditLine());

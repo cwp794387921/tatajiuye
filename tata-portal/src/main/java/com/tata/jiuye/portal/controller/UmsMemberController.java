@@ -6,7 +6,9 @@ import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
+import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.UmsMember;
+import com.tata.jiuye.model.UmsMemberExample;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberLevelService;
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,6 +60,9 @@ public class UmsMemberController {
     private static final Logger log = LoggerFactory.getLogger(UmsMemberController.class);
 
     protected HttpServletRequest request;
+
+    @Resource
+    private UmsMemberMapper umsMemberMapper;
 
     @Resource
     private  UmsMemberService memberService;
@@ -296,6 +303,21 @@ public class UmsMemberController {
     public void delCash(@RequestParam @ApiParam("要删除缓存的用户ID") Long memberId){
         umsMemberCacheService.delMember(memberId);
     }
+
+
+    @ApiOperation("删除用户缓存")
+    @RequestMapping(value = "/delAllUserCash",method = RequestMethod.POST)
+    @ResponseBody
+    public void delAllUserCash(){
+        UmsMemberExample memberExample = new UmsMemberExample();
+        List<UmsMember> umsMembers = umsMemberMapper.selectByExample(memberExample);
+        if(!CollectionUtils.isEmpty(umsMembers)){
+            for(UmsMember umsMember : umsMembers){
+                umsMemberCacheService.delMember(umsMember.getId());
+            }
+        }
+    }
+
 
     @ApiOperation("获取用户等级名称")
     @RequestMapping(value = "/getMemberLevelName",method = RequestMethod.POST)
