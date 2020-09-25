@@ -182,6 +182,7 @@
                 and d.shipment_id = #{shipmentId}
             </if>
         </where>
+        order by d.id desc
     </select>
 
   <select id="queryDistributionDetail" parameterType="com.tata.jiuye.model.OmsDistribution" resultMap="listMap">
@@ -227,6 +228,7 @@
         and d.shipment_id = #{shipmentId}
       </if>
     </where>
+      order by d.id desc
   </select>
 
 
@@ -263,6 +265,7 @@
         and shipment_id = #{shipmentId}
       </if>
     </where>
+      order by id desc
   </select>
   <select id="queryList"  resultMap="BaseResultMap">
     select
