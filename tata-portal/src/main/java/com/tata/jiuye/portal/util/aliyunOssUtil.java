@@ -23,7 +23,7 @@ public class aliyunOssUtil {
     @Value("${aliyun.oss.bucketName}")
     private  String bucketName ;
 
-    private  String filePath ="https://"+bucketName+"."+endpoint;
+    //private  String filePath ="https://"+bucketName+"."+endpoint+"/";
 
     public String uploadFile(File data, String key) {
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
@@ -40,7 +40,7 @@ public class aliyunOssUtil {
         } finally {
             ossClient.shutdown();
         }
-        return filePath+key;
+        return "https://"+bucketName+"."+endpoint+"/"+key;
     }
 
     public String uploadByte(byte[] data, String key) {
@@ -58,7 +58,7 @@ public class aliyunOssUtil {
         } finally {
             ossClient.shutdown();
         }
-        return filePath+key;
+        return "https://"+bucketName+"."+endpoint+"/"+key;
     }
 
     public void deleteKey(String key){
