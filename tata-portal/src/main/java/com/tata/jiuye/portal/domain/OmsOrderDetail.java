@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.domain;
 
+import com.tata.jiuye.DTO.DeliveryInfo;
 import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.model.OmsOrderItem;
 
@@ -12,6 +13,10 @@ import java.util.List;
 public class OmsOrderDetail extends OmsOrder {
     private List<OmsOrderItem> orderItemList;
 
+    //送货人信息
+    private DeliveryInfo deliveryInfo;
+
+
     public List<OmsOrderItem> getOrderItemList() {
         return orderItemList;
     }
@@ -19,4 +24,5 @@ public class OmsOrderDetail extends OmsOrder {
     public void setOrderItemList(List<OmsOrderItem> orderItemList) {
         this.orderItemList = orderItemList;
     }
+
 }

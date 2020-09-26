@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.DTO.DeliveryInfo;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
@@ -84,6 +85,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private PmsSkuStockService pmsSkuStockService;
     @Resource
     private WmsMemberMapper wmsMemberMapper;
+
+    @Resource
+    private OmsDistributionMapper omsDistributionMapper;
 
     @Value("${redis.key.orderId}")
     private String REDIS_KEY_ORDER_ID;
@@ -532,6 +536,10 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             BeanUtil.copyProperties(omsOrder, orderDetail);
             List<OmsOrderItem> relatedItemList = orderItemList.stream().filter(item -> item.getOrderId().equals(orderDetail.getId())).collect(Collectors.toList());
             orderDetail.setOrderItemList(relatedItemList);
+            DeliveryInfo deliveryInfo = omsDistributionMapper.getDeliveryInfoByOrderSn(omsOrder.getOrderSn());
+            orderDetail.setReceiverName(deliveryInfo.getWmsMemberName());
+            orderDetail.setReceiverPhone(deliveryInfo.getWmsMemberPhone());
+            orderDetail.setReceiverDetailAddress(deliveryInfo.getWmsMemberAddress());
             orderDetailList.add(orderDetail);
         }
         resultPage.setList(orderDetailList);

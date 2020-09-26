@@ -1,5 +1,6 @@
 package com.tata.jiuye.mapper;
 
+import com.tata.jiuye.DTO.DeliveryInfo;
 import com.tata.jiuye.model.OmsDistribution;
 import com.tata.jiuye.model.OmsDistributionExample;
 import java.util.List;
@@ -42,4 +43,11 @@ public interface OmsDistributionMapper {
     int updateByPrimaryKeySelective(OmsDistribution record);
 
     int updateByPrimaryKey(OmsDistribution record);
+
+    /**
+     * 通过订单号获取送货人信息
+     * @param orderNo
+     * @return
+     */
+    DeliveryInfo getDeliveryInfoByOrderSn(@Param("orderNo")String orderNo);
 }
