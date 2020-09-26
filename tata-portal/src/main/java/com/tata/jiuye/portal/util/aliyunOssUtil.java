@@ -23,7 +23,7 @@ public class aliyunOssUtil {
     @Value("${aliyun.oss.bucketName}")
     private  String bucketName ;
 
-    private  String filePath ="https://cscyimages.oss-cn-zhangjiakou.aliyuncs.com/";
+    private  String filePath ="https://"+bucketName+"."+endpoint;
 
     public String uploadFile(File data, String key) {
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
