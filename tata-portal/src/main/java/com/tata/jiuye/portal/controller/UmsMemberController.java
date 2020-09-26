@@ -289,11 +289,11 @@ public class UmsMemberController {
         }
         String invitationCode = currentMember.getInviteCode();
         String accesstoken = InviteQrCode.postToken();
-        int size = 280;
-        int x = 610;
-        int y = 580;
+        int size = 400;
+        int x = 170;
+        int y = 450;
         //String imgUrl = "http://cscyimages.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200907/47e1e3d629e12a049d0154d23c0e806.jpg";
-        String imgUrl = "http://zzjyshop.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200926/WechatIMG1109.jpeg";
+        String imgUrl = "http://zzjyshop.oss-cn-zhangjiakou.aliyuncs.com/jiuye/images/20200926/750.jpeg";
         String resultUrl =  InviteQrCode.mergeImageAndQRToFileUrl(imgUrl,invitationCode,size,x,y,accesstoken);
         return CommonResult.success(resultUrl);
     }
