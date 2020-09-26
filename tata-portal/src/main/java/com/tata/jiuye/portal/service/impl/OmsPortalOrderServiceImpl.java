@@ -123,6 +123,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
 
 
+
     @Override
     public Map<String, Object> generateOrder(OrderParam orderParam,UmsMember currentMember) {
         log.info("---------------------------下单方法  开始---------------------------");
@@ -175,6 +176,36 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                 }
             }*/
             //等级为VIP,不能购买升级为VIP商品
+            if(joinVipProductId.equals(productId)){
+                Map<String, Object> params = new HashMap<>();
+                params.put("memberId",currentMember.getId());
+                params.put("status",0);
+                List<OmsOrder> orderList=orderMapper.queryList(params);
+                for(OmsOrder  order:orderList){
+                    List<OmsOrderItem> itemList=omsOrderItemService.getItemForOrderSn(order.getOrderSn());
+                    for(OmsOrderItem item:itemList){
+                        if(item.getProductId().equals(joinVipProductId)){
+                            result.put("msg","已有一笔待确认的升级VIP订单，请确认后再试");
+                            Asserts.fail("已有一笔待确认的升级VIP订单，请确认后再试");
+                        }
+                    }
+                }
+            }
+            if(upgradeDistributionCenterProductId.equals(productId)){
+                Map<String, Object> params = new HashMap<>();
+                params.put("memberId",currentMember.getId());
+                params.put("status",0);
+                List<OmsOrder> orderList=orderMapper.queryList(params);
+                for(OmsOrder  order:orderList){
+                    List<OmsOrderItem> itemList=omsOrderItemService.getItemForOrderSn(order.getOrderSn());
+                    for(OmsOrderItem item:itemList){
+                        if(item.getProductId().equals(upgradeDistributionCenterProductId)){
+                            result.put("msg","已有一笔待确认的升级VIP订单，请确认后再试");
+                            Asserts.fail("已有一笔待确认的升级VIP订单，请确认后再试");
+                        }
+                    }
+                }
+            }
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER.equals(memberLevelName) && joinVipProductId.equals(productId)){
                 result.put("msg","您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
                 Asserts.fail("您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
