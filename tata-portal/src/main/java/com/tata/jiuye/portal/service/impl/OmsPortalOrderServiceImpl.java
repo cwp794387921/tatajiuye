@@ -205,6 +205,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                         }
                     }
                 }
+                //判断是否单独购买的加入配送中心商品
+                if(cartPromotionItemList.size() > 1){
+                    result.put("msg","加入配送中心的商品需单独购买");
+                    Asserts.fail("加入配送中心的商品需单独购买");
+                }
             }
             if(StaticConstant.UMS_MEMBER_LEVEL_NAME_VIP_MEMBER.equals(memberLevelName) && joinVipProductId.equals(productId)){
                 result.put("msg","您已升级为VIP会员,无需再次购买升级为VIP会员的商品");
