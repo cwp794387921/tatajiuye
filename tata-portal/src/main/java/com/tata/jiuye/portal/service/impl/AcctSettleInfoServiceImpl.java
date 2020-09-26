@@ -63,7 +63,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     }
 
 
-    @Override
+    /*@Override
     public void insertCommissionRecordFlow(UmsMember umsMember,String orderSn){
         log.info("----------------------执行分佣流水   开始----------------------");
         //获取邀请链条(消费人->直邀人 -> 间邀人)
@@ -127,10 +127,10 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             }
         }
         log.info("----------------------执行分佣流水   结束----------------------");
-    }
+    }*/
 
 
-    /*@Override
+    @Override
     public void insertCommissionRecordFlow(UmsMember umsMember,String orderSn){
         log.info("----------------------执行分佣流水   开始----------------------");
         //获取邀请链条(消费人->直邀人 -> 间邀人)
@@ -194,7 +194,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             }
         }
         log.info("----------------------执行分佣流水   结束----------------------");
-    }*/
+    }
 
     @Override
     public void insertFlow(Long directPushMemberId,BigDecimal changeAmount,String orderSn,Long sourceId,String flowType,String flowTypeDetail,String accountType,Long omsDistributionNo){

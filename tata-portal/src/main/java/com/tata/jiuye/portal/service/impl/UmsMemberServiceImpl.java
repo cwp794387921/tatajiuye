@@ -305,9 +305,19 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         //JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
         JSONObject object = JSONObject.parseObject(registeredMemberParam.getUserInfoJson());
         log.info("==========微信用户信息==========："+object);
+        //先判断数据库手机号是否存在
+        UmsMember umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
+        //是否新注册用户(区分原有数据用户)
+        Boolean ifNewUser = true;
+        if(umsMember != null){
+            ifNewUser = false;
+        }
+        //umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
+        if(umsMember == null){
+            umsMember = new UmsMember();
+        }
         //log.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
         //log.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
-        UmsMember umsMember = new UmsMember();
         umsMember.setUsername(registeredMemberParam.getPhone());
         umsMember.setPhone(registeredMemberParam.getPhone());
         umsMember.setPassword(passwordEncoder.encode("123456"));
@@ -318,58 +328,62 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setCity(object.getString("city"));
         umsMember.setGender(object.getInteger("gender"));
         umsMember.setOpenid(openId);
-        //获取默认会员等级并设置
-        UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
-        levelExample.createCriteria().andDefaultStatusEqualTo(1);
-        List<UmsMemberLevel> memberLevelList = memberLevelMapper.selectByExample(levelExample);
-        if (!CollectionUtils.isEmpty(memberLevelList)) {
-            umsMember.setMemberLevelId(memberLevelList.get(0).getId());
-        }
-        String selfInviteCode = generateInviteCode();
-        umsMember.setInviteCode(selfInviteCode);
         //插入会员信息
-        memberMapper.insert(umsMember);
-        //绑定关系
-        Long grandpaMemberId;
-        Long parentMemberId;
-        String inviteCode = registeredMemberParam.getInviteCode();
-        if(!StringUtils.isEmpty(inviteCode)){
-            log.info("邀请人的邀请码:"+inviteCode);
-            UmsMember fatherUmsMember = memberMapper.getUmsMemberByInviteCode(inviteCode);
-            if(fatherUmsMember == null){
-                Asserts.fail("邀请人信息不存在");
+        if(ifNewUser){
+            UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
+            levelExample.createCriteria().andDefaultStatusEqualTo(1);
+            List<UmsMemberLevel> memberLevelList = memberLevelMapper.selectByExample(levelExample);
+            if (!CollectionUtils.isEmpty(memberLevelList)) {
+                umsMember.setMemberLevelId(memberLevelList.get(0).getId());
             }
-            //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
-            UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
-            //邀请人角色角色等级(是否配送中心)
-            //UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
-            parentMemberId = fatherUmsMember.getId();
-            grandpaMemberId = fatherInfo.getFatherMemberId();
-        }else{
-            log.info("未携带邀请码注册");
-            log.info("上级绑定到平台");
-            grandpaMemberId = 1L;
-            parentMemberId = 1L;
+            String selfInviteCode = generateInviteCode();
+            umsMember.setInviteCode(selfInviteCode);
+            memberMapper.insert(umsMember);
+            //绑定关系
+            Long grandpaMemberId;
+            Long parentMemberId;
+            String inviteCode = registeredMemberParam.getInviteCode();
+            if(!StringUtils.isEmpty(inviteCode)){
+                log.info("邀请人的邀请码:"+inviteCode);
+                UmsMember fatherUmsMember = memberMapper.getUmsMemberByInviteCode(inviteCode);
+                if(fatherUmsMember == null){
+                    Asserts.fail("邀请人信息不存在");
+                }
+                //邀请人用户层次上级与上上级(若无,则默认填平台,所以必定有)
+                UmsMemberInviteRelation fatherInfo = umsMemberInviteRelationMapper.getByMemberId(fatherUmsMember.getId());
+                //邀请人角色角色等级(是否配送中心)
+                //UmsMemberLevel umsMemberLevel = memberLevelMapper.selectByPrimaryKey(fatherUmsMember.getMemberLevelId());
+                parentMemberId = fatherUmsMember.getId();
+                grandpaMemberId = fatherInfo.getFatherMemberId();
+            }else{
+                log.info("未携带邀请码注册");
+                log.info("上级绑定到平台");
+                grandpaMemberId = 1L;
+                parentMemberId = 1L;
+            }
+            //生成会员关系表
+            UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
+            umsMemberInviteRelation.setCreateTime(new Date());
+            umsMemberInviteRelation.setFatherMemberId(parentMemberId);
+            umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
+            umsMemberInviteRelation.setMemberId(umsMember.getId());
+            //生成会员账户信息表
+            //String acctId=phone+ GlobalConstants.ACCTITAIL2;
+            AcctInfo acctInfo=new AcctInfo();
+            //acctInfo.setAcctId(acctId);
+            acctInfo.setBalance(BigDecimal.ZERO);
+            acctInfo.setMemberId(umsMember.getId());
+            acctInfo.setEffDate(new Date());
+            acctInfo.setInsertTime(new Date());
+            acctInfo.setUpdateTime(new Date());
+            acctInfo.setStatus(StaticConstant.INTEGER_STATUS_TAKE_EFFECT);
+            acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_ORDINARY);
+            umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
+            acctInfoMapper.insert(acctInfo);
         }
-        //生成会员关系表
-        UmsMemberInviteRelation umsMemberInviteRelation=new UmsMemberInviteRelation();
-        umsMemberInviteRelation.setCreateTime(new Date());
-        umsMemberInviteRelation.setFatherMemberId(parentMemberId);
-        umsMemberInviteRelation.setGrandpaMemberId(grandpaMemberId);
-        umsMemberInviteRelation.setMemberId(umsMember.getId());
-        //生成会员账户信息表
-        //String acctId=phone+ GlobalConstants.ACCTITAIL2;
-        AcctInfo acctInfo=new AcctInfo();
-        //acctInfo.setAcctId(acctId);
-        acctInfo.setBalance(BigDecimal.ZERO);
-        acctInfo.setMemberId(umsMember.getId());
-        acctInfo.setEffDate(new Date());
-        acctInfo.setInsertTime(new Date());
-        acctInfo.setUpdateTime(new Date());
-        acctInfo.setStatus(StaticConstant.INTEGER_STATUS_TAKE_EFFECT);
-        acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_ORDINARY);
-        umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
-        acctInfoMapper.insert(acctInfo);
+        else{
+            memberMapper.updateByPrimaryKeySelective(umsMember);
+        }
         UserDetails userDetails=new MemberDetails(umsMember);
         String token = jwtTokenUtil.generateToken(userDetails);
         return token;
