@@ -87,7 +87,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price, 
+    id, order_sn, status, goods_img, goods_title, goods_subtitle, price, number, sub_price,
     name, head_img, address, create_time, wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id,shipment_id
   </sql>
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsDistributionExample" resultMap="BaseResultMap">
@@ -105,7 +105,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from oms_distribution
     where id = #{id,jdbcType=BIGINT}
@@ -367,15 +367,15 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into oms_distribution (order_sn, status, goods_img, 
-      goods_title, goods_subtitle, price, 
-      number, sub_price, name, 
-      head_img, address, create_time, 
+    insert into oms_distribution (order_sn, status, goods_img,
+      goods_title, goods_subtitle, price,
+      number, sub_price, name,
+      head_img, address, create_time,
       wms_member_id,type,profit,phone,ums_member_id,product_id,replenishable_id,shipment_id)
-    values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR}, 
-      #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
-      #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
-      #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{orderSn,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{goodsImg,jdbcType=VARCHAR},
+      #{goodsTitle,jdbcType=VARCHAR}, #{goodsSubtitle,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+      #{number,jdbcType=INTEGER}, #{subPrice,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},
+      #{headImg,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{wmsMemberId,jdbcType=INTEGER},#{type,jdbcType=INTEGER},#{profit,jdbcType=DECIMAL},
     #{phone,jdbcType=VARCHAR}, #{umsMemberId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{replenishableId,jdbcType=INTEGER},#{shipmentId,jdbcType=INTEGER})
   </insert>
@@ -732,4 +732,15 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getDeliveryInfoByOrderSn" resultType="com.tata.jiuye.DTO.DeliveryInfo">
+      SELECT wm.phone AS wms_member_phone,wm.nickname AS wms_member_name,wa.address AS wms_member_address
+      FROM wms_member wm
+      LEFT JOIN wms_area wa ON wa.wms_member_id = wm.id
+      LEFT JOIN oms_distribution od ON od.wms_member_id = wm.id
+      LEFT JOIN oms_order oo ON oo.order_sn = od.order_sn
+      WHERE oo.order_sn = #{orderNo,jdbcType=VARCHAR}
+      ORDER BY wm.create_time DESC
+      LIMIT 1
+  </select>
 </mapper>
