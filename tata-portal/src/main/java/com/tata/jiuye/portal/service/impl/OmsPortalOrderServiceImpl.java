@@ -537,9 +537,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             List<OmsOrderItem> relatedItemList = orderItemList.stream().filter(item -> item.getOrderId().equals(orderDetail.getId())).collect(Collectors.toList());
             orderDetail.setOrderItemList(relatedItemList);
             DeliveryInfo deliveryInfo = omsDistributionMapper.getDeliveryInfoByOrderSn(omsOrder.getOrderSn());
-            orderDetail.setReceiverName(deliveryInfo.getWmsMemberName());
-            orderDetail.setReceiverPhone(deliveryInfo.getWmsMemberPhone());
-            orderDetail.setReceiverDetailAddress(deliveryInfo.getWmsMemberAddress());
+            if(deliveryInfo != null){
+                orderDetail.setReceiverName(deliveryInfo.getWmsMemberName());
+                orderDetail.setReceiverPhone(deliveryInfo.getWmsMemberPhone());
+                orderDetail.setReceiverDetailAddress(deliveryInfo.getWmsMemberAddress());
+            }
             orderDetailList.add(orderDetail);
         }
         resultPage.setList(orderDetailList);
