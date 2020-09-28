@@ -385,7 +385,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         OmsOrder order=orderMapper.selectByOrderNum(queryParam);
         OmsOrderSetting setting=settingMapper.selectByPrimaryKey(1L);
         Integer Receiveday=setting.getConfirmOvertime();//自动收货天数
-        order.setReceiveTime(DateUtil.offset(new Date(), DateField.MINUTE, 5));
+        order.setReceiveTime(DateUtil.offset(new Date(), DateField.DAY_OF_MONTH, Receiveday));
         order.setStatus(2);//配送中
         orderMapper.updateByPrimaryKey(order);
 

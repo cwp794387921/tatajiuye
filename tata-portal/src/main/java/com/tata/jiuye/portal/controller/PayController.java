@@ -45,6 +45,8 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Api("支付接口")
@@ -82,6 +84,10 @@ public class PayController {
     @Resource
     private RedisService redisService;
 
+    @Value("${redis.key.orderId}")
+    private String REDIS_KEY_ORDER_ID;
+    @Value("${redis.database}")
+    private String REDIS_DATABASE;
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
     @Value("${auth.wechat.appId}")
@@ -202,6 +208,52 @@ public class PayController {
             e.printStackTrace();
         }
     }
+
+    @ApiOperation(value = "刷新订单")
+    @RequestMapping(value = "/refreshOrder", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult refreshOrder(@RequestParam @ApiParam("订单编号")String orderNum) {
+        log.info("==>接收到刷新订单请求,订单号:"+orderNum);
+        Map<String,Object>params=new HashMap<>();
+        params.put("orderNum",orderNum);
+        OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
+        if(omsOrder==null){
+            return CommonResult.success("订单不存在");
+        }
+        String key=REDIS_DATABASE + ":" + REDIS_KEY_ORDER_ID + omsOrder.getOrderSn().substring(0,omsOrder.getOrderSn().length()-10);
+        List<OmsOrderItem> itemList=omsOrderItemService.getItemForOrderSn(omsOrder.getOrderSn());
+        omsOrder.setOrderSn(generateOrderSn(omsOrder.getSourceType(),omsOrder.getPayType()));
+        for (OmsOrderItem item:itemList){
+            item.setOrderSn(omsOrder.getOrderSn());
+            omsOrderItemMapper.updateByPrimaryKey(item);
+        }
+        orderMapper.updateByPrimaryKey(omsOrder);
+        redisService.del(key);
+        log.info("==>刷新订单号:"+omsOrder.getOrderSn());
+        return CommonResult.success("操作成功");
+    }
+
+    private String generateOrderSn(Integer sourceType,Integer payType) {
+        StringBuilder sb = new StringBuilder();
+        //获取秒数
+        Long second = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        //获取毫秒数
+        Long milliSecond = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        String date = milliSecond.toString();
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_ORDER_ID + date;
+        Long increment = redisService.incr(key, 1);
+        sb.append(date);
+        sb.append(String.format("%02d", sourceType));
+        sb.append(String.format("%02d", payType));
+        String incrementStr = increment.toString();
+        if (incrementStr.length() <= 6) {
+            sb.append(String.format("%06d", increment));
+        } else {
+            sb.append(incrementStr);
+        }
+        return sb.toString();
+    }
+
 
     @ApiOperation("微信web支付接口")
     @PostMapping("/wxWebRechargePay")
@@ -593,33 +645,6 @@ public class PayController {
         }
     }
 
-    public static void main(String []args){
-        BigDecimal a=new BigDecimal(0.01);
-        BigDecimal b= new BigDecimal(0.01);
-        System.out.println(a.compareTo(b));
-        /*try {
-            Map<String,String> map = Maps.newHashMap();
-            map.put("merchantNo", Config.MERCHANT_NO);
-            map.put("refundAmount","0.01");
-            map.put("merchantOrderNo", "16009343938860102000001");
-            map.put("merchantRefundNo","TK16009171851920102000001");
-            map.put("notifyUrl",Config.RefundNotifyUrl);
-            map.put("refundReason","test");
-            *//*JSONObject jsonObject1=new JSONObject();
-            jsonObject1.put("sceneInfo","小程序");
-            jsonObject1.put("is_phone","1");
-            map.put("attach",jsonObject1.toJSONString());*//*
-            TreeMap<String, Object> sortedMap = new TreeMap<String, Object>(map);
-            String sign = EncryUtil.handleRSA(sortedMap, Config.PRIVATE_KEY);
-            map.put("sign", Base64Util.encodeByBase64(sign));
-            String content = ChannelUtils.getContent(map);
-            log.info("请求参数："+content);
-            String responseStr = HttpRequestUtils.readContentFromPost(Config.Refund_URL,content);
-            log.info("请求结果:"+responseStr);
-        }catch (Exception e){
-
-        }*/
-    }
 
 
     /**
