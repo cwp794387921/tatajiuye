@@ -12,6 +12,7 @@ import com.tata.jiuye.model.UmsMemberInviteRelation;
 import com.tata.jiuye.portal.service.UmsMemberInviteRelationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -48,12 +49,15 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
         }
         else{
             results = umsMemberInviteRelationMapper.getDirectPerformanceWhenAllOrderNumNull(memberId);
+            List<DirectPerformanceResult> temporarys = new ArrayList<>();
             for (DirectPerformanceResult directPerformanceResult : directPerformanceResults){
-                directPerformanceResult.setOrderCount(0);
-                directPerformanceResult.setTotalPayAmount(BigDecimal.ZERO);
-                results.remove(directPerformanceResult);
+                DirectPerformanceResult temporary = new DirectPerformanceResult();
+                BeanUtils.copyProperties(directPerformanceResult,temporary);
+                temporary.setOrderCount(0);
+                temporary.setTotalPayAmount(BigDecimal.ZERO);
+                results.remove(temporary);
             }
-            for(DirectPerformanceResult directPerformanceResult : directPerformanceResults){
+            for (DirectPerformanceResult directPerformanceResult : directPerformanceResults){
                 results.add(directPerformanceResult);
             }
             Collections.sort(results);
@@ -77,9 +81,11 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
         else{
             results = umsMemberInviteRelationMapper.getIndirectPerformanceWhenAllOrderNumNull(memberId);
             for (IndirectPerformanceResult indirectPerformanceResult : indirectPerformanceResults){
-                indirectPerformanceResult.setOrderCount(0);
-                indirectPerformanceResult.setTotalPayAmount(BigDecimal.ZERO);
-                results.remove(indirectPerformanceResult);
+                IndirectPerformanceResult temporary = new IndirectPerformanceResult();
+                BeanUtils.copyProperties(indirectPerformanceResult,temporary);
+                temporary.setOrderCount(0);
+                temporary.setTotalPayAmount(BigDecimal.ZERO);
+                results.remove(temporary);
             }
             for(IndirectPerformanceResult indirectPerformanceResult : indirectPerformanceResults){
                 results.add(indirectPerformanceResult);
