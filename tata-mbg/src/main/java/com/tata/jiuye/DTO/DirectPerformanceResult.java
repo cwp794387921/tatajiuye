@@ -10,7 +10,9 @@ import java.math.BigDecimal;
  * @author
  */
 @Data
-public class DirectPerformanceResult {
+public class DirectPerformanceResult implements Comparable<DirectPerformanceResult>{
+
+    private Long id;
 
     @ApiModelProperty("用户头像")
     private String icon;
@@ -23,4 +25,10 @@ public class DirectPerformanceResult {
 
     @ApiModelProperty("金额")
     private BigDecimal totalPayAmount;
+
+
+    @Override
+    public int compareTo(DirectPerformanceResult o) {
+        return o.getOrderCount()-this.getOrderCount()  ;
+    }
 }

@@ -225,6 +225,7 @@
   </update>
 
   <resultMap id="directPerformanceBaseResult" type="com.tata.jiuye.DTO.DirectPerformanceResult">
+    <result column="id" property="id"></result>
     <result column="nickname" property="nickname"></result>
     <result column="order_count" property="orderCount"></result>
     <result column="total_pay_amount" property="totalPayAmount"></result>
@@ -232,6 +233,7 @@
 
   <select id="getDirectPerformance" parameterType="java.lang.Long" resultMap="directPerformanceBaseResult">
       SELECT
+          um.id,
           um.icon,
           um.nickname,
           count( oo.order_sn ) AS order_count,
@@ -256,6 +258,7 @@
 
     <select id="getDirectPerformanceWhenAllOrderNumNull" parameterType="java.lang.Long" resultMap="directPerformanceBaseResult">
       SELECT
+          um.id,
           um.icon,
           um.nickname,
           0 AS order_count,
@@ -271,6 +274,7 @@
     </select>
 
   <resultMap id="indirectPerformanceBaseResult" type="com.tata.jiuye.DTO.IndirectPerformanceResult">
+    <result column="id" property="id"></result>
     <result column="father_nickname" property="fatherNickname"></result>
     <result column="nickname" property="nickname"></result>
     <result column="order_count" property="orderCount"></result>
@@ -279,6 +283,7 @@
 
   <select id="getIndirectPerformance" parameterType="java.lang.Long" resultMap="indirectPerformanceBaseResult">
       SELECT
+          um.id,
           um.icon,
           umf.icon AS father_icon,
           umf.nickname AS father_nickname,
@@ -306,6 +311,7 @@
 
     <select id="getIndirectPerformanceWhenAllOrderNumNull" parameterType="java.lang.Long" resultMap="indirectPerformanceBaseResult">
       SELECT
+          um.id,
           um.icon,
           umf.icon AS father_icon,
           umf.nickname AS father_nickname,

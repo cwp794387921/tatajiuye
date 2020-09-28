@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +41,24 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
             Asserts.fail("用户ID为空");
         }
         PageHelper.startPage(pageNum,pageSize);
+        List<DirectPerformanceResult> results = new ArrayList<>();
         List<DirectPerformanceResult> directPerformanceResults = umsMemberInviteRelationMapper.getDirectPerformance(memberId);
         if(CollectionUtils.isEmpty(directPerformanceResults)){
-            directPerformanceResults = umsMemberInviteRelationMapper.getDirectPerformanceWhenAllOrderNumNull(memberId);
+            results = umsMemberInviteRelationMapper.getDirectPerformanceWhenAllOrderNumNull(memberId);
         }
-        CommonPage<DirectPerformanceResult> resultCommonPage = CommonPage.restPage(directPerformanceResults);
+        else{
+            results = umsMemberInviteRelationMapper.getDirectPerformanceWhenAllOrderNumNull(memberId);
+            for (DirectPerformanceResult directPerformanceResult : directPerformanceResults){
+                directPerformanceResult.setOrderCount(0);
+                directPerformanceResult.setTotalPayAmount(BigDecimal.ZERO);
+                results.remove(directPerformanceResult);
+            }
+            for(DirectPerformanceResult directPerformanceResult : directPerformanceResults){
+                results.add(directPerformanceResult);
+            }
+            Collections.sort(results);
+        }
+        CommonPage<DirectPerformanceResult> resultCommonPage = CommonPage.restPage(results);
         return resultCommonPage;
     }
 
@@ -53,11 +69,24 @@ public class UmsMemberInviteRelationServiceImpl extends ServiceImpl<UmsMemberInv
             Asserts.fail("用户ID为空");
         }
         PageHelper.startPage(pageNum,pageSize);
+        List<IndirectPerformanceResult> results = new ArrayList<>();
         List<IndirectPerformanceResult> indirectPerformanceResults = umsMemberInviteRelationMapper.getIndirectPerformance(memberId);
         if(CollectionUtils.isEmpty(indirectPerformanceResults)){
-            indirectPerformanceResults = umsMemberInviteRelationMapper.getIndirectPerformanceWhenAllOrderNumNull(memberId);
+            results = umsMemberInviteRelationMapper.getIndirectPerformanceWhenAllOrderNumNull(memberId);
         }
-        CommonPage<IndirectPerformanceResult> resultCommonPage = CommonPage.restPage(indirectPerformanceResults);
+        else{
+            results = umsMemberInviteRelationMapper.getIndirectPerformanceWhenAllOrderNumNull(memberId);
+            for (IndirectPerformanceResult indirectPerformanceResult : indirectPerformanceResults){
+                indirectPerformanceResult.setOrderCount(0);
+                indirectPerformanceResult.setTotalPayAmount(BigDecimal.ZERO);
+                results.remove(indirectPerformanceResult);
+            }
+            for(IndirectPerformanceResult indirectPerformanceResult : indirectPerformanceResults){
+                results.add(indirectPerformanceResult);
+            }
+            Collections.sort(results);
+        }
+        CommonPage<IndirectPerformanceResult> resultCommonPage = CommonPage.restPage(results);
         return resultCommonPage;
     }
 
