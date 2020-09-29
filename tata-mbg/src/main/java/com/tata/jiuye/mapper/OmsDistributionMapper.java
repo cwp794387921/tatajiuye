@@ -50,4 +50,11 @@ public interface OmsDistributionMapper {
      * @return
      */
     DeliveryInfo getDeliveryInfoByOrderSn(@Param("orderNo")String orderNo);
+
+    /**
+     * 通过订单号获取配送单
+     * @param orderNo
+     * @return
+     */
+    OmsDistribution getByOrderSn(@Param("orderNo")String orderNo);
 }

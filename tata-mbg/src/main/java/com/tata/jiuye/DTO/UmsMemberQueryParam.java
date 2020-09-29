@@ -1,6 +1,7 @@
 package com.tata.jiuye.DTO;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,7 @@ import lombok.Setter;
  *
  * @author lewis
  */
-@Getter
-@Setter
+@Data
 public class UmsMemberQueryParam {
     @ApiModelProperty(value = "手机号")
     private String phone;

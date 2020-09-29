@@ -522,14 +522,14 @@
       LEFT JOIN ums_member gum ON gum.id = umir.grandpa_member_id
       WHERE
         1 = 1
-      <if test="param.phone != null">
-        AND phone = #{param.phone}
+      <if test="param.phone != null and param.phone != ''">
+        AND um.phone = #{param.phone}
       </if>
-      <if test="param.nickname != null">
-        AND nickname = CONCAT('%',#{param.nickname},'%')
+      <if test="param.nickname != null and param.nickname != ''">
+        AND um.nickname = CONCAT('%',#{param.nickname},'%')
       </if>
       <if test="param.memberLevelId != null">
-        AND memberLevelId = #{param.memberLevelId}
+        AND um.member_level_id = #{param.memberLevelId}
       </if>
       ORDER BY um.create_time desc
   </select>

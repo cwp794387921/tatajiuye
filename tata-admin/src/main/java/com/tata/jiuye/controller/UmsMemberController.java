@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import java.util.List;
  * 用户模块
  */
 @Controller
+@Slf4j
 @Api(tags = "UmsMemberController", description = "用户模块")
 @RequestMapping("/umsMember")
 @RequiredArgsConstructor
@@ -55,6 +57,7 @@ public class UmsMemberController {
             param.setPageSize(10);
         }
         PageHelper.startPage(param.getPageNum(),param.getPageSize());
+        log.info("-----------------------------------------参数 param: "+param);
         List<UmsMemberQueryResult> umsMembers = umsMemberMapper.getUmsMemberByParam(param);
         CommonPage<UmsMemberQueryResult> umsMemberCommonPage = CommonPage.restPage(umsMembers);
         return CommonResult.success(umsMemberCommonPage);

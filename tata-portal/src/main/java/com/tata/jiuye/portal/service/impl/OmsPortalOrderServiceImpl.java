@@ -138,6 +138,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         Long joinVipProductId = pmsProductMapper.getProductByIfJoinVipProduct();
         //升级为配送中心的商品ID
         Long upgradeDistributionCenterProductId = pmsProductMapper.getProductByIfUpgradeDistributionCenterProduct();
+        log.info("---------------------当前登录用户 currentMember : "+currentMember);
         //UmsMember currentMember = memberService.getCurrentMember();
         if(CollectionUtils.isEmpty(orderParam.getCartIds())){
             Asserts.fail("选中的购物车商品为空,请选择购物车商品");

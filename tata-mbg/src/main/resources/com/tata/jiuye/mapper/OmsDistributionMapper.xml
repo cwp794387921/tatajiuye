@@ -743,4 +743,12 @@
       ORDER BY wm.create_time DESC
       LIMIT 1
   </select>
+
+
+  <select id="getByOrderSn" resultType="com.tata.jiuye.model.OmsDistribution">
+      SELECT * FROM oms_distribution
+      WHERE order_sn = #{orderNo,jdbcType=VARCHAR}
+      ORDER BY create_time DESC
+      LIMIT 1
+  </select>
 </mapper>
