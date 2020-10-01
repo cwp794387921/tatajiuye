@@ -64,6 +64,9 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
             lockAmount = BigDecimal.ZERO;
         }
         BigDecimal balance = acctInfo.getBalance();
+        if(balance.compareTo(BigDecimal.ZERO) <= 0){
+            Asserts.fail("用户无可提现金额");
+        }
         BigDecimal actBalance = balance.subtract(lockAmount);
         if(actBalance.compareTo(withdrawAmount) < 0){
             Asserts.fail("提现金额不可大于余额");
