@@ -1,6 +1,7 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
@@ -304,7 +305,13 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         JSONObject object = JSONObject.parseObject(registeredMemberParam.getUserInfoJson());
         log.info("==========微信用户信息==========：" + object);
         //先判断数据库手机号是否存在
-        UmsMember umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
+        UmsMember umsMember = memberMapper.selectOne(
+                new LambdaQueryWrapper<UmsMember>()
+                        .eq(UmsMember::getPhone, registeredMemberParam.getPhone())
+                        .eq(UmsMember::getStatus, 1)
+        );
+
+        // UmsMember umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
         //是否新注册用户(区分原有数据用户)
         Boolean ifNewUser = true;
         if (umsMember != null) {

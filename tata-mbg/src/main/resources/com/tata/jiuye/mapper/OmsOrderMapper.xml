@@ -134,6 +134,9 @@
     <if test="receiveTime != null">
       and receive_time &lt; #{receiveTime,jdbcType=TIMESTAMP}
     </if>
+    <if test="end != null">
+      and receive_time &lt; now()
+    </if>
   </select>
 
   <select id="selectByExample" parameterType="com.tata.jiuye.model.OmsOrderExample" resultMap="BaseResultMap">

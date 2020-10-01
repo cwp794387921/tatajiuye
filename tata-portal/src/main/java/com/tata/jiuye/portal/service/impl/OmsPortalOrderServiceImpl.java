@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
+
     @Resource
     private  UmsMemberService memberService;
     @Resource
@@ -85,7 +86,6 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private PmsSkuStockService pmsSkuStockService;
     @Resource
     private WmsMemberMapper wmsMemberMapper;
-
     @Resource
     private OmsDistributionMapper omsDistributionMapper;
 
