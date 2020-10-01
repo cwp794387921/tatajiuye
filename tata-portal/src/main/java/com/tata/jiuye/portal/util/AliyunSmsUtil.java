@@ -1,5 +1,6 @@
 package com.tata.jiuye.portal.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -26,11 +27,14 @@ public class AliyunSmsUtil {
     private String TEMPLATECODE;
 
     public static void main(String[] args) {
+        String nickName = "大爷";
+        String orderNo = "117057";
+        String ammout = "10000000.00";
+
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FyMjpYjQTaWUqe1gq8p", "i3tLJpZ4nQlgakk24fxAtUSyF4ntKK");
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = new CommonRequest();
 
-        String result = "";
         request.setSysMethod(MethodType.POST);
         request.setSysDomain("dysmsapi.aliyuncs.com");
         request.setSysVersion("2017-05-25");
@@ -38,20 +42,24 @@ public class AliyunSmsUtil {
         request.putQueryParameter("RegionId", "hangzhou");
         request.putQueryParameter("PhoneNumbers", "13850075431");
         request.putQueryParameter("SignName", "山图世纪合一");
-        request.putQueryParameter("TemplateCode", "SMS_204126033");
-        request.putQueryParameter("TemplateParam", "{\"nickName\":\"Tom\", \"custmer\":\"123\", \"productName\":\"内裤\", \"productNum\":\"3\", \"receiver\":\"厦门\", \"address\":\"福建\"}");
+        request.putQueryParameter("TemplateCode", "SMS_204126035");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickName", nickName);
+        jsonObject.put("orderNo", orderNo);
+        jsonObject.put("ammout", ammout);
+
+        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
+        String result = "";
 
         try {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());
             result = response.getData();
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
         }
+
     }
 
     public String sendSms(String phone, String code) {
@@ -83,9 +91,18 @@ public class AliyunSmsUtil {
     }
 
     /**
-     *  发送补货通知
+     * 发送补货通知
+     *
+     * @param phone       手机号码
+     * @param nickName    上级昵称
+     * @param custmer     下级昵称
+     * @param productName 商品名称
+     * @param productNum  数量
+     * @param receiver    收货人
+     * @param address     地址
+     * @return
      */
-    public String sendSms1(String phone, String code) {
+    public String sendSms1(String phone, String nickName, String custmer, String productName, String productNum, String receiver, String address) {
 
         String result = "";
         DefaultProfile profile = DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
@@ -96,24 +113,123 @@ public class AliyunSmsUtil {
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
         request.putQueryParameter("RegionId", REGIONID);
-        request.putQueryParameter("PhoneNumbers", "13850075431");
-        request.putQueryParameter("SignName", SIGNNAME);
-        request.putQueryParameter("TemplateCode", "SMS_204126033");
-        request.putQueryParameter("TemplateParam", "{\"nickName\":\"Tom\", \"custmer\":\"123\", \"productName\":\"内裤\", \"productNum\":\"3\", \"receiver\":\"厦门\", \"address\":\"福建\"}");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "山图世纪合一");
+        request.putQueryParameter("TemplateCode", "SMS_204115964");
 
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickName", nickName);
+        jsonObject.put("custmer", custmer);
+        jsonObject.put("productName", productName);
+        jsonObject.put("productNum", productNum);
+        jsonObject.put("receiver", receiver);
+        jsonObject.put("address", address);
 
+        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
 
         try {
             CommonResponse response = client.getCommonResponse(request);
             System.out.println(response.getData());
             result = response.getData();
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
         }
+
         return result;
     }
+
+    /**
+     * 下单通知配送中心
+     *
+     * @param phone       手机号
+     * @param nickName    配送中心昵称
+     * @param custmer     下单会员昵称
+     * @param productName 商品名称
+     * @param productNum  商品数量
+     * @param receiver    收货人
+     * @param address     地址
+     * @param time        下单时间
+     * @return
+     */
+    public String sendSms2(String phone, String nickName, String custmer, String productName, String productNum, String receiver, String address, String time) {
+
+        String result = "";
+        DefaultProfile profile = DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", REGIONID);
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "山图世纪合一");
+        request.putQueryParameter("TemplateCode", "SMS_204111046");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickName", nickName);
+        jsonObject.put("custmer", custmer);
+        jsonObject.put("productName", productName);
+        jsonObject.put("productNum", productNum);
+        jsonObject.put("receiver", receiver);
+        jsonObject.put("address", address);
+        jsonObject.put("time", time);
+
+        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
+
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            result = response.getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     *  分佣，配送费，仓补收入到账通知
+     *
+     * @param phone    手机号
+     * @param nickName 配送中心昵称
+     * @param orderNo  下单会员昵称
+     * @param ammout   商品名称
+     * @return
+     */
+    public String sendSms3(String phone, String nickName, String orderNo, String ammout) {
+
+        String result = "";
+        DefaultProfile profile = DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", REGIONID);
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "山图世纪合一");
+        request.putQueryParameter("TemplateCode", "SMS_204126035");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickName", nickName);
+        jsonObject.put("orderNo", orderNo);
+        jsonObject.put("ammout", ammout);
+
+        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
+
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            result = response.getData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+
 }

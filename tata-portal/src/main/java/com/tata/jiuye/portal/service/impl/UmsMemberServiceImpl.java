@@ -1,7 +1,6 @@
 package com.tata.jiuye.portal.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tata.jiuye.DTO.RegisteredMemberParam;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
@@ -280,6 +279,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Override
     public String registeredMember(RegisteredMemberParam registeredMemberParam) {
         log.info("===》开始注册流程");
+
         if (StringUtils.isEmpty(registeredMemberParam.getWxCode())) {
             Asserts.fail("微信小程序CODE为空");
         }
@@ -289,6 +289,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if (StringUtils.isEmpty(registeredMemberParam.getUserInfoJson())) {
             Asserts.fail("用户信息为空");
         }
+
         //没有该用户进行添加操作
         JSONObject result = null;
         try {
@@ -299,28 +300,29 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         if (result == null) {
             Asserts.fail("获取openId失败");
         }
+
         String openId = result.get("openid").toString();
         log.info("openId 为 " + openId);
         //JSONObject object = GetWeiXinCode.getInfoUrlByAccessToken(accessToken,openId);//用户信息
         JSONObject object = JSONObject.parseObject(registeredMemberParam.getUserInfoJson());
         log.info("==========微信用户信息==========：" + object);
         //先判断数据库手机号是否存在
-        UmsMember umsMember = memberMapper.selectOne(
-                new LambdaQueryWrapper<UmsMember>()
-                        .eq(UmsMember::getPhone, registeredMemberParam.getPhone())
-                        .eq(UmsMember::getStatus, 1)
-        );
+        UmsMember umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
+        // 是否新注册用户(区分原有数据用户)
+        boolean ifNewUser = true;
 
-        // UmsMember umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
-        //是否新注册用户(区分原有数据用户)
-        Boolean ifNewUser = true;
         if (umsMember != null) {
+            if (0 == umsMember.getStatus()) {
+                Asserts.fail("账号已被冻结，请联系客服处理");
+            }
             ifNewUser = false;
         }
+
         //umsMember = memberMapper.getUmsMemberByPhone(registeredMemberParam.getPhone());
         if (umsMember == null) {
             umsMember = new UmsMember();
         }
+
         //log.info("+++++++++++++++++微信头像+++++++++++++"+object.get("headimgurl"));
         //log.info("+++++++++++++++++微信昵称+++++++++++++"+object.get("nickname"));
         umsMember.setUsername(registeredMemberParam.getPhone());
@@ -331,6 +333,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setCity(object.getString("city"));
         umsMember.setGender(object.getInteger("gender"));
         umsMember.setOpenid(openId);
+
         //插入会员信息
         if (ifNewUser) {
 

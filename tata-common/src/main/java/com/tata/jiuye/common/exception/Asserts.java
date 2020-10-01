@@ -7,6 +7,7 @@ import com.tata.jiuye.common.api.IErrorCode;
  * Created by macro on 2020/2/27.
  */
 public class Asserts {
+
     public static void fail(String message) {
         throw new ApiException(message);
     }
