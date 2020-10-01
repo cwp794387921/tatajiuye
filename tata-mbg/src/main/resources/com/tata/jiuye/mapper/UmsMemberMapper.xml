@@ -522,6 +522,9 @@
       LEFT JOIN ums_member gum ON gum.id = umir.grandpa_member_id
       WHERE
         1 = 1
+      <if test="param.memberId != null">
+        AND um.id = #{param.memberId}
+      </if>
       <if test="param.phone != null and param.phone != ''">
         AND um.phone = #{param.phone}
       </if>

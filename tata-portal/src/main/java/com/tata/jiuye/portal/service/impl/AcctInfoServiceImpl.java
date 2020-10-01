@@ -79,6 +79,9 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
         else if(StaticConstant.FLOW_TYPE_EXPENDITURE.equals(type)){
             log.info("--------------------变更类型为 支出--------------------");
             balance = balance.subtract(changeAmount);
+            if(balance.compareTo(BigDecimal.ZERO) < 0){
+                Asserts.fail("支出金额超过余额,支出失败");
+            }
             lockAmount = lockAmount.subtract(changeAmount);
             acctInfo.setLockAmount(lockAmount);
         }

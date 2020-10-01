@@ -12,6 +12,10 @@ import lombok.Setter;
  */
 @Data
 public class UmsMemberQueryParam {
+
+    @ApiModelProperty(value = "用户ID")
+    private Long memberId;
+
     @ApiModelProperty(value = "手机号")
     private String phone;
 

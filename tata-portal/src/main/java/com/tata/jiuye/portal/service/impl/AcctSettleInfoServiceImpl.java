@@ -211,7 +211,7 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             //插入传入的Member对应的邀流水表(直邀或间邀)
             insertAcctInfoChangeFlow(orderSn,acctId,beforBal,afterBal,changeAmount,sourceId,flowType,flowTypeDetail,omsDistributionNo);
         }
-        log.info("----------------------插入资金变动流水   开始----------------------");
+        log.info("----------------------插入资金变动流水   结束----------------------");
     }
 
 
