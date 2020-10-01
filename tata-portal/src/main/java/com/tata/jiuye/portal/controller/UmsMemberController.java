@@ -184,29 +184,36 @@ public class UmsMemberController {
         String phone = registeredMemberParam.getPhone();
         String verificationCode = registeredMemberParam.getVerificationCode();
 
-        if (!StrUtil.isEmpty(phone) && !StrUtil.isEmpty(verificationCode)) {
+        log.info("==》开始校验短信验证码，phone[" + phone + "],code[" + verificationCode + "]");
 
-            if (phone.length() != 11) {
-                return CommonResult.validateFailed("手机号码格式错误");
-            }
-
-            log.info("==》开始校验短信验证码，phone[" + phone + "],code[" + verificationCode + "]");
-            //从缓存中取出验证码
-            if (redisService.get("SMS_" + phone) == null) {
-                return CommonResult.validateFailed("验证码已过期");  //404
-            }
-
-            String valiCode = redisService.get("SMS_" + phone).toString();
-            log.info("==》验证码[" + valiCode + "]");
-            if (!valiCode.equals(verificationCode)) {
-                return CommonResult.validateFailed("验证码错误");  //404
-            }
-
-            //验证通过，删除验证码
-            redisService.del("SMS_" + phone);
+        if (StringUtils.isEmpty(phone)) {
+            return CommonResult.validateFailed("请输入手机号码");
         }
-        String token = memberService.registeredMember(registeredMemberParam);
-        return CommonResult.success(token);
+
+        if (phone.length() != 11) {
+            return CommonResult.validateFailed("请输入正确格式的手机号码");
+        }
+
+        if (StringUtils.isEmpty(verificationCode)) {
+            return CommonResult.validateFailed("请输入验证码");
+        }
+
+        //从缓存中取出验证码
+        Object redisValidateCode = redisService.get("SMS_" + phone);
+        if (redisValidateCode == null) {
+            return CommonResult.validateFailed("验证码已过期");  //404
+        }
+
+        String valiCode = redisValidateCode.toString();
+        log.info("==》验证码[" + valiCode + "]");
+
+        if (!valiCode.equals(verificationCode)) {
+            return CommonResult.validateFailed("验证码错误");  //404
+        }
+
+        // 验证通过，删除验证码
+        redisService.del("SMS_" + phone);
+        return CommonResult.success(memberService.registeredMember(registeredMemberParam));
     }
 
 
@@ -242,8 +249,12 @@ public class UmsMemberController {
     public CommonResult smsAPI(@RequestParam String phone) {
         log.info("===>接收到发送短信验证码请求：手机号[" + phone + "]");
 
+        if (StringUtils.isEmpty(phone)) {
+            return CommonResult.validateFailed("请输入手机号码");
+        }
+
         if (phone.length() != 11) {
-            return CommonResult.validateFailed("手机号码格式错误");
+            return CommonResult.validateFailed("请输入正确的手机号码");
         }
 
         //生成4位随机数
@@ -258,6 +269,7 @@ public class UmsMemberController {
                 return CommonResult.failed(resultJson.get("Message").toString());
             }
         }
+
         //存入redis
         redisService.set("SMS_" + phone, String.valueOf(code), 5 * 60);
         log.info("验证码为 " + code);

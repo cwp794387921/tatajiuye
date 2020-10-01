@@ -12,6 +12,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,41 +31,51 @@ public class AliyunSmsUtil {
     private String TEMPLATECODE;
 
     public static void main(String[] args) {
-        String nickName = "大爷";
-        String custmer = "小爷";
 
-        LocalDateTime time = LocalDateTime.now();
-        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String strDate2 = dtf2.format(time);
+        BigDecimal a = new BigDecimal(2);
+        BigDecimal b = new BigDecimal(2);
 
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FyMjpYjQTaWUqe1gq8p", "i3tLJpZ4nQlgakk24fxAtUSyF4ntKK");
-        IAcsClient client = new DefaultAcsClient(profile);
-        CommonRequest request = new CommonRequest();
+        BigDecimal c = new BigDecimal(2);
 
-        String result = "";
-        request.setSysMethod(MethodType.POST);
-        request.setSysDomain("dysmsapi.aliyuncs.com");
-        request.setSysVersion("2017-05-25");
-        request.setSysAction("SendSms");
-        request.putQueryParameter("RegionId", "hangzhou");
-        request.putQueryParameter("PhoneNumbers", "13850075431");
-        request.putQueryParameter("SignName", "山图世纪合一");
-        request.putQueryParameter("TemplateCode", "SMS_204115968");
+        System.out.println("。。。。。。。。。。。。。。。。" + a.subtract(b).compareTo(c));
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nickName", " [" + nickName + "]");
-        jsonObject.put("custmer", " [" + custmer + "]");
-        jsonObject.put("time", strDate2);
-
-        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
-
-        try {
-            CommonResponse response = client.getCommonResponse(request);
-            System.out.println(response.getData());
-            result = response.getData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//
+//
+//        String nickName = "大爷";
+//        String custmer = "小爷";
+//
+//        LocalDateTime time = LocalDateTime.now();
+//        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String strDate2 = dtf2.format(time);
+//
+//        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4FyMjpYjQTaWUqe1gq8p", "i3tLJpZ4nQlgakk24fxAtUSyF4ntKK");
+//        IAcsClient client = new DefaultAcsClient(profile);
+//        CommonRequest request = new CommonRequest();
+//
+//        String result = "";
+//        request.setSysMethod(MethodType.POST);
+//        request.setSysDomain("dysmsapi.aliyuncs.com");
+//        request.setSysVersion("2017-05-25");
+//        request.setSysAction("SendSms");
+//        request.putQueryParameter("RegionId", "hangzhou");
+//        request.putQueryParameter("PhoneNumbers", "13850075431");
+//        request.putQueryParameter("SignName", "山图世纪合一");
+//        request.putQueryParameter("TemplateCode", "SMS_204115968");
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("nickName", " [" + nickName + "]");
+//        jsonObject.put("custmer", " [" + custmer + "]");
+//        jsonObject.put("time", strDate2);
+//
+//        request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
+//
+//        try {
+//            CommonResponse response = client.getCommonResponse(request);
+//            System.out.println(response.getData());
+//            result = response.getData();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public String sendSms(String phone, String code) {
