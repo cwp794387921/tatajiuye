@@ -201,6 +201,7 @@ public class UmsMemberController {
             if (!valiCode.equals(verificationCode)) {
                 return CommonResult.validateFailed("验证码错误");  //404
             }
+
             //验证通过，删除验证码
             redisService.del("SMS_" + phone);
         }

@@ -9,6 +9,7 @@ import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.domain.MemberDetails;
 import com.tata.jiuye.portal.service.*;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.security.util.JwtTokenUtil;
@@ -33,6 +34,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -73,11 +75,14 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     @Resource
     private RedisService redisService;
     @Resource
+    private AliyunSmsUtil aliyunSmsUtil;
+    @Resource
     private OmsPortalOrderService omsPortalOrderService;
     @Resource
     private AcctInfoService acctInfoService;
     @Resource
     private WmsMemberMapper wmsMemberMapper;
+
     @Value("${redis.key.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.expire.authCode}")
@@ -391,9 +396,23 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             acctInfo.setAcctType(StaticConstant.ACCOUNT_TYPE_ORDINARY);
             umsMemberInviteRelationMapper.insert(umsMemberInviteRelation);
             acctInfoMapper.insert(acctInfo);
+
+            if (1 != umsMemberInviteRelation.getFatherMemberId()) {
+                // 发送上级，通知下级注册成功
+                // 获取上级手机号
+                UmsMember father = this.getById(umsMemberInviteRelation.getFatherMemberId());
+                if (null != father) {
+                    LocalDateTime time = LocalDateTime.now();
+                    DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String strDate2 = dtf2.format(time);
+
+                    aliyunSmsUtil.sendSms4(father.getPhone(), father.getNickname(), umsMember.getNickname(), strDate2);
+                }
+            }
         } else {
             memberMapper.updateByPrimaryKeySelective(umsMember);
         }
+
         UserDetails userDetails = new MemberDetails(umsMember);
         String token = jwtTokenUtil.generateToken(userDetails);
         return token;
