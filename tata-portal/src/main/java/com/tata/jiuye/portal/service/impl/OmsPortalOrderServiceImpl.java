@@ -485,6 +485,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public void confirmReceiveOrder(Long orderId) {
+
         UmsMember member = memberService.getCurrentMember();
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
         if (!member.getId().equals(order.getMemberId())) {
