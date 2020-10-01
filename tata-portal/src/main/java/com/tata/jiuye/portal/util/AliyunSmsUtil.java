@@ -52,8 +52,8 @@ public class AliyunSmsUtil {
         request.putQueryParameter("TemplateCode", "SMS_204115968");
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nickName", nickName);
-        jsonObject.put("custmer", custmer);
+        jsonObject.put("nickName", " [" + nickName + "]");
+        jsonObject.put("custmer", " [" + custmer + "]");
         jsonObject.put("time", strDate2);
 
         request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
@@ -259,8 +259,8 @@ public class AliyunSmsUtil {
         request.putQueryParameter("TemplateCode", "SMS_204115968");
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nickName", nickName);
-        jsonObject.put("custmer", custmer);
+        jsonObject.put("nickName", " [" + nickName + "]");
+        jsonObject.put("custmer", " [" + custmer + "]");
         jsonObject.put("time", time);
 
         request.putQueryParameter("TemplateParam", jsonObject.toJSONString());
