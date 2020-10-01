@@ -297,6 +297,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         if (result == null) {
             Asserts.fail("获取openId失败");
         }
