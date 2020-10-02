@@ -238,37 +238,10 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
-    public String Wxlogin(String wxCode) {
+    public String Wxlogin(UmsMember umsMember) {
+
         String token = null;
         try {
-            JSONObject result = GetWeiXinCode.getOpenId(wxCode);
-            if (result == null) {
-                return null;
-            }
-            String openId = result.get("openid").toString();
-            log.info("openId为 " + openId);
-            //查询是否已有该用户
-            UmsMember umsMember = memberMapper.selectByOpenId(openId);
-            if (umsMember != null) {
-                //已注册 直接登陆
-                log.info("===》用户已存在，直接登录");
-            } else {
-                log.info("==>需要验证手机号");
-                return "1";
-                /*if(phone==null){
-                    //openid未绑定,验证手机号注册或绑定
-                    log.info("==>需要验证手机号");
-                    return "1";
-                }else{
-                    UmsMember umsMember1 = memberMapper.selectByUsername(phone);
-                    if(umsMember1!=null){
-                        //手机号已绑定
-                        log.info("===>["+phone+"]该手机号已绑定另外一个账号");
-                        return "2";
-                    }
-                    //openid未绑定 手机号未注册  开始注册流程
-                }*/
-            }
             UserDetails userDetails = new MemberDetails(umsMember);
             token = jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
@@ -278,6 +251,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             throw new RuntimeException();
         }
         return token;
+
     }
 
     //注册
