@@ -32,12 +32,12 @@ public class AliyunSmsUtil {
 
     public static void main(String[] args) {
 
-        BigDecimal a = new BigDecimal(2);
+        BigDecimal a = new BigDecimal(5);
         BigDecimal b = new BigDecimal(2);
 
         BigDecimal c = new BigDecimal(2);
 
-        System.out.println("。。。。。。。。。。。。。。。。" + a.subtract(b).compareTo(c));
+        System.out.println("。。。。。。。。。。。。。。。。" + a.compareTo(b));
 
 //
 //
@@ -110,15 +110,14 @@ public class AliyunSmsUtil {
      * 发送补货通知
      *
      * @param phone       手机号码
-     * @param nickName    上级昵称
-     * @param custmer     下级昵称
+     * @param nickName    本人昵称
+     * @param custmer     下单人昵称
      * @param productName 商品名称
      * @param productNum  数量
      * @param receiver    收货人
      * @param address     地址
-     * @return
      */
-    public String sendSms1(String phone, String nickName, String custmer, String productName, String productNum, String receiver, String address) {
+    public String replenishmentNotice(String phone, String nickName, String custmer, String productName, String productNum, String receiver, String address) {
 
         String result = "";
         DefaultProfile profile = DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
