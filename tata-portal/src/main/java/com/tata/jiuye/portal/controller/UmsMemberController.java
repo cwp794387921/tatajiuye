@@ -14,6 +14,7 @@ import com.tata.jiuye.portal.service.UmsMemberCacheService;
 import com.tata.jiuye.portal.service.UmsMemberLevelService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.util.AliyunSmsUtil;
+import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
 import com.tata.jiuye.portal.util.inviteQrCode.InviteQrCode;
@@ -62,20 +63,15 @@ public class UmsMemberController {
     protected HttpServletRequest request;
 
     @Resource
-    private UmsMemberMapper umsMemberMapper;
-
-    @Resource
-    private UmsMemberService memberService;
-
+    private RedisService redisService;
     @Resource
     private AliyunSmsUtil aliyunSmsUtil;
-
     @Resource
-    private RedisService redisService;
-
+    private UmsMemberService memberService;
+    @Resource
+    private UmsMemberMapper umsMemberMapper;
     @Resource
     private UmsMemberCacheService umsMemberCacheService;
-
     @Resource
     private UmsMemberLevelService umsMemberLevelService;
 
@@ -150,6 +146,7 @@ public class UmsMemberController {
         if (refreshToken == null) {
             return CommonResult.failed("token已经过期！");
         }
+
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", refreshToken);
         tokenMap.put("tokenHead", tokenHead);
@@ -160,16 +157,42 @@ public class UmsMemberController {
     @RequestMapping(value = "/WxApplogin", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult WxApplogin(@RequestParam String wxCode) {
+
         if (StrUtil.isEmpty(wxCode)) {
-            return CommonResult.validateFailed("参数缺失");//404
+            return CommonResult.validateFailed("参数缺失"); // 404
         }
-        String token = memberService.Wxlogin(wxCode);
+
+        JSONObject result = GetWeiXinCode.getOpenId(wxCode);
+        if (result == null) {
+            return null;
+        }
+
+        String openId = result.get("openid").toString();
+        log.info("openId为 " + openId);
+        //查询是否已有该用户
+        UmsMember umsMember = umsMemberMapper.selectByOpenId(openId);
+
+        if (umsMember != null) {
+            if (umsMember.getStatus() == 0) {
+                return CommonResult.validateFailed("您的账号已被冻结，请联系管理员~");
+            }
+
+            //已注册 直接登陆
+            log.info("===》用户已存在，直接登录");
+        } else {
+            return CommonResult.CodeAndMessage(400, "请验证手机号");
+        }
+
+        String token = memberService.Wxlogin(umsMember);
+
         if (token == null) {
             return CommonResult.failed("登陆或注册失败,请联系管理员");  //500
         }
+
         if (token.equals("1")) {
             return CommonResult.CodeAndMessage(400, "请验证手机号");   //400
         }
+
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
