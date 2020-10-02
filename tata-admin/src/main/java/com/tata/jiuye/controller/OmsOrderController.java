@@ -5,11 +5,15 @@ import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.dto.*;
 import com.tata.jiuye.model.OmsOrder;
 import com.tata.jiuye.service.OmsOrderService;
+import com.tata.jiuye.utils.HttpTools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -113,4 +117,17 @@ public class OmsOrderController {
         }
         return CommonResult.failed();
     }
+
+    @ApiOperation("订单退款接口")
+    @RequestMapping(value = "/refundApply", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult refundApply(@RequestParam @ApiParam("订单编号")String orderNum, String refundMoney) {
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        param.add("orderNum", orderNum);
+        param.add("refundMoney", refundMoney);
+        CommonResult result = HttpTools.sendPostRequest("https://www.xmzzhy.com:8085/pay/refundApply",param);
+        return result;
+    }
+
+
 }

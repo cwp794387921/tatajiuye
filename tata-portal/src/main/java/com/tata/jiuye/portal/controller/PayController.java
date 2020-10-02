@@ -148,6 +148,8 @@ public class PayController {
             }catch (Exception e){
 
             }
+        }else {
+            return CommonResult.failed("订单不存在");
         }
         return CommonResult.success("操作成功");
     }
