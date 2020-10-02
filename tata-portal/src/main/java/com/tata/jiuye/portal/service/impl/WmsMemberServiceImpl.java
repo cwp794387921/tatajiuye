@@ -221,6 +221,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         wmsMemberMapper.updateByPrimaryKey(wmsMember);//返还授信额度
         distributionMapper.updateByPrimaryKey(omsDistribution);
         distributionMapper.updateByPrimaryKey(shipment);
+        creditLineChange(wmsMember.getId(),
+                omsDistribution.getPrice().multiply(new BigDecimal(omsDistribution.getNumber())),wmsMember.getId()+"取消补货增加额度");
     }
 
     @Override
@@ -354,8 +356,12 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (changeInfo == null) {
             Asserts.fail("转让配送中心信息不存在");
         }
+        BigDecimal changeValue=new BigDecimal(value);
+        if(changeValue.compareTo(wmsMember.getCreditLine())==1){
+            Asserts.fail("转让额度超过最大值");
+        }
 
-        // 判断货值是否足够
+       /* // 判断货值是否足够
         if (wmsMember.getCreditLine().doubleValue() < 0) {
             Asserts.fail("您的余额不足");
         }
@@ -371,7 +377,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         // 判断转让金额后余额是否充足
         if (wmsMember.getCreditLine().subtract(changeValue).doubleValue() < 0) {
             Asserts.fail("您的余额不足");
-        }
+        }*/
 
         wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(changeValue));
         wmsMember.setUpdateTime(new Date());
@@ -386,6 +392,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         creditLineChange(changeInfo.getId(), changeValue, remark);
 
     }
+
 
     @Override
     public void acceptOrder(Long orderId) {
