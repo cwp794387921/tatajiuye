@@ -61,6 +61,8 @@ public class WmsMemberController {
     private AcctSettleInfoMapper acctSettleInfoMapper;
     @Resource
     private ChangeDistributionMapper changeDistributionMapper;
+    @Resource
+    private WmsMemberCreditlineChangeMapper creditlineChangeMapper;
 
     @ApiOperation("获取所有配送单列表")
     @RequestMapping(value = "/allDistributionList", method = RequestMethod.GET)
@@ -298,16 +300,38 @@ public class WmsMemberController {
         if(wmsMember==null){
             return CommonResult.failed("用户信息不存在");
         }
+        BigDecimal changeValue;
+        String remark;
         if(type.equals("1")){
-            wmsMember.setCreditLine(wmsMember.getCreditLine().add(new BigDecimal(value)));
+            changeValue=new BigDecimal(value);
+            remark="后台操作增加额度";
+            wmsMember.setCreditLine(wmsMember.getCreditLine().add(changeValue));
         }else if(type.equals("2")){
-            wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(new BigDecimal(value)));
+            changeValue=new BigDecimal(value).multiply(new BigDecimal(-1));
+            remark="后台操作减少额度";
+            wmsMember.setCreditLine(wmsMember.getCreditLine().add(changeValue));
         }else {
             return CommonResult.failed("参数错误");
         }
         wmsMember.setUpdateTime(new Date());
         memberMapper.updateByPrimaryKey(wmsMember);
+        creditLineChange(wmsMember.getId(),changeValue,remark);
         return CommonResult.success("更改成功");
+    }
+
+    public void creditLineChange(Long id,BigDecimal value,String remark){
+        WmsMember wmsMember=memberMapper.selectByPrimaryKey(id);
+        if (wmsMember==null){
+            Asserts.fail("用户不存在");
+        }
+        WmsMemberCreditlineChange creditlineChange=new WmsMemberCreditlineChange();
+        creditlineChange.setWmsMemberId(wmsMember.getId());
+        creditlineChange.setBeforeValue(wmsMember.getCreditLine());
+        creditlineChange.setChangeValue(value);
+        creditlineChange.setAfterValue(wmsMember.getCreditLine().add(value));
+        creditlineChange.setCreateTime(new Date());
+        creditlineChange.setRemark(remark);
+        creditlineChangeMapper.insert(creditlineChange);
     }
 
     @ApiOperation("获取省市区列表")
