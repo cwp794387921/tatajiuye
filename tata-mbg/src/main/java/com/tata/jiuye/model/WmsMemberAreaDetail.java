@@ -6,6 +6,8 @@ public class WmsMemberAreaDetail extends WmsMember {
 
     private String province;
 
+    private String pic;
+
     private String citys;
 
     private String area;
@@ -16,6 +18,14 @@ public class WmsMemberAreaDetail extends WmsMember {
 
     public String getProvince() {
         return province;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public void setProvince(String province) {

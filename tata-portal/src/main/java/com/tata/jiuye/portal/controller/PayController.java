@@ -9,6 +9,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.google.common.collect.Maps;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.enums.ServiceEnum;
+import com.tata.jiuye.common.enums.TemplateCodeEnums;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.common.utils.*;
@@ -17,6 +18,7 @@ import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.MD5Util;
 import com.tata.jiuye.portal.util.WxConfig;
 import io.swagger.annotations.Api;
@@ -78,6 +80,8 @@ public class PayController {
     @Resource
     private AcctSettleInfoService acctSettleInfoService;
     @Resource
+    private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
+    @Resource
     private PmsProductMapper productMapper;
     @Resource
     private AcctInfoService acctInfoService;
@@ -88,6 +92,8 @@ public class PayController {
     private String REDIS_KEY_ORDER_ID;
     @Value("${redis.database}")
     private String REDIS_DATABASE;
+    @Value("${redis.member}")
+    private String REDIS_KEY_MEMBER;
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
     @Value("${auth.wechat.appId}")
@@ -96,6 +102,8 @@ public class PayController {
     private String MCHID;
     @Value("${auth.wechat.pay.notifyurl}")
     private String NOTIFYURL;
+    @Resource
+    private AliyunSmsUtil smsUtil;
 
 
     @ApiOperation("第三方退款接口")
@@ -194,6 +202,22 @@ public class PayController {
                              distribution.setStatus(5);
                              distributionMapper.updateByPrimaryKey(distribution);
                          }
+                        List<OmsOrderItem> orderItemList = omsOrderItemService.getItemForOrderSn(omsOrder.getOrderSn());
+                        for(OmsOrderItem omsOrderItem : orderItemList){
+                            if(omsOrderItem.getIfJoinVipProduct() == 1){
+                                log.info("==》升级VIP商品，进行用户等级回退");
+                                UmsMember umsMember=umsMemberMapper.selectByPrimaryKey(omsOrder.getMemberId());
+                                if(umsMember.getMemberLevelId().equals(2L)){
+                                    log.info("==》已升级配送中心，取消等级回退");
+                                    continue;
+                                }
+                                umsMember.setMemberLevelId(4L);
+                                umsMemberMapper.updateByPrimaryKeySelective(umsMember);
+                                String key = REDIS_DATABASE + ":" + REDIS_KEY_MEMBER + ":" + umsMember.getUsername();
+                                redisService.del(key);
+                            }
+                        }
+
                     }
                     omsOrder.setStatus(6);//已退款
                     orderMapper.updateByPrimaryKey(omsOrder);
@@ -287,7 +311,7 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                Map<String,String> map = Maps.newHashMap();
+                /*Map<String,String> map = Maps.newHashMap();
                 map.put("merchantNo", Config.MERCHANT_NO);
                 map.put("orderAmount",money.toString());
                 map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
@@ -318,8 +342,8 @@ public class PayController {
                     jsonObject.put("paySign",payInfo.get("paySign").toString());
                 }else {
                     return   CommonResult.failed(PostResult.get("msg").toString());
-                }
-                /*WxConfig wxConfig = new WxConfig();
+                }*/
+                WxConfig wxConfig = new WxConfig();
                 WXPay wxPay=new WXPay(wxConfig);
                 Map<String,String> map=new HashMap<>();
                 SortedMap<Object,Object> map1 = new TreeMap<Object,Object>();
@@ -357,7 +381,7 @@ public class PayController {
                 map2.put("nonceStr",jsonObject.get("nonceStr"));
                 map2.put("package",jsonObject.get("package"));
                 map2.put("signType",jsonObject.get("signType"));
-                jsonObject.put("paySign",createSign("UTF-8",map2));*/
+                jsonObject.put("paySign",createSign("UTF-8",map2));
             }catch (Exception e){
                 System.out.println(e.getMessage());
                 return CommonResult.failed(e.getMessage());
@@ -526,6 +550,21 @@ public class PayController {
                     omsOrderItem.setRelationDistributionId(distribution.getId());//关联id
                     omsOrderItem.setDistributionStatus(0L);//配送状态 待配送
                     omsOrderItemMapper.updateByPrimaryKey(omsOrderItem);//更新订单详情
+                    //发送通知配送短信
+                    if(!wmsMember.getId().equals(1L)){
+                        JSONObject param=new JSONObject();
+                        param.put("nickName", wmsMember.getNickname());
+                        param.put("productName", distributionItem.getGoodsTitle());
+                        param.put("productNum", distributionItem.getNumber());
+                        param.put("custmer", distribution.getName());
+                        param.put("receiver", distribution.getName());
+                        param.put("address", distribution.getAddress());
+                        param.put("time", DateUtil.now());
+                        log.info("==》开始发送通知上级短信");
+                        smsUtil.sendSms(wmsMember.getPhone(), TemplateCodeEnums.PS.getValue(),param.toString());
+                    }else {
+                        log.info("==》上级配送中心是平台，不发送短信");
+                    }
                 }
             }
 
@@ -545,6 +584,26 @@ public class PayController {
             if(omsOrderItem.getIfUpgradeDistributionCenterProduct() == 1){
                 umsMemberService.updateUmsMemberLevel(umsMember, StaticConstant.UMS_MEMBER_LEVEL_NAME_DELIVERY_CENTER,omsOrderItem);
             }
+        }
+        //发送会员下单通知
+        //查找上级
+        UmsMemberInviteRelation umsMemberInviteRelation = umsMemberInviteRelationMapper.getByMemberId(umsMember.getId());
+        if (umsMemberInviteRelation != null&&!umsMemberInviteRelation.getFatherMemberId().equals(1L)) {
+            UmsMember fatherInfo=umsMemberMapper.selectByPrimaryKey(umsMemberInviteRelation.getFatherMemberId());
+            if(fatherInfo==null){
+                log.info("==》上级信息不存在");
+            }else{
+                JSONObject param=new JSONObject();
+                param.put("nickName", fatherInfo.getNickname());
+                param.put("ammout", omsOrder.getPayAmount());
+                param.put("orderSn", omsOrder.getOrderSn());
+                param.put("custmer", omsOrder.getReceiverName());
+                param.put("time", DateUtil.now());
+                log.info("==》开始发送通知上级短信");
+                smsUtil.sendSms(fatherInfo.getPhone(), TemplateCodeEnums.XD.getValue(),param.toString());
+            }
+        }else {
+            log.info("==》上级不存在或绑定平台，取消发送短信");
         }
         //业务处理结束
         return true;

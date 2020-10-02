@@ -113,6 +113,18 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         }
         else if(StaticConstant.APPROVAL_OPERATION_REFUSE.equals(operateType)){
             withdrawalExamine.setStatus(WithdrawStatusEnum.REJECT.getValue());
+            //更新账户表锁定金额
+            AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getAcctType());
+            if(acctInfo == null){
+                Asserts.fail("该用户ID无法找到对应的账户信息");
+            }
+            BigDecimal lockAmount = acctInfo.getLockAmount();
+            if(lockAmount == null){
+                lockAmount = BigDecimal.ZERO;
+            }
+            lockAmount = lockAmount.subtract(withdrawalExamine.getWithdrawalAmount());
+            acctInfo.setLockAmount(lockAmount);
+            acctInfoMapper.updateByPrimaryKey(acctInfo);
         }
         withdrawalExamine.setApproverMemberId(umsAdminMemberId);
         withdrawalExamine.setApproverMemberName(umsAdminNickName);

@@ -2,10 +2,19 @@ package com.tata.jiuye.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.common.enums.TemplateCodeEnums;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
@@ -532,6 +541,11 @@ public class WmsMemberController {
                 BHacctInfo.setBalance(BHacctInfo.getBalance().add(distribution.getProfit()));
                 BHacctInfo.setUpdateTime(new Date());
                 acctInfoMapper.updateByPrimaryKey(BHacctInfo);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("nickName", wmsMember.getNickname());
+                jsonObject.put("orderNo", distribution.getOrderSn());
+                jsonObject.put("ammout", distribution.getProfit());
+                sendSms(wmsMember.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
             }
             //添加出货收益流水
             acctSettleInfo=new AcctSettleInfo();
@@ -549,6 +563,11 @@ public class WmsMemberController {
                 CHacctInfo.setBalance(CHacctInfo.getBalance().add(Shipment.getProfit()));
                 CHacctInfo.setUpdateTime(new Date());
                 acctInfoMapper.updateByPrimaryKey(CHacctInfo);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("nickName", CHmember.getNickname());
+                jsonObject.put("orderNo", Shipment.getOrderSn());
+                jsonObject.put("ammout", Shipment.getProfit());
+                sendSms(wmsMember.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
             }
             //补货单状态完成
             distribution.setStatus(5);//更新补货单状态
@@ -574,6 +593,34 @@ public class WmsMemberController {
         }
         examineMapper.updateByPrimaryKey(examine);
         return CommonResult.success("操作成功");
+    }
+
+    public String sendSms(String phone,String templatecode,String json) {
+        String result = "";
+        DefaultProfile profile = DefaultProfile.getProfile("cn-zhangjiakou", "LTAI4FyMjpYjQTaWUqe1gq8p", "i3tLJpZ4nQlgakk24fxAtUSyF4ntKK");
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-zhangjiakou");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "山图世纪合一");
+        request.putQueryParameter("TemplateCode", templatecode);
+        request.putQueryParameter("TemplateParam", json);
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            result = response.getData();
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return result;
     }
 
 }

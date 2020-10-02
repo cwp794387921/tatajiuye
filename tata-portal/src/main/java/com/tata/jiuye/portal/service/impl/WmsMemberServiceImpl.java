@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.common.enums.TemplateCodeEnums;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.utils.OrderUtil;
 import com.tata.jiuye.mapper.*;
@@ -15,6 +16,7 @@ import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.UmsMemberInviteRelationService;
 import com.tata.jiuye.portal.service.UmsMemberService;
 import com.tata.jiuye.portal.service.WmsMemberService;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -70,7 +72,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     private WmsMemberCreditlineChangeMapper creditlineChangeMapper;
     @Resource
     private UmsMemberInviteRelationMapper umsMemberInviteRelationMapper;
-
+    @Resource
+    private AliyunSmsUtil smsUtil;
 
     @Override
     public void creditLineChange(Long id, BigDecimal value, String remark) {
@@ -278,6 +281,12 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
         acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
         acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("nickName", wmsMember.getNickname());
+        jsonObject.put("orderNo", omsDistribution.getOrderSn());
+        jsonObject.put("ammout", omsDistribution.getProfit());
+        log.info("==》开始发送入账短信");
+        smsUtil.sendSms(wmsMember.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
     }
 
     @Override
@@ -427,11 +436,19 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         omsDistribution.setStatus(1);//待配送
         distributionMapper.updateByPrimaryKey(omsDistribution);
         List<OmsDistributionItem> list = omsDistribution.getItemList();
+        String productName="";
         for (OmsDistributionItem item : list) {
             //增加授信额度
             PmsProduct pmsProduct = pmsProductMapper.selectByPrimaryKey(item.getProductId());
             if (pmsProduct == null) {
                 Asserts.fail("==>找不到商品信息");
+            }
+            if(productName.length()<20){
+                String reName=productName;
+                reName+="["+pmsProduct.getName()+"]";
+                if(reName.length()<=20){
+                    productName=reName;
+                }
             }
             String remark = "接单增加额度,productId[" + pmsProduct.getId() + "],number[" + item.getNumber() + "]";
             switch (wmsMember.getLevel()) {
@@ -454,6 +471,14 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             wmsMember.setUpdateTime(new Date());
             wmsMemberMapper.updateByPrimaryKey(wmsMember);
         }
+        //发送接单通知短信
+        JSONObject params=new JSONObject();
+        params.put("nickName", omsDistribution.getName());
+        params.put("productName", productName);
+        params.put("orderSn", omsDistribution.getOrderSn());
+        params.put("custmer", wmsMember.getNickname());
+        params.put("phone", wmsMember.getPhone());
+        smsUtil.sendSms(omsDistribution.getPhone(), TemplateCodeEnums.JD.getValue(),params.toString());
     }
 
 
@@ -689,12 +714,23 @@ public class WmsMemberServiceImpl implements WmsMemberService {
             //设置关联id
             distribution.setShipmentId(Shipment.getId().longValue());
             distributionMapper.insert(distribution);
+            //发送通知上级出货短信
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("nickName", parent.getNickname());
+            jsonObject.put("custmer", wmsMember.getNickname());
+            jsonObject.put("productName", pmsProduct.getName());
+            jsonObject.put("productNum", num);
+            jsonObject.put("receiver", wmsMember.getNickname());
+            jsonObject.put("address", wmsMember.getAddress());
+            log.info("==》开始发送通知上级短信");
+            smsUtil.sendSms(wmsMember.getPhone(), TemplateCodeEnums.BH.getValue(),jsonObject.toString());
         }
         log.info("==>总货值[" + subPrice + "]");
         String remark = wmsMember.getId() + "补货扣减额度[" + subPrice + "]";
         wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(subPrice));
         wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
         creditLineChange(wmsMember.getId(), subPrice.multiply(new BigDecimal(-1)), remark);
+
     }
 
 

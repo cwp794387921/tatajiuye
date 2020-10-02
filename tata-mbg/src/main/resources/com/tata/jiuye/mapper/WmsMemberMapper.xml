@@ -150,6 +150,7 @@
     <result property="id" column="id" />
     <result property="nickname" column="nickname" />
     <result property="phone" column="phone" />
+    <result property="pic" column="pic" />
   </collection>
 </resultMap>
 
@@ -157,7 +158,7 @@
       SELECT DISTINCT
           a.province,
           a.city,
-          a.area,
+          a.area,m.icon as pic,
           a.address,
           m.id,
           m.nickname,

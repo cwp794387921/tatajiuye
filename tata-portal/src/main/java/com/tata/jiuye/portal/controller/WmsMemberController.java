@@ -69,10 +69,10 @@ public class WmsMemberController {
     @ApiOperation("获取配送用户列表")
     @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult queryUserList(@RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+    public CommonResult queryUserList(@RequestParam(value = "pageSize", defaultValue = "100") Integer pageSize,
                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,String params) {
         List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser(pageSize,pageNum,params);
-        return CommonResult.success(CommonPage.restPage(result));
+        return CommonResult.success(result);
     }
 
     @ApiOperation("获取可选地区列表")

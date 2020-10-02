@@ -1,12 +1,15 @@
 package com.tata.jiuye.portal.component;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
+import com.tata.jiuye.common.enums.TemplateCodeEnums;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.AcctSettleInfoService;
 import com.tata.jiuye.portal.service.OmsOrderItemService;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,8 @@ public class OrderTimeOutCancelTask {
     private AcctInfoMapper acctInfoMapper;
     @Resource
     private AcctSettleInfoMapper acctSettleInfoMapper;
-
+    @Resource
+    private AliyunSmsUtil smsUtil;
     /**
      * cron表达式：Seconds Minutes Hours DayofMonth Month DayofWeek [Year]
      * 每10分钟扫描一次，扫描设定超时时间之前下的订单，如果没支付则取消该订单
@@ -104,6 +108,12 @@ public class OrderTimeOutCancelTask {
                 acctSettleInfo.setSourceId(omsDistribution.getUmsMemberId());
                 acctSettleInfoMapper.insert(acctSettleInfo);//插入账户流水
                 acctInfoMapper.updateByPrimaryKey(acctInfo);//更新账户信息
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("nickName", wmsMember.getNickname());
+                jsonObject.put("orderNo", omsDistribution.getOrderSn());
+                jsonObject.put("ammout", omsDistribution.getProfit());
+                LOGGER.info("==》开始发送入账短信");
+                smsUtil.sendSms(wmsMember.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
             }
         }
     }

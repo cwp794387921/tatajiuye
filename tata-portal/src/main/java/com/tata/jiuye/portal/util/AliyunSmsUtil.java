@@ -32,12 +32,6 @@ public class AliyunSmsUtil {
 
     public static void main(String[] args) {
 
-        BigDecimal a = new BigDecimal(5);
-        BigDecimal b = new BigDecimal(2);
-
-        BigDecimal c = new BigDecimal(2);
-
-        System.out.println("。。。。。。。。。。。。。。。。" + a.compareTo(b));
 
 //
 //
@@ -76,6 +70,46 @@ public class AliyunSmsUtil {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickName", "1");
+        jsonObject.put("productName", "3");
+        jsonObject.put("orderSn", "4");
+        jsonObject.put("custmer", "5");
+        jsonObject.put("phone", "17689218784");
+        try{
+            AliyunSmsUtil smsUtil=new AliyunSmsUtil();
+            String result=smsUtil.sendSms("17689218784","SMS_204111063",jsonObject.toString());
+        }catch (Exception e){
+
+        }
+    }
+
+    public String sendSms(String phone,String templatecode,String json) {
+        String result = "";
+        DefaultProfile profile = DefaultProfile.getProfile(REGIONID, ACCESSKEYID, SECRET);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", REGIONID);
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", "山图世纪合一");
+        request.putQueryParameter("TemplateCode", templatecode);
+        request.putQueryParameter("TemplateParam", json);
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.getData());
+            result = response.getData();
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return result;
     }
 
     public String sendSms(String phone, String code) {

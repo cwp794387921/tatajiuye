@@ -1,18 +1,22 @@
 package com.tata.jiuye.portal.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.tata.jiuye.DTO.AcctSettleInfoResult;
 import com.tata.jiuye.DTO.OmsOrderDetailDTO;
 import com.tata.jiuye.DTO.TotalFlowQueryParam;
 import com.tata.jiuye.common.api.CommonPage;
+import com.tata.jiuye.common.enums.TemplateCodeEnums;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.mapper.AcctSettleInfoMapper;
 import com.tata.jiuye.mapper.OmsDistributionItemMapper;
 import com.tata.jiuye.mapper.OmsDistributionMapper;
+import com.tata.jiuye.mapper.UmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
+import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +44,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
 
     @Autowired
     private UmsMemberService umsMemberService;
+    @Resource
+    private UmsMemberMapper umsMemberMapper;
     @Autowired
     private OmsOrderItemService omsOrderItemService;
     @Autowired
@@ -51,6 +58,8 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
     private OmsDistributionItemMapper omsDistributionItemMapper;
     @Autowired
     private OmsDistributionMapper omsDistributionMapper;
+    @Resource
+    private AliyunSmsUtil smsUtil;
 
     //上级配送中心分佣金额(当购买的商品为升级配送中心商品时,专用)
     private static BigDecimal DIRECT_SUPERIOR_DISTRIBUTION_CENTER_MEMBER_COMMISSION_AMMOUNT = new BigDecimal("1500");
@@ -181,15 +190,34 @@ public class AcctSettleInfoServiceImpl extends ServiceImpl<AcctSettleInfoMapper,
             else{
                 //获取直邀账户并增加余额
                 if(!directPushAmount.equals(BigDecimal.ZERO)){
-                    log.info("-----------------执行正常商品直邀分佣 ");
+                    log.info("-----------------执行正常商品直邀分佣");
                     insertFlow(parentMemberId,directPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
                             StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_DIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
                 }
                 //获取间邀账户并增加余额
                 if(!indirectPushAmount.equals(BigDecimal.ZERO)){
-                    log.info("-----------------执行正常商品间邀分佣 ");
+                    log.info("-----------------执行正常商品间邀分佣");
                     insertFlow(grandpaMemberId,indirectPushAmount,orderSn,umsMember.getId(),StaticConstant.FLOW_TYPE_INCOME,
                             StaticConstant.FLOW_TYPE_DETAIL_INCOME_COMMISSION_INCOME_INDIRECT,StaticConstant.ACCOUNT_TYPE_ORDINARY,null);
+                }
+                log.info("==>分佣结束，开始发送入账短信");
+                UmsMember parentInfo=umsMemberMapper.selectByPrimaryKey(parentMemberId);
+                UmsMember grandpaInfo=umsMemberMapper.selectByPrimaryKey(grandpaMemberId);
+                if(parentInfo!=null&&!parentInfo.getId().equals(1L)){
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("nickName", parentInfo.getNickname());
+                    jsonObject.put("orderNo", orderSn);
+                    jsonObject.put("ammout", directPushAmount);
+                    log.info("==》开始发送入账短信");
+                    smsUtil.sendSms(parentInfo.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
+                }
+                if(grandpaInfo!=null&&!grandpaInfo.getId().equals(1L)){
+                    JSONObject jsonObject=new JSONObject();
+                    jsonObject.put("nickName", grandpaInfo.getNickname());
+                    jsonObject.put("orderNo", orderSn);
+                    jsonObject.put("ammout", indirectPushAmount);
+                    log.info("==》开始发送入账短信");
+                    smsUtil.sendSms(grandpaInfo.getPhone(), TemplateCodeEnums.SY.getValue(),jsonObject.toString());
                 }
             }
         }
