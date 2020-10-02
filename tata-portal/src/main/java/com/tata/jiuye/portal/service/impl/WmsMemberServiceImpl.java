@@ -4,6 +4,8 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.enums.FlowTypeEnum;
 import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.utils.OrderUtil;
@@ -125,18 +127,21 @@ public class WmsMemberServiceImpl implements WmsMemberService {
     }
 
     @Override
-    public List<WmsMemberAreaDetail> queryAllUser(String params) {
+    public List<WmsMemberAreaDetail> queryAllUser(Integer pageSize,Integer pageNum,String params) {
         UmsMember currentMember = memberService.getCurrentMember();
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
         WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        PageHelper.startPage(pageNum, pageSize);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
         Map<String, Object> param = new HashMap<>();
         param.put("id", wmsMember.getId());
-        param.put("params", params);
+        if(!StrUtil.isEmpty(params.trim())){
+            param.put("params", params);
+        }
         List<WmsMemberAreaDetail> memberAreaDetails = wmsMemberMapper.queryAllWmsUser(param);
         return memberAreaDetails;
     }

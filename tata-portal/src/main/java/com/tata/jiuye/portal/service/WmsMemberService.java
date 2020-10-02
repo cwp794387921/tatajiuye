@@ -12,7 +12,7 @@ public interface WmsMemberService {
 
     JSONObject selectMerberInfo();
 
-    List<WmsMemberAreaDetail> queryAllUser(String params);
+    List<WmsMemberAreaDetail> queryAllUser(Integer pageSize,Integer pageNum,String params);
 
     List<WmsArea> queryAllArea();
 

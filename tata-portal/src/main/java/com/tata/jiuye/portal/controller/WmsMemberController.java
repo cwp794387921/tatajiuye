@@ -2,9 +2,13 @@ package com.tata.jiuye.portal.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.tata.jiuye.common.api.CommonPage;
 import com.tata.jiuye.common.api.CommonResult;
+import com.tata.jiuye.common.exception.Asserts;
 import com.tata.jiuye.common.service.RedisService;
 import com.tata.jiuye.mapper.OmsDistributionMapper;
+import com.tata.jiuye.mapper.WmsMemberMapper;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.service.OmsPortalOrderService;
 import com.tata.jiuye.portal.service.WmsMemberService;
@@ -17,8 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @Api(tags = "WmsMemberController", description = "配送中心用户管理")
@@ -34,8 +41,13 @@ public class WmsMemberController {
     private OmsPortalOrderService portalOrderService;
 
     @Resource
+    private WmsMemberMapper wmsMemberMapper;
+    @Resource
     private OmsDistributionMapper distributionMapper;
 
+
+    @Resource
+    private RedisService redisService;
 
 
     @ApiOperation("获取用户信息")
@@ -57,9 +69,10 @@ public class WmsMemberController {
     @ApiOperation("获取配送用户列表")
     @RequestMapping(value = "/queryUserList", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult queryUserList(String params) {
-        List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser(params);
-        return CommonResult.success(result);
+    public CommonResult queryUserList(@RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,String params) {
+        List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser(pageSize,pageNum,params);
+        return CommonResult.success(CommonPage.restPage(result));
     }
 
     @ApiOperation("获取可选地区列表")
