@@ -92,7 +92,7 @@ public class PayController {
     private String REDIS_KEY_ORDER_ID;
     @Value("${redis.database}")
     private String REDIS_DATABASE;
-    @Value("${redis.member}")
+    @Value("${redis.key.member}")
     private String REDIS_KEY_MEMBER;
     @Value("${umsmemberlevelname.vip}")
     private String UMS_MEMBER_LEVEL_NAME_VIP;
