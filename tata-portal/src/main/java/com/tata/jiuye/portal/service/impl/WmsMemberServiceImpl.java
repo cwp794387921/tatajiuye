@@ -384,6 +384,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         creditLineChange(wmsMember.getId(), changeValue.multiply(new BigDecimal(-1)), remark);
         wmsMemberMapper.updateByPrimaryKey(changeInfo);
         creditLineChange(changeInfo.getId(), changeValue, remark);
+
     }
 
     @Override
