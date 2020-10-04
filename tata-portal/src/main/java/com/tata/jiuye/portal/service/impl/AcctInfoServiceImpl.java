@@ -45,7 +45,9 @@ public class AcctInfoServiceImpl extends ServiceImpl<AcctInfoMapper, AcctInfo> i
         if(acctType.equals("COMMISSION")){
             params.put("memberId",memberId);
         }else if(acctType.equals("DELIVERYCENTER")){
-            WmsMember wmsMember=wmsMemberMapper.selectByUmsId(memberId);
+            Map<String,Object>queryParams=new HashMap<>();
+            queryParams.put("umsMemberId",memberId);
+            WmsMember wmsMember=wmsMemberMapper.selectByUmsId(queryParams);
             if(wmsMember==null){
                 Asserts.fail("配送用户信息不存在");
             }

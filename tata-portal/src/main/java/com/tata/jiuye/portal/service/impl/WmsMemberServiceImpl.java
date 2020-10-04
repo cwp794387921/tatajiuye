@@ -98,7 +98,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -135,7 +137,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         PageHelper.startPage(pageNum, pageSize);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
@@ -162,7 +166,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -295,7 +301,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -358,9 +366,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
         // 获取当前登录用户的配送中心
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -411,7 +420,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -486,7 +497,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -578,7 +591,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -620,7 +635,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -738,7 +755,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
@@ -767,7 +786,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (currentMember == null) {
             Asserts.fail("用户未登录");
         }
-        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(currentMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",currentMember.getId());
+        WmsMemberAreaDetail wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }

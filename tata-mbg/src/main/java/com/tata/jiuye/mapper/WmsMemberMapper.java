@@ -26,7 +26,7 @@ public interface WmsMemberMapper {
 
     WmsMember selectByPrimaryKey(Long id);
 
-    WmsMemberAreaDetail selectByUmsId(Long id);
+    WmsMemberAreaDetail selectByUmsId(Map<String,Object> params);
 
     List<WmsMember> queryCreditLine(Map<String,Object> params);
 

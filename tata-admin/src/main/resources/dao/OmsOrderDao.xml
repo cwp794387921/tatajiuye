@@ -33,6 +33,9 @@
         <if test="queryParam.vipProduct !=null">
             AND i.if_join_vip_product = #{queryParam.vipProduct} or i.if_upgrade_distribution_center_product = #{queryParam.vipProduct}
         </if>
+        <if test="queryParam.NoVipProduct !=null">
+            AND i.if_join_vip_product = #{queryParam.NoVipProduct} and i.if_upgrade_distribution_center_product = #{queryParam.NoVipProduct}
+        </if>
         <if test="queryParam.createTime!=null and queryParam.createTime!=''">
             AND oo.create_time LIKE concat(#{queryParam.createTime},"%")
         </if>

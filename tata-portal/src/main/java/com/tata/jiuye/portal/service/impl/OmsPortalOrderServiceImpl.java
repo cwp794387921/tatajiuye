@@ -586,7 +586,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public JSONObject queryDistribution() {
         UmsMember member = memberService.getCurrentMember();
-        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(member.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",member.getId());
+        WmsMember wmsMember = wmsMemberMapper.selectByUmsId(queryParams);
         if (wmsMember == null) {
             log.info("==》不是配送中心");
             return null;

@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Api(tags = "WmsMemberController", description = "配送中心用户管理")
@@ -74,6 +71,17 @@ public class WmsMemberController {
         List<WmsMemberAreaDetail> result= wmsMemberService.queryAllUser(pageSize,pageNum,params);
         return CommonResult.success(result);
     }
+
+    @ApiOperation("根据id查询配送用户信息")
+    @RequestMapping(value = "/queryMemberInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult queryUserList(Long id) {
+        Map<String,Object>params=new HashMap<>();
+        params.put("id",id);
+        WmsMemberAreaDetail result= wmsMemberMapper.selectByUmsId(params);
+        return CommonResult.success(result);
+    }
+
 
     @ApiOperation("额度变动记录")
     @RequestMapping(value = "/changeInfoList", method = RequestMethod.POST)

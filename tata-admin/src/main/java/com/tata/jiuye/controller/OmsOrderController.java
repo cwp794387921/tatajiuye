@@ -41,6 +41,10 @@ public class OmsOrderController {
         if(queryParam.getVipProduct()!=null&&queryParam.getVipProduct().equals(-1)){
             queryParam.setVipProduct(null);
         }
+        if(queryParam.getVipProduct()!=null&&queryParam.getVipProduct().equals(0)){
+            queryParam.setVipProduct(null);
+            queryParam.setNoVipProduct(0);
+        }
         List<OmsOrder> orderList = orderService.list(queryParam, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(orderList));
     }

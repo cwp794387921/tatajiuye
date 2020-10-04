@@ -29,4 +29,6 @@ public class OmsOrderQueryParam {
     @ApiModelProperty(value = "升级订单 0否  1是 -1全部")
     private Integer vipProduct;
 
+    private Integer NoVipProduct;
+
 }

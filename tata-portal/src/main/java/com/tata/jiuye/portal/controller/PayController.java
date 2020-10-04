@@ -161,7 +161,6 @@ public class PayController {
         }
         return CommonResult.success("操作成功");
     }
-
     @PostMapping("/RefundNotify")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
@@ -311,7 +310,7 @@ public class PayController {
             omsOrder.setPaymentTime(new Date());
             orderMapper.updateByPrimaryKey(omsOrder);
             try{
-                /*Map<String,String> map = Maps.newHashMap();
+               /* Map<String,String> map = Maps.newHashMap();
                 map.put("merchantNo", Config.MERCHANT_NO);
                 map.put("orderAmount",money.toString());
                 map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
@@ -438,7 +437,9 @@ public class PayController {
             Asserts.fail("==>找不到订单号 :"+orderSn +"的订单商品信息");
         }
         //生成配送单
-        WmsMember isWms=wmsMemberMapper.selectByUmsId(umsMember.getId());
+        Map<String,Object>queryParams=new HashMap<>();
+        queryParams.put("umsMemberId",umsMember.getId());
+        WmsMember isWms=wmsMemberMapper.selectByUmsId(queryParams);
         if(isWms!=null){
             log.info("自身是配送中心");
         }
@@ -446,7 +447,9 @@ public class PayController {
         log.info("找到的配送中心ID 为"+id);
         WmsMember wmsMember=null;
         if(id!=null){
-            wmsMember=wmsMemberMapper.selectByUmsId(id);
+            queryParams=new HashMap<>();
+            queryParams.put("umsMemberId",id);
+            wmsMember=wmsMemberMapper.selectByUmsId(queryParams);
             if (wmsMember==null){
                 Asserts.fail("==>找不到对应配送中心信息");
             }
