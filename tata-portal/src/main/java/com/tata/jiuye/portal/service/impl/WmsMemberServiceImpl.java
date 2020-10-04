@@ -142,7 +142,7 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         }
         Map<String, Object> param = new HashMap<>();
         param.put("id", wmsMember.getId());
-        if(!StrUtil.isEmpty(params.trim())){
+        if(params!=null&&!StrUtil.isEmpty(params.trim())){
             param.put("params", params);
         }
         List<WmsMemberAreaDetail> memberAreaDetails = wmsMemberMapper.queryAllWmsUser(param);
@@ -364,17 +364,18 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
-
         // 获取转让的配送中心
         WmsMember changeInfo = wmsMemberMapper.selectByPrimaryKey(memberId);
         if (changeInfo == null) {
             Asserts.fail("转让配送中心信息不存在");
         }
         BigDecimal changeValue=new BigDecimal(value);
+        if (changeValue.compareTo(BigDecimal.ZERO)==-1){
+            Asserts.fail("只能输入正数");
+        }
         if(changeValue.compareTo(wmsMember.getCreditLine())==1){
             Asserts.fail("转让额度超过最大值");
         }
-
        /* // 判断货值是否足够
         if (wmsMember.getCreditLine().doubleValue() < 0) {
             Asserts.fail("您的余额不足");
@@ -387,24 +388,21 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         } catch (Exception e) {
             Asserts.fail("您输入的金额格式错误");
         }
-
         // 判断转让金额后余额是否充足
         if (wmsMember.getCreditLine().subtract(changeValue).doubleValue() < 0) {
             Asserts.fail("您的余额不足");
         }*/
-
         wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(changeValue));
         wmsMember.setUpdateTime(new Date());
         changeInfo.setCreditLine(changeInfo.getCreditLine().add(changeValue));
         changeInfo.setUpdateTime(new Date());
         String remark = wmsMember.getId() + "转让额度[" + changeValue + "]到" + changeInfo.getId();
-        wmsMemberMapper.updateByPrimaryKey(wmsMember);
-
-        //插入额度变动明细
         creditLineChange(wmsMember.getId(), changeValue.multiply(new BigDecimal(-1)), remark);
-        wmsMemberMapper.updateByPrimaryKey(changeInfo);
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);
         creditLineChange(changeInfo.getId(), changeValue, remark);
+        wmsMemberMapper.updateByPrimaryKey(changeInfo);
     }
+
 
 
     @Override

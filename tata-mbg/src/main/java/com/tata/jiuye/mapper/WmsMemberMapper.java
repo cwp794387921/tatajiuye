@@ -28,6 +28,8 @@ public interface WmsMemberMapper {
 
     WmsMemberAreaDetail selectByUmsId(Long id);
 
+    List<WmsMember> queryCreditLine(Map<String,Object> params);
+
     List<WmsMemberAreaDetail> queryAllWmsUser(Map<String,Object> params);
 
     List<WmsMemberAreaDetail> queryMemberDetail(Map<String,Object> params);

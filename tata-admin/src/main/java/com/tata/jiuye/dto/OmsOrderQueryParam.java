@@ -26,4 +26,7 @@ public class OmsOrderQueryParam {
     private String createTime;
     @ApiModelProperty(value = "下单人ID")
     private Long memberId;
+    @ApiModelProperty(value = "升级订单 0否  1是 -1全部")
+    private Integer vipProduct;
+
 }

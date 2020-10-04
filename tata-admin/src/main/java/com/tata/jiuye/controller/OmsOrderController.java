@@ -38,6 +38,9 @@ public class OmsOrderController {
     public CommonResult<CommonPage<OmsOrder>> list(OmsOrderQueryParam queryParam,
                                                    @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                    @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        if(queryParam.getVipProduct()!=null&&queryParam.getVipProduct().equals(-1)){
+            queryParam.setVipProduct(null);
+        }
         List<OmsOrder> orderList = orderService.list(queryParam, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(orderList));
     }

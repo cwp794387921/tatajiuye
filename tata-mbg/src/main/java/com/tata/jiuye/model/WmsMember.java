@@ -77,6 +77,56 @@ public class WmsMember implements Serializable {
     @ApiModelProperty(value = "等级  1配送中心 2区域  3站长")
     private Integer level;
 
+    private String changeValue;
+
+    private String beforeValue;
+
+    private String afterValue;
+
+    private String changeRemark;
+
+    private Date changeTime;
+
+    public String getChangeValue() {
+        return changeValue;
+    }
+
+    public void setChangeValue(String changeValue) {
+        this.changeValue = changeValue;
+    }
+
+    public String getBeforeValue() {
+        return beforeValue;
+    }
+
+    public void setBeforeValue(String beforeValue) {
+        this.beforeValue = beforeValue;
+    }
+
+    public String getAfterValue() {
+        return afterValue;
+    }
+
+    public void setAfterValue(String afterValue) {
+        this.afterValue = afterValue;
+    }
+
+    public String getChangeRemark() {
+        return changeRemark;
+    }
+
+    public void setChangeRemark(String changeRemark) {
+        this.changeRemark = changeRemark;
+    }
+
+    public Date getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(Date changeTime) {
+        this.changeTime = changeTime;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getLevel() {

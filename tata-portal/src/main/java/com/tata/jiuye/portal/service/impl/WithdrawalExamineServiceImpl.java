@@ -107,17 +107,25 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         if(withdrawalExamine == null){
             Asserts.fail("找不到对应的提现申请记录");
         }
+        AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getAcctType());
+        if(acctInfo == null){
+            Asserts.fail("该用户ID无法找到对应的账户信息");
+        }
         //如果操作类型为通过,则改该状态为1
         if(StaticConstant.APPROVAL_OPERATION_PASS.equals(operateType)){
+            if(acctInfo.getBalance().compareTo(BigDecimal.ZERO)!=1||
+                    acctInfo.getBalance().subtract(withdrawalExamine.getWithdrawalAmount()).compareTo(BigDecimal.ZERO)!=1){
+                Asserts.fail("账户余额不足");
+            }
+            /*acctInfo.setBalance(acctInfo.getBalance().subtract(withdrawalExamine.getWithdrawalAmount()));
+            acctInfo.setLockAmount(acctInfo.getLockAmount().subtract(withdrawalExamine.getWithdrawalAmount()));
+            acctInfo.setUpdateTime(new Date());
+            acctInfoMapper.updateByPrimaryKey(acctInfo);*/
             withdrawalExamine.setStatus(WithdrawStatusEnum.PASS.getValue());
         }
         else if(StaticConstant.APPROVAL_OPERATION_REFUSE.equals(operateType)){
             withdrawalExamine.setStatus(WithdrawStatusEnum.REJECT.getValue());
             //更新账户表锁定金额
-            AcctInfo acctInfo = acctInfoService.getAcctInfoByMemberId(withdrawalExamine.getApplicantMemberId(),withdrawalExamine.getAcctType());
-            if(acctInfo == null){
-                Asserts.fail("该用户ID无法找到对应的账户信息");
-            }
             BigDecimal lockAmount = acctInfo.getLockAmount();
             if(lockAmount == null){
                 lockAmount = BigDecimal.ZERO;

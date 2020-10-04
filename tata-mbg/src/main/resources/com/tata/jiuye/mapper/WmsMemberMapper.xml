@@ -28,6 +28,42 @@
     <result column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
 
+  <resultMap id="credieLineMap" type="com.tata.jiuye.model.WmsMember"  extends="BaseResultMap">
+    <id column="change_value" jdbcType="VARCHAR" property="changeValue" />
+    <result column="before_value" jdbcType="VARCHAR" property="beforeValue" />
+    <result column="after_value" jdbcType="VARCHAR" property="afterValue" />
+    <result column="remark" jdbcType="VARCHAR" property="changeRemark" />
+    <result column="changetime" jdbcType="TIMESTAMP" property="changeTime" />
+  </resultMap>
+
+  <select id="queryCreditLine" resultMap="credieLineMap" >
+    SELECT
+    c.change_value,
+    c.before_value,
+    c.after_value,
+    c.remark,
+    c.create_time  as changetime,
+    m.*
+    FROM
+    wms_member_creditline_change c
+    LEFT JOIN wms_member m ON m.id = c.wms_member_id
+    where 1=1
+    <if test="id !=null ">
+      and m.id = #{id}
+    </if>
+    <if test="phone !=null and phone!='' ">
+      and m.phone = #{phone}
+    </if>
+    <if test="nickname !=null ">
+      and m.nickname like CONCAT('%',#{nickname}, '%')
+    </if>
+    <if test="remark !=null ">
+      and c.remark like CONCAT('%',#{remark}, '%')
+    </if>
+    ORDER BY
+    c.create_time desc,m.id desc
+  </select>
+
 
   <sql id="Example_Where_Clause">
     <where>
@@ -175,6 +211,9 @@
       ORDER BY
           m.id desc
   </select>
+
+
+
 
 
 

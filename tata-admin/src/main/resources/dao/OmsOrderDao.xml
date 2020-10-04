@@ -11,10 +11,11 @@
         <collection property="historyList" resultMap="com.tata.jiuye.mapper.OmsOrderOperateHistoryMapper.BaseResultMap" columnPrefix="history_"/>
     </resultMap>
     <select id="getList" resultMap="com.tata.jiuye.mapper.OmsOrderMapper.BaseResultMap">
-        SELECT oo.*
+        SELECT distinct oo.*
         FROM
         oms_order oo
         LEFT JOIN ums_member um ON um.id = oo.member_id
+        LEFT JOIN oms_order_item i ON i.order_id = oo.id
         WHERE
         delete_status = 0
         <if test="queryParam.orderSn!=null and queryParam.orderSn!=''">
@@ -28,6 +29,9 @@
         </if>
         <if test="queryParam.orderType!=null">
             AND oo.order_type = #{queryParam.orderType}
+        </if>
+        <if test="queryParam.vipProduct !=null">
+            AND i.if_join_vip_product = #{queryParam.vipProduct} or i.if_upgrade_distribution_center_product = #{queryParam.vipProduct}
         </if>
         <if test="queryParam.createTime!=null and queryParam.createTime!=''">
             AND oo.create_time LIKE concat(#{queryParam.createTime},"%")

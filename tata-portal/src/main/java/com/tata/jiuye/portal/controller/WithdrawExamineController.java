@@ -46,7 +46,7 @@ public class WithdrawExamineController {
         if(currentMember == null){
             return CommonResult.failed("用户未登录");
         }
-        if(withdrawAmount == null || BigDecimal.ZERO.equals(withdrawAmount)){
+        if(withdrawAmount == null || withdrawAmount.compareTo(BigDecimal.ZERO)!=1){
             return CommonResult.failed("提现金额不能为空或0");
         }
         if(type.equals("3")&& StrUtil.isEmpty(bank)){

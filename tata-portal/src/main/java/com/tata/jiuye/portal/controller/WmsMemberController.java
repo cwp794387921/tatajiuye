@@ -75,6 +75,17 @@ public class WmsMemberController {
         return CommonResult.success(result);
     }
 
+    @ApiOperation("额度变动记录")
+    @RequestMapping(value = "/changeInfoList", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeInfoList(@RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<WmsMember> list=  wmsMemberMapper.queryCreditLine(params);
+        return CommonResult.success(CommonPage.restPage(list));
+    }
+
+
     @ApiOperation("获取可选地区列表")
     @RequestMapping(value = "/queryAreaList", method = RequestMethod.GET)
     @ResponseBody

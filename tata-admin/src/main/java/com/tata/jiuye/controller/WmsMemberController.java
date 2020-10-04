@@ -390,10 +390,20 @@ public class WmsMemberController {
     @ApiOperation("补货审核列表")
     @RequestMapping(value = "/replenishableList", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult replenishableList(@RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+    public CommonResult replenishableList(@RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
         PageHelper.startPage(pageNum, pageSize);
         List<ReplenishableExamine> list=  examineMapper.queryList(params);
+        return CommonResult.success(CommonPage.restPage(list));
+    }
+
+    @ApiOperation("额度变动记录")
+    @RequestMapping(value = "/changeInfoList", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult changeInfoList(@RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
+                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@RequestParam Map<String,Object> params) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<WmsMember> list=  memberMapper.queryCreditLine(params);
         return CommonResult.success(CommonPage.restPage(list));
     }
 
