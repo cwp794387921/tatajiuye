@@ -114,7 +114,7 @@ public class WithdrawalExamineServiceImpl extends ServiceImpl<WithdrawalExamineM
         //如果操作类型为通过,则改该状态为1
         if(StaticConstant.APPROVAL_OPERATION_PASS.equals(operateType)){
             if(acctInfo.getBalance().compareTo(BigDecimal.ZERO)!=1||
-                    acctInfo.getBalance().subtract(withdrawalExamine.getWithdrawalAmount()).compareTo(BigDecimal.ZERO)!=1){
+                    acctInfo.getBalance().subtract(withdrawalExamine.getWithdrawalAmount()).compareTo(BigDecimal.ZERO)==-1){
                 Asserts.fail("账户余额不足");
             }
             /*acctInfo.setBalance(acctInfo.getBalance().subtract(withdrawalExamine.getWithdrawalAmount()));
