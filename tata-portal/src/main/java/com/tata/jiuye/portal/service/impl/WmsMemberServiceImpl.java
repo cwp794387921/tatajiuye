@@ -232,11 +232,11 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         omsDistribution.setStatus(4);
         shipment.setStatus(4);
         wmsMember.setCreditLine(wmsMember.getCreditLine().add(omsDistribution.getPrice().multiply(new BigDecimal(omsDistribution.getNumber()))));
+        creditLineChange(wmsMember.getId(),
+                omsDistribution.getPrice().multiply(new BigDecimal(omsDistribution.getNumber())),wmsMember.getId()+"取消补货增加额度");
         wmsMemberMapper.updateByPrimaryKey(wmsMember);//返还授信额度
         distributionMapper.updateByPrimaryKey(omsDistribution);
         distributionMapper.updateByPrimaryKey(shipment);
-        creditLineChange(wmsMember.getId(),
-                omsDistribution.getPrice().multiply(new BigDecimal(omsDistribution.getNumber())),wmsMember.getId()+"取消补货增加额度");
     }
 
     @Override
@@ -373,6 +373,9 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         if (wmsMember == null) {
             Asserts.fail("配送中心不存在");
         }
+        if(wmsMember.getId()==memberId){
+            Asserts.fail("不可转让给自己");
+        }
         // 获取转让的配送中心
         WmsMember changeInfo = wmsMemberMapper.selectByPrimaryKey(memberId);
         if (changeInfo == null) {
@@ -406,10 +409,10 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         changeInfo.setCreditLine(changeInfo.getCreditLine().add(changeValue));
         changeInfo.setUpdateTime(new Date());
         String remark = wmsMember.getId() + "转让额度[" + changeValue + "]到" + changeInfo.getId();
-        creditLineChange(wmsMember.getId(), changeValue.multiply(new BigDecimal(-1)), remark);
-        wmsMemberMapper.updateByPrimaryKey(wmsMember);
         creditLineChange(changeInfo.getId(), changeValue, remark);
         wmsMemberMapper.updateByPrimaryKey(changeInfo);
+        creditLineChange(wmsMember.getId(), changeValue.multiply(new BigDecimal(-1)), remark);
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);
     }
 
 
@@ -743,9 +746,8 @@ public class WmsMemberServiceImpl implements WmsMemberService {
         log.info("==>总货值[" + subPrice + "]");
         String remark = wmsMember.getId() + "补货扣减额度[" + subPrice + "]";
         wmsMember.setCreditLine(wmsMember.getCreditLine().subtract(subPrice));
-        wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
         creditLineChange(wmsMember.getId(), subPrice.multiply(new BigDecimal(-1)), remark);
-
+        wmsMemberMapper.updateByPrimaryKey(wmsMember);//扣减授信额度
     }
 
 

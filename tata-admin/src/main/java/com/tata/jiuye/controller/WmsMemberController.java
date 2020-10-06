@@ -297,6 +297,7 @@ public class WmsMemberController {
         return CommonResult.success(CommonPage.restPage(memberList));
     }
 
+
     @ApiOperation("配送用户更改额度")
     @RequestMapping(value = "/modifyCreditLine", method = RequestMethod.POST)
     @ResponseBody
@@ -309,22 +310,27 @@ public class WmsMemberController {
         if(wmsMember==null){
             return CommonResult.failed("用户信息不存在");
         }
-        BigDecimal changeValue;
+        BigDecimal changeValue=new BigDecimal(value);
+        if(changeValue.compareTo(BigDecimal.ZERO)!=1){
+            return CommonResult.failed("输入的数值需要大于0");
+        }
         String remark;
         if(type.equals("1")){
-            changeValue=new BigDecimal(value);
             remark="后台操作增加额度";
             wmsMember.setCreditLine(wmsMember.getCreditLine().add(changeValue));
         }else if(type.equals("2")){
-            changeValue=new BigDecimal(value).multiply(new BigDecimal(-1));
+            changeValue=changeValue.multiply(new BigDecimal(-1));
+            if(wmsMember.getCreditLine().add(changeValue).compareTo(BigDecimal.ZERO)==-1){
+                return CommonResult.failed("额度最低只能减少到0");
+            }
             remark="后台操作减少额度";
             wmsMember.setCreditLine(wmsMember.getCreditLine().add(changeValue));
         }else {
             return CommonResult.failed("参数错误");
         }
         wmsMember.setUpdateTime(new Date());
-        memberMapper.updateByPrimaryKey(wmsMember);
         creditLineChange(wmsMember.getId(),changeValue,remark);
+        memberMapper.updateByPrimaryKey(wmsMember);
         return CommonResult.success("更改成功");
     }
 

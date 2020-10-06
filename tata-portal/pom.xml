@@ -32,7 +32,6 @@
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-data-mongodb</artifactId>-->
 <!--        </dependency>-->
-
         <!--redis依赖配置-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

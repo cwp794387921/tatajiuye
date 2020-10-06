@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class WxConfig implements WXPayConfig {
 
-    //public static String PATH="/usr/local/tata-jiuye/tata-portal/apiclient_cert.p12";
+   // public static String PATH="/usr/local/tata-jiuye/tata-portal/apiclient_cert.p12";
     public static String PATH = "/usr/local/tata-jiuye/tata-portal/prod/apiclient_cert.p12";
 
 
@@ -43,12 +43,12 @@ public class WxConfig implements WXPayConfig {
     //商户号
     @Override
     public String getMchID() {
-        //return "1494508502";
-        return "1601954250";
+      // return "1494508502";
+       return "1601954250";
     }
 
     public String getAppSecret() {
-       // return "56bcec96c36b270da318979e4c41f8fc";
+      // return "56bcec96c36b270da318979e4c41f8fc";
         return "5c4953f10adadc5cf6bcee10b27c108c";
     }
     @Override
