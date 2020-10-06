@@ -106,7 +106,6 @@ public class PayController {
     private AliyunSmsUtil smsUtil;
 
 
-    @ApiOperation("第三方退款接口")
     @PostMapping("/refundApply")
     @ResponseBody
     public CommonResult refundApply(@RequestParam @ApiParam("订单编号")String orderNum,String refundMoney, HttpServletRequest httpRequest,
