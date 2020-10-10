@@ -16,6 +16,7 @@
         <module>tata-portal</module>
         <module>tata-common</module>
         <module>tata-security</module>
+        <module>tata-service</module>
     </modules>
 
     <parent>
@@ -51,6 +52,7 @@
         <guava.version>20.0</guava.version>
         <tata-common.version>1.0.0-SNAPSHOT</tata-common.version>
         <tata-mbg.version>1.0.0-SNAPSHOT</tata-mbg.version>
+        <tata-service.version>1.0.0-SNAPSHOT</tata-service.version>
         <tata-security.version>1.0.0-SNAPSHOT</tata-security.version>
         <fastjson.version>1.2.45</fastjson.version>
     </properties>
@@ -98,6 +100,11 @@
                 <groupId>com.tata.jiuye</groupId>
                 <artifactId>tata-mbg</artifactId>
                 <version>${tata-mbg.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tata.jiuye</groupId>
+                <artifactId>tata-service</artifactId>
+                <version>${tata-service.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

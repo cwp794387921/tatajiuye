@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.tata.jiuye</groupId>
-            <artifactId>tata-mbg</artifactId>
+            <artifactId>tata-service</artifactId>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>

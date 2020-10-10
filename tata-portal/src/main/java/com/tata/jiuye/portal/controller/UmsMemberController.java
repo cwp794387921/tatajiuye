@@ -18,6 +18,7 @@ import com.tata.jiuye.portal.util.GetWeiXinCode;
 import com.tata.jiuye.portal.util.HttpRequest;
 import com.tata.jiuye.portal.util.ValidateCode;
 import com.tata.jiuye.portal.util.inviteQrCode.InviteQrCode;
+import com.tata.jiuye.utils.AliyunSmsUtilCOPY;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -65,7 +66,7 @@ public class UmsMemberController {
     @Resource
     private RedisService redisService;
     @Resource
-    private AliyunSmsUtil aliyunSmsUtil;
+    private AliyunSmsUtilCOPY smsUtil;
     @Resource
     private UmsMemberService memberService;
     @Resource
@@ -282,7 +283,7 @@ public class UmsMemberController {
 
         //生成4位随机数
         int code = (int) ((Math.random() * 9 + 1) * 1000);
-        String result = aliyunSmsUtil.sendSms(phone, String.valueOf(code));
+        String result = smsUtil.sendSms(phone, String.valueOf(code));
         if (result == null) {
             return CommonResult.failed("短信发送失败");
         } else {

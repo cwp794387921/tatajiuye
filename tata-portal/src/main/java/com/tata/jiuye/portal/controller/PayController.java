@@ -1,6 +1,5 @@
 package com.tata.jiuye.portal.controller;
 
-import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -18,14 +17,13 @@ import com.tata.jiuye.mapper.*;
 import com.tata.jiuye.model.*;
 import com.tata.jiuye.portal.common.constant.StaticConstant;
 import com.tata.jiuye.portal.service.*;
-import com.tata.jiuye.portal.util.AliyunSmsUtil;
 import com.tata.jiuye.portal.util.MD5Util;
 import com.tata.jiuye.portal.util.WxConfig;
+import com.tata.jiuye.service.PayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import com.tata.jiuye.utils.AliyunSmsUtilCOPY;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -103,13 +102,15 @@ public class PayController {
     @Value("${auth.wechat.pay.notifyurl}")
     private String NOTIFYURL;
     @Resource
-    private AliyunSmsUtil smsUtil;
-
+    private AliyunSmsUtilCOPY smsUtil;
+    @Resource
+    private PayService payService;
 
     @PostMapping("/refundApply")
     @ResponseBody
     public CommonResult refundApply(@RequestParam @ApiParam("订单编号")String orderNum,String refundMoney, HttpServletRequest httpRequest,
                                          HttpServletResponse httpResponse)throws ServletException, IOException {
+        payService.refundApply(orderNum,refundMoney);
         Map<String,Object>params=new HashMap<>();
         params.put("orderNum",orderNum);
         OmsOrder omsOrder = orderMapper.selectByOrderNum(params);
@@ -314,7 +315,7 @@ public class PayController {
                 Map<String,String> map = Maps.newHashMap();
                 map.put("merchantNo", Config.MERCHANT_NO);
                 map.put("orderAmount",money.toString());
-                map.put("service", ServiceEnum.WECHAT_APPLET.getValue().toString());
+                map.put("com/tata/jiuye/service", ServiceEnum.WECHAT_APPLET.getValue().toString());
                 map.put("orderTitle","塔塔酒业");
                 map.put("notifyUrl",Config.NotifyUrl);
                 JSONObject jsonObject1=new JSONObject();
