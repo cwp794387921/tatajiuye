@@ -16,7 +16,6 @@
         <module>tata-portal</module>
         <module>tata-common</module>
         <module>tata-security</module>
-        <module>tata-service</module>
     </modules>
 
     <parent>
