@@ -26,6 +26,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,7 +104,7 @@ public class PayController {
     private String NOTIFYURL;
     @Resource
     private AliyunSmsUtilCOPY smsUtil;
-    @Resource
+    @Autowired
     private PayService payService;
 
     @PostMapping("/refundApply")
